@@ -1,25 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Training nov\\Travelo\\Travelo\\Travelo.API\\Travelo.API.csproj": {}
+    "D:\\Projects\\Travelo\\Travelo.API\\Travelo.API.csproj": {}
   },
   "projects": {
-    "D:\\Training nov\\Travelo\\Travelo\\Travelo.API\\Travelo.API.csproj": {
+    "D:\\Projects\\Travelo\\Travelo.API\\Travelo.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Training nov\\Travelo\\Travelo\\Travelo.API\\Travelo.API.csproj",
+        "projectUniqueName": "D:\\Projects\\Travelo\\Travelo.API\\Travelo.API.csproj",
         "projectName": "Travelo.API",
-        "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.API\\Travelo.API.csproj",
-        "packagesPath": "C:\\Users\\Ahmed\\.nuget\\packages\\",
-        "outputPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.API\\obj\\",
+        "projectPath": "D:\\Projects\\Travelo\\Travelo.API\\Travelo.API.csproj",
+        "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\Travelo\\Travelo.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 24.2\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ahmed\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.2.config",
+          "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -28,18 +26,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 24.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj": {
-                "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj"
+              "D:\\Projects\\Travelo\\Travelo.Application\\Travelo.Application.csproj": {
+                "projectPath": "D:\\Projects\\Travelo\\Travelo.Application\\Travelo.Application.csproj"
               },
-              "D:\\Training nov\\Travelo\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj": {
-                "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj"
+              "D:\\Projects\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj": {
+                "projectPath": "D:\\Projects\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj"
               }
             }
           }
@@ -88,22 +85,20 @@
         }
       }
     },
-    "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj": {
+    "D:\\Projects\\Travelo\\Travelo.Application\\Travelo.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj",
+        "projectUniqueName": "D:\\Projects\\Travelo\\Travelo.Application\\Travelo.Application.csproj",
         "projectName": "Travelo.Application",
-        "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj",
-        "packagesPath": "C:\\Users\\Ahmed\\.nuget\\packages\\",
-        "outputPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\obj\\",
+        "projectPath": "D:\\Projects\\Travelo\\Travelo.Application\\Travelo.Application.csproj",
+        "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\Travelo\\Travelo.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 24.2\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ahmed\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.2.config",
+          "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -112,15 +107,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 24.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj": {
-                "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj"
+              "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj": {
+                "projectPath": "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj"
               }
             }
           }
@@ -160,22 +154,20 @@
         }
       }
     },
-    "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj": {
+    "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
+        "projectUniqueName": "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
         "projectName": "Travelo.Domain",
-        "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
-        "packagesPath": "C:\\Users\\Ahmed\\.nuget\\packages\\",
-        "outputPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\obj\\",
+        "projectPath": "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
+        "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\Travelo\\Travelo.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 24.2\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ahmed\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.2.config",
+          "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -184,7 +176,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 24.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -208,6 +199,12 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.11, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -228,22 +225,20 @@
         }
       }
     },
-    "D:\\Training nov\\Travelo\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj": {
+    "D:\\Projects\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
+        "projectUniqueName": "D:\\Projects\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
         "projectName": "Travelo.Infrastracture",
-        "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
-        "packagesPath": "C:\\Users\\Ahmed\\.nuget\\packages\\",
-        "outputPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Infrastracture\\obj\\",
+        "projectPath": "D:\\Projects\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
+        "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\Travelo\\Travelo.Infrastracture\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 24.2\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ahmed\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.2.config",
+          "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -252,18 +247,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 24.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj": {
-                "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj"
+              "D:\\Projects\\Travelo\\Travelo.Application\\Travelo.Application.csproj": {
+                "projectPath": "D:\\Projects\\Travelo\\Travelo.Application\\Travelo.Application.csproj"
               },
-              "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj": {
-                "projectPath": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj"
+              "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj": {
+                "projectPath": "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj"
               }
             }
           }
