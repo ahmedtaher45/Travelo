@@ -1,26 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Training nov\\Travelo\\Travelo\\",
+  "WorkspaceRootPath": "D:\\Projects\\Travelo\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E1C4185A-FBDA-43F0-BA77-4D7C3CBC6796}|Travelo.Application\\Travelo.Application.csproj|d:\\training nov\\travelo\\travelo\\travelo.application\\common\\responses\\genericresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E1C4185A-FBDA-43F0-BA77-4D7C3CBC6796}|Travelo.Application\\Travelo.Application.csproj|solutionrelative:travelo.application\\common\\responses\\genericresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9F22AB23-C989-42C3-BF1B-CB5640B54AA0}|Travelo.API\\Travelo.API.csproj|d:\\projects\\travelo\\travelo.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F22AB23-C989-42C3-BF1B-CB5640B54AA0}|Travelo.API\\Travelo.API.csproj|solutionrelative:travelo.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9F22AB23-C989-42C3-BF1B-CB5640B54AA0}|Travelo.API\\Travelo.API.csproj|d:\\training nov\\travelo\\travelo\\travelo.api\\travelo.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{9F22AB23-C989-42C3-BF1B-CB5640B54AA0}|Travelo.API\\Travelo.API.csproj|solutionrelative:travelo.api\\travelo.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{F1E6C7B1-CFA0-4534-8DA5-F1FDB0628B97}|Travelo.Infrastracture\\Travelo.Infrastracture.csproj|d:\\projects\\travelo\\travelo.infrastracture\\contexts\\useridentitydbcontex.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1E6C7B1-CFA0-4534-8DA5-F1FDB0628B97}|Travelo.Infrastracture\\Travelo.Infrastracture.csproj|solutionrelative:travelo.infrastracture\\contexts\\useridentitydbcontex.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1C4185A-FBDA-43F0-BA77-4D7C3CBC6796}|Travelo.Application\\Travelo.Application.csproj|d:\\training nov\\travelo\\travelo\\travelo.application\\travelo.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{E1C4185A-FBDA-43F0-BA77-4D7C3CBC6796}|Travelo.Application\\Travelo.Application.csproj|solutionrelative:travelo.application\\travelo.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{9F22AB23-C989-42C3-BF1B-CB5640B54AA0}|Travelo.API\\Travelo.API.csproj|d:\\projects\\travelo\\travelo.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9F22AB23-C989-42C3-BF1B-CB5640B54AA0}|Travelo.API\\Travelo.API.csproj|solutionrelative:travelo.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E74AA4A1-4F24-4DDF-BBF8-2ECC8F65C6B2}|Travelo.Domain\\Travelo.Domain.csproj|d:\\training nov\\travelo\\travelo\\travelo.domain\\travelo.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{E74AA4A1-4F24-4DDF-BBF8-2ECC8F65C6B2}|Travelo.Domain\\Travelo.Domain.csproj|solutionrelative:travelo.domain\\travelo.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{E74AA4A1-4F24-4DDF-BBF8-2ECC8F65C6B2}|Travelo.Domain\\Travelo.Domain.csproj|d:\\projects\\travelo\\travelo.domain\\models\\entities\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E74AA4A1-4F24-4DDF-BBF8-2ECC8F65C6B2}|Travelo.Domain\\Travelo.Domain.csproj|solutionrelative:travelo.domain\\models\\entities\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F1E6C7B1-CFA0-4534-8DA5-F1FDB0628B97}|Travelo.Infrastracture\\Travelo.Infrastracture.csproj|d:\\training nov\\travelo\\travelo\\travelo.infrastracture\\travelo.infrastracture.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{F1E6C7B1-CFA0-4534-8DA5-F1FDB0628B97}|Travelo.Infrastracture\\Travelo.Infrastracture.csproj|solutionrelative:travelo.infrastracture\\travelo.infrastracture.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{E74AA4A1-4F24-4DDF-BBF8-2ECC8F65C6B2}|Travelo.Domain\\Travelo.Domain.csproj|d:\\projects\\travelo\\travelo.domain\\travelo.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E74AA4A1-4F24-4DDF-BBF8-2ECC8F65C6B2}|Travelo.Domain\\Travelo.Domain.csproj|solutionrelative:travelo.domain\\travelo.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,43 +30,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 5,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Projects\\Travelo\\Travelo.API\\appsettings.json",
+              "RelativeDocumentMoniker": "Travelo.API\\appsettings.json",
+              "ToolTip": "D:\\Projects\\Travelo\\Travelo.API\\appsettings.json*",
+              "RelativeToolTip": "Travelo.API\\appsettings.json*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-08T14:30:50.338Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:129:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:134:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Bookmark",
@@ -78,67 +59,54 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GenericResponse.cs",
-              "DocumentMoniker": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Common\\Responses\\GenericResponse.cs",
-              "RelativeDocumentMoniker": "Travelo.Application\\Common\\Responses\\GenericResponse.cs",
-              "ToolTip": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Common\\Responses\\GenericResponse.cs",
-              "RelativeToolTip": "Travelo.Application\\Common\\Responses\\GenericResponse.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB4AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-08T10:47:03.884Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Travelo.API",
-              "DocumentMoniker": "D:\\Training nov\\Travelo\\Travelo\\Travelo.API\\Travelo.API.csproj",
-              "RelativeDocumentMoniker": "Travelo.API\\Travelo.API.csproj",
-              "ToolTip": "D:\\Training nov\\Travelo\\Travelo\\Travelo.API\\Travelo.API.csproj",
-              "RelativeToolTip": "Travelo.API\\Travelo.API.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-01-08T10:47:03.117Z",
+              "Title": "UserIdentityDbContex.cs",
+              "DocumentMoniker": "D:\\Projects\\Travelo\\Travelo.Infrastracture\\Contexts\\UserIdentityDbContex.cs",
+              "RelativeDocumentMoniker": "Travelo.Infrastracture\\Contexts\\UserIdentityDbContex.cs",
+              "ToolTip": "D:\\Projects\\Travelo\\Travelo.Infrastracture\\Contexts\\UserIdentityDbContex.cs*",
+              "RelativeToolTip": "Travelo.Infrastracture\\Contexts\\UserIdentityDbContex.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-08T14:24:50.206Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Travelo.Application",
-              "DocumentMoniker": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj",
-              "RelativeDocumentMoniker": "Travelo.Application\\Travelo.Application.csproj",
-              "ToolTip": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Application\\Travelo.Application.csproj",
-              "RelativeToolTip": "Travelo.Application\\Travelo.Application.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-01-08T10:47:03.014Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Travelo.Domain",
-              "DocumentMoniker": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
-              "RelativeDocumentMoniker": "Travelo.Domain\\Travelo.Domain.csproj",
-              "ToolTip": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
-              "RelativeToolTip": "Travelo.Domain\\Travelo.Domain.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-01-08T10:47:02.896Z",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Projects\\Travelo\\Travelo.API\\Program.cs",
+              "RelativeDocumentMoniker": "Travelo.API\\Program.cs",
+              "ToolTip": "D:\\Projects\\Travelo\\Travelo.API\\Program.cs*",
+              "RelativeToolTip": "Travelo.API\\Program.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-08T14:10:40.336Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Travelo.Infrastracture",
-              "DocumentMoniker": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
-              "RelativeDocumentMoniker": "Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
-              "ToolTip": "D:\\Training nov\\Travelo\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
-              "RelativeToolTip": "Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
+              "Title": "Travelo.Domain.csproj",
+              "DocumentMoniker": "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
+              "RelativeDocumentMoniker": "Travelo.Domain\\Travelo.Domain.csproj",
+              "ToolTip": "D:\\Projects\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
+              "RelativeToolTip": "Travelo.Domain\\Travelo.Domain.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-01-08T10:47:01.174Z",
+              "WhenOpened": "2026-01-08T14:05:53.984Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "D:\\Projects\\Travelo\\Travelo.Domain\\Models\\Entities\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "Travelo.Domain\\Models\\Entities\\ApplicationUser.cs",
+              "ToolTip": "D:\\Projects\\Travelo\\Travelo.Domain\\Models\\Entities\\ApplicationUser.cs",
+              "RelativeToolTip": "Travelo.Domain\\Models\\Entities\\ApplicationUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-08T14:05:50.014Z",
               "EditorCaption": ""
             }
           ]

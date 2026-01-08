@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Travelo.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07b47ea699d40c9fec2735eeec40db9a96d1669d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8648cca6be7e0d9b93c5f036ae04e8bff0fa83ef")]
 [assembly: System.Reflection.AssemblyProductAttribute("Travelo.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Travelo.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
