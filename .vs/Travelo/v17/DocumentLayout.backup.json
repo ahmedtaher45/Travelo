@@ -1,7 +1,28 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Training nov\\Travelo\\Travelo\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\PC\\source\\repos\\ahmedtaher45\\Travelo\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E1C4185A-FBDA-43F0-BA77-4D7C3CBC6796}|Travelo.Application\\Travelo.Application.csproj|c:\\users\\pc\\source\\repos\\ahmedtaher45\\travelo\\travelo.application\\common\\responses\\genericresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E1C4185A-FBDA-43F0-BA77-4D7C3CBC6796}|Travelo.Application\\Travelo.Application.csproj|solutionrelative:travelo.application\\common\\responses\\genericresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F22AB23-C989-42C3-BF1B-CB5640B54AA0}|Travelo.API\\Travelo.API.csproj|c:\\users\\pc\\source\\repos\\ahmedtaher45\\travelo\\travelo.api\\travelo.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{9F22AB23-C989-42C3-BF1B-CB5640B54AA0}|Travelo.API\\Travelo.API.csproj|solutionrelative:travelo.api\\travelo.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1C4185A-FBDA-43F0-BA77-4D7C3CBC6796}|Travelo.Application\\Travelo.Application.csproj|c:\\users\\pc\\source\\repos\\ahmedtaher45\\travelo\\travelo.application\\travelo.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{E1C4185A-FBDA-43F0-BA77-4D7C3CBC6796}|Travelo.Application\\Travelo.Application.csproj|solutionrelative:travelo.application\\travelo.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E74AA4A1-4F24-4DDF-BBF8-2ECC8F65C6B2}|Travelo.Domain\\Travelo.Domain.csproj|c:\\users\\pc\\source\\repos\\ahmedtaher45\\travelo\\travelo.domain\\travelo.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{E74AA4A1-4F24-4DDF-BBF8-2ECC8F65C6B2}|Travelo.Domain\\Travelo.Domain.csproj|solutionrelative:travelo.domain\\travelo.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1E6C7B1-CFA0-4534-8DA5-F1FDB0628B97}|Travelo.Infrastracture\\Travelo.Infrastracture.csproj|c:\\users\\pc\\source\\repos\\ahmedtaher45\\travelo\\travelo.infrastracture\\travelo.infrastracture.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F1E6C7B1-CFA0-4534-8DA5-F1FDB0628B97}|Travelo.Infrastracture\\Travelo.Infrastracture.csproj|solutionrelative:travelo.infrastracture\\travelo.infrastracture.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,8 +30,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 14,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
@@ -49,11 +86,68 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GenericResponse.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\ahmedtaher45\\Travelo\\Travelo.Application\\Common\\Responses\\GenericResponse.cs",
+              "RelativeDocumentMoniker": "Travelo.Application\\Common\\Responses\\GenericResponse.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\ahmedtaher45\\Travelo\\Travelo.Application\\Common\\Responses\\GenericResponse.cs",
+              "RelativeToolTip": "Travelo.Application\\Common\\Responses\\GenericResponse.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAIBJwB4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-08T10:47:03.884Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Travelo.API.csproj",
+              "DocumentMoniker": "C:\\Users\\PC\\Source\\Repos\\ahmedtaher45\\Travelo\\Travelo.API\\Travelo.API.csproj",
+              "RelativeDocumentMoniker": "Travelo.API\\Travelo.API.csproj",
+              "ToolTip": "C:\\Users\\PC\\Source\\Repos\\ahmedtaher45\\Travelo\\Travelo.API\\Travelo.API.csproj",
+              "RelativeToolTip": "Travelo.API\\Travelo.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-08T10:47:03.117Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Travelo.Application.csproj",
+              "DocumentMoniker": "C:\\Users\\PC\\Source\\Repos\\ahmedtaher45\\Travelo\\Travelo.Application\\Travelo.Application.csproj",
+              "RelativeDocumentMoniker": "Travelo.Application\\Travelo.Application.csproj",
+              "ToolTip": "C:\\Users\\PC\\Source\\Repos\\ahmedtaher45\\Travelo\\Travelo.Application\\Travelo.Application.csproj",
+              "RelativeToolTip": "Travelo.Application\\Travelo.Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-08T10:47:03.014Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Travelo.Domain.csproj",
+              "DocumentMoniker": "C:\\Users\\PC\\Source\\Repos\\ahmedtaher45\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
+              "RelativeDocumentMoniker": "Travelo.Domain\\Travelo.Domain.csproj",
+              "ToolTip": "C:\\Users\\PC\\Source\\Repos\\ahmedtaher45\\Travelo\\Travelo.Domain\\Travelo.Domain.csproj",
+              "RelativeToolTip": "Travelo.Domain\\Travelo.Domain.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-08T10:47:02.896Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Travelo.Infrastracture.csproj",
+              "DocumentMoniker": "C:\\Users\\PC\\Source\\Repos\\ahmedtaher45\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
+              "RelativeDocumentMoniker": "Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
+              "ToolTip": "C:\\Users\\PC\\Source\\Repos\\ahmedtaher45\\Travelo\\Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
+              "RelativeToolTip": "Travelo.Infrastracture\\Travelo.Infrastracture.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-08T10:47:01.174Z"
             }
           ]
         }
