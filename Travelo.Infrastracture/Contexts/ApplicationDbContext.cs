@@ -11,7 +11,7 @@ using Travelo.Domain.Models.Entities;
 
 namespace Travelo.Infrastracture.Contexts
 {
-    public class UserIdentityDbContex(DbContextOptions<UserIdentityDbContex> options) : IdentityDbContext<ApplicationUser>(options)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         override protected void OnModelCreating(ModelBuilder builder)
         {
