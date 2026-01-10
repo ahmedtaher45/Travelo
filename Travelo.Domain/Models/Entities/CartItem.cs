@@ -7,12 +7,12 @@ using Travelo.Domain.Shared;
 
 namespace Travelo.Domain.Models.Entities
 {
-    public class CartItems : BaseEntity
+    public class CartItem : BaseEntity
     {
         public int CartId { get; set; }
-        public Cart Cart { get; set; }
+        public Cart? Cart { get; set; }
         public int ProductId { get; set; }
-        public MenuItem Product { get; set; }
+        public MenuItem? Product { get; set; }
         public int Quantity { get; set; }
     }
 }

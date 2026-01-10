@@ -7,17 +7,18 @@ using Travelo.Domain.Shared;
 
 namespace Travelo.Domain.Models.Entities
 {
-    public class BlogPost:BaseEntity
+    public class BlogPost :BaseEntity
     {
-        public int UserId { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public string Image { get; set; }
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
+        public string? Title { get; set; }
+        public string? Content { get; set; }
+        public string? Image { get; set; }
 
         public int Likes { get; set; }
         public int Views { get; set; }
 
-        public IEnumerable<Comment> Comments { get; set; }
+        public IEnumerable<Comment>? Comments { get; set; }
 
 
     }

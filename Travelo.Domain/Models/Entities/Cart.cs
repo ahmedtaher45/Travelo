@@ -9,11 +9,11 @@ namespace Travelo.Domain.Models.Entities
 {
     public class Cart : BaseEntity
     {
-        public int UserId { get; set; }
-
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
         public decimal TotalPrice { get; set; }
 
         public decimal SubTotal { get; set; }
-        public List<CartItems> CartItems { get; set; }
+        public List<CartItem>? CartItems { get; set; }
     }
 }

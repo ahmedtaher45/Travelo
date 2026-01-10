@@ -20,7 +20,7 @@ namespace Travelo.Domain.Models.Entities
 
         public PaymentType PaymentType { get; set; }
 
-        public IEnumerable<OrderItems> Items { get; set; } = new List<OrderItems>();>
+        public IEnumerable<OrderItem> Items { get; set; } = new List<OrderItem>();
        
     }
 }

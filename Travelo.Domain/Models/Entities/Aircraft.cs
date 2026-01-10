@@ -1,9 +1,10 @@
-﻿namespace Travelo.Domain.models.Entities
+﻿using Travelo.Domain.Shared;
+
+namespace Travelo.Domain.models.Entities
 {
-    public class Aircraft
+    public class Aircraft : BaseEntity
     {
-        public int Id { get; set; }
-        public string Model { get; set; }
+        public string? Model { get; set; }
         public int CountOfSeats { get; set; }
     }
 }
