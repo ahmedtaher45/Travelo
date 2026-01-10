@@ -9,9 +9,9 @@ namespace Travelo.Domain.Models.Entities
 {
     public class MenuCategory : BaseEntity
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Image {  get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public string? Image {  get; set; }
 
         public IEnumerable<MenuItem> items { get; set; } = new List<MenuItem>();
 

@@ -1,13 +1,14 @@
-﻿namespace Travelo.Domain.models.Entities
-{
-    public class Flight
-    {
-        public int Id { get; set; }
-        public string Airline { get; set; }
-        public string FlightNumber { get; set; }
+﻿using Travelo.Domain.Shared;
 
-        public string FromAirport { get; set; }
-        public string ToAirport { get; set; }
+namespace Travelo.Domain.models.Entities
+{
+    public class Flight : BaseEntity
+    {
+        public string? Airline { get; set; }
+        public string? FlightNumber { get; set; }
+
+        public string? FromAirport { get; set; }
+        public string? ToAirport { get; set; }
 
         public DateTime DepartureDateTime { get; set; }
         public DateTime ArrivalDateTime { get; set; }
