@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Travelo.Application.Interfaces;
+using Travelo.Application.UseCases.Auth;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Repositories;
@@ -49,6 +53,29 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
 opt.TokenLifespan = TimeSpan.FromHours(2));
 
+builder.Services.AddAuthentication(options => 
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+}
+    
+)
+.AddCookie(IdentityConstants.ApplicationScheme)
+.AddCookie(IdentityConstants.ExternalScheme)
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Google:ClientID"];
+    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+    options.SaveTokens = true;
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+    options.ClaimActions.MapJsonKey("picture", "picture");
+});
+
+builder.Services.AddScoped<IOAuthGoogleRepository, OAuthGoogleRepository>();
+builder.Services.AddScoped<IJwtTokenRepository, JwtTokenRepository>();
+builder.Services.AddScoped<GoogleLoginUseCase>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,6 +87,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
