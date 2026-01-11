@@ -11,12 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="DTOs\" />
+    <Folder Include="Interfaces\NewFolder\" />
     <Folder Include="Mapping\" />
+    <Folder Include="Services\Auth\" />
     <Folder Include="Templates\" />
-    <Folder Include="Services\" />
-    <Folder Include="UseCases\" />
   </ItemGroup>
 
 </Project>
