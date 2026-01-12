@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Auth;
 using Travelo.Application.UseCases.Auth;
 
@@ -23,5 +24,21 @@ namespace Travelo.API.Controllers
             }
             return Ok(result);
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(
+            [FromBody] LoginDTO loginDTO,
+            [FromServices] LoginUseCase loginUseCase)
+        {
+            var result = await loginUseCase.ExecuteAsync(loginDTO);
+
+            if (!result.Success)
+            {
+                return Unauthorized(result);
+            }
+
+            return Ok(result);
+        }
     }
+
 }
