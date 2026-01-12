@@ -39,6 +39,33 @@ namespace Travelo.API.Controllers
 
             return Ok(result);
         }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(
+            [FromBody] ForgotPasswordDTO forgotPasswordDTO,
+            [FromServices] ForgotPasswordUseCase forgotPasswordUseCase
+            )
+        {
+            var result = await forgotPasswordUseCase.ExecuteAsync(forgotPasswordDTO);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(
+            [FromBody] ResetPasswordDTO resetPasswordDTO,
+            [FromServices] ResetPasswordUseCase resetPasswordUseCase
+            )
+        {
+            
+            var result = await resetPasswordUseCase.ExecuteAsync(resetPasswordDTO);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 
 }

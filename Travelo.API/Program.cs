@@ -1,14 +1,16 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
 using Travelo.Application.Interfaces;
+using Travelo.Application.Services.Auth;
 using Travelo.Application.UseCases.Auth;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+
 
 var builder = WebApplication.CreateBuilder(args);
 //Database Connection
@@ -24,6 +26,7 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<Travelo.Application.Interfaces.IEmailSender, EmailSender>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<RegisterUseCase>();
@@ -74,6 +77,12 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
 opt.TokenLifespan = TimeSpan.FromHours(2));
+
+var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfigruration>();
+builder.Services.AddSingleton(emailConfig);
+//builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<ForgotPasswordUseCase>();
+builder.Services.AddScoped<ResetPasswordUseCase>();
 
 var app = builder.Build();
 

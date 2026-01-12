@@ -12,5 +12,8 @@ namespace Travelo.Application.Interfaces
     {
         Task<GenericResponse<string>> RegisterAsync(RegisterDTO registerDTO);
         Task<GenericResponse<AuthResponseDTO>> LoginAsync(LoginDTO loginDTO);
+        Task<GenericResponse<string>> ForgotPasswordAsync(ForgotPasswordDTO forgotPasswordDTO);
+        Task<GenericResponse<string>> ResetPasswordAsync(ResetPasswordDTO resetPasswordDTO);
+
     }
 }
