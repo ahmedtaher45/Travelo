@@ -18,5 +18,15 @@ namespace Travelo.Domain.Models.Entities
         public int CityId { get; set; }
         public City? City { get; set; }
 
+
+        // ==========================================
+
+        public string Name { get; set; } = string.Empty; 
+        public decimal PricePerNight { get; set; } 
+        public double Rating { get; set; } 
+        public int ReviewsCount { get; set; } 
+        public string ImageUrl { get; set; } = string.Empty; 
+        public bool IsFeatured { get; set; } 
+
     }
 }

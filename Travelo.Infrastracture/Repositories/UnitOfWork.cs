@@ -20,9 +20,15 @@ namespace Travelo.Infrastracture.Repositories
         {
             _context = context;
             _userManager = userManager;
+
+            Hotels = new HotelRepository(_context);
+
         }
 
         public IAuthRepository Auth { get; private set; }
+
+        public IHotelRepository Hotels { get; private set; }
+
 
         public async Task<int> CompleteAsync()
         {

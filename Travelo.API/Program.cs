@@ -71,6 +71,8 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddDataProtection();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<Travelo.Application.UseCases.Hotels.GetFeaturedHotelsUseCase>();
+
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
 opt.TokenLifespan = TimeSpan.FromHours(2));

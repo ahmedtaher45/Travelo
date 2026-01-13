@@ -7,14 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
+    <Compile Remove="Interfaces\NewFolder\**" />
+    <Compile Remove="Mapping\**" />
+    <Compile Remove="Services\**" />
+    <Compile Remove="Templates\**" />
+    <EmbeddedResource Remove="Interfaces\NewFolder\**" />
+    <EmbeddedResource Remove="Mapping\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <EmbeddedResource Remove="Templates\**" />
+    <None Remove="Interfaces\NewFolder\**" />
+    <None Remove="Mapping\**" />
+    <None Remove="Services\**" />
+    <None Remove="Templates\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\NewFolder\" />
-    <Folder Include="Mapping\" />
-    <Folder Include="Services\Auth\" />
-    <Folder Include="Templates\" />
+    <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
   </ItemGroup>
 
 </Project>
