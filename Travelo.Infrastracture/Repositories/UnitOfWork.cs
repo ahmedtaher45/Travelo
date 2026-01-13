@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,12 +15,17 @@ namespace Travelo.Infrastracture.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
 
-        public UnitOfWork(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UnitOfWork(ApplicationDbContext context, UserManager<ApplicationUser> userManager,IEmailSender emailSender,IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
+            _emailSender = emailSender;
+            _configuration = configuration;
+            Auth = new AuthRepository(_userManager, _context, _configuration, _emailSender);
 
             Hotels = new HotelRepository(_context);
 

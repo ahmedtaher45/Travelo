@@ -125,6 +125,9 @@ namespace Travelo.Infrastracture.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("PasswordRestCode")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 

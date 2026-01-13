@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Travelo.Domain.Models.Entities
 {
-    public class ApplicationUser: IdentityUser
+    public class ApplicationUser : IdentityUser
     {
-
+        public bool PasswordRestCode { get; set; }
     }
 }

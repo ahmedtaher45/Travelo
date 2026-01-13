@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templates\Email\ResetPasswordEmail.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Email\ResetPasswordEmail.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Interfaces\NewFolder\**" />
+    <EmbeddedResource Remove="Interfaces\NewFolder\**" />
+    <None Remove="Interfaces\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
     <Compile Remove="Interfaces\NewFolder\**" />
     <Compile Remove="Mapping\**" />
     <Compile Remove="Services\**" />
@@ -22,6 +37,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Mapping\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
     <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
   </ItemGroup>
 
