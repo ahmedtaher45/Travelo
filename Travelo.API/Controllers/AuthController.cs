@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Travelo.Application.Common.Responses;
 using System.Security.Claims;
 using Travelo.Application.DTOs.Auth;
 using Travelo.Application.Interfaces;
@@ -14,7 +15,7 @@ namespace Travelo.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(
             [FromBody] RegisterDTO registerDTO,
             [FromServices] RegisterUseCase registerUseCase
@@ -28,6 +29,23 @@ namespace Travelo.API.Controllers
             }
             return Ok(result);
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(
+            [FromBody] LoginDTO loginDTO,
+            [FromServices] LoginUseCase loginUseCase)
+        {
+            var result = await loginUseCase.ExecuteAsync(loginDTO);
+
+            if (!result.Success)
+            {
+                return Unauthorized(result);
+            }
+
+            return Ok(result);
+        }
+    }
+
 
         [HttpGet("Google-Login")]
         public async Task<IActionResult> GoogleLogin() 

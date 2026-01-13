@@ -11,5 +11,6 @@ namespace Travelo.Application.Interfaces
     public interface IAuthRepository
     {
         Task<GenericResponse<string>> RegisterAsync(RegisterDTO registerDTO);
+        Task<GenericResponse<AuthResponseDTO>> LoginAsync(LoginDTO loginDTO);
     }
 }
