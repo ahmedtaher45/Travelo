@@ -20,6 +20,8 @@ namespace Travelo.Infrastracture.Repositories
         {
             _context = context;
             _userManager = userManager;
+
+            Auth = new AuthRepository(_userManager, _context);
         }
 
         public IAuthRepository Auth { get; private set; }
