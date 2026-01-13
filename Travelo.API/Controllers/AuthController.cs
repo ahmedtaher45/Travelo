@@ -9,7 +9,7 @@ namespace Travelo.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(
             [FromBody] RegisterDTO registerDTO,
             [FromServices] RegisterUseCase registerUseCase
