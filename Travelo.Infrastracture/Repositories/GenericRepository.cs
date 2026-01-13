@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Travelo.Application.Interfaces;
@@ -12,10 +13,12 @@ namespace Travelo.Infrastracture.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly ApplicationDbContext context;
+        protected readonly DbSet<T> _set;
 
         public GenericRepository(ApplicationDbContext _context)
         {
             context = _context;
+            _set = context.Set<T>();
         }
         public virtual async Task<IEnumerable<T>> GetAll(
             int? pageNum = null,
@@ -49,7 +52,10 @@ namespace Travelo.Infrastracture.Repositories
             return await query
                 .FirstOrDefaultAsync(e=> EF.Property<int>(e, "Id") == id);
         }
-
+        public async Task<List<T>> GetManyAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _set.Where(predicate).AsNoTracking().ToListAsync();
+        }
         public virtual async Task Add(T entity)
         {
             await context.Set<T>().AddAsync(entity);
