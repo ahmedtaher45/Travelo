@@ -76,7 +76,7 @@ namespace Travelo.Infrastracture.Repositories
                     return GenericResponse<string>.FailureResponse("User ID is null after creation");
                 }
 
-                //await userManager.AddToRoleAsync(user, "User");
+                await userManager.AddToRoleAsync(user, "User");
 
             }
             catch (Exception ex)

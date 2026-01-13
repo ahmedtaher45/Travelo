@@ -13,6 +13,7 @@ using Travelo.Application.Services.Auth;
 using Travelo.Application.UseCases.Auth;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
+using Travelo.Infrastracture.Identity;
 using Travelo.Infrastracture.Repositories;
 
 
@@ -135,4 +136,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await IdentitySeeder.SeedRoles(roleManager);
+}
 app.Run();
