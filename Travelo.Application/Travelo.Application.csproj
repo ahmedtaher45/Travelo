@@ -7,10 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Templates\Email\ResetPasswordEmail.html" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <EmbeddedResource Include="Templates\Email\ConfirmEmail.html" />
     <EmbeddedResource Include="Templates\Email\ResetPasswordEmail.html" />
   </ItemGroup>
 
@@ -24,16 +21,14 @@
     <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
     <Compile Remove="Interfaces\NewFolder\**" />
     <Compile Remove="Mapping\**" />
-    <Compile Remove="Services\**" />
-    <Compile Remove="Templates\**" />
     <EmbeddedResource Remove="Interfaces\NewFolder\**" />
     <EmbeddedResource Remove="Mapping\**" />
-    <EmbeddedResource Remove="Services\**" />
-    <EmbeddedResource Remove="Templates\**" />
     <None Remove="Interfaces\NewFolder\**" />
     <None Remove="Mapping\**" />
-    <None Remove="Services\**" />
-    <None Remove="Templates\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Templates\Email\ConfirmEmail.html" />
   </ItemGroup>
 
   <ItemGroup>

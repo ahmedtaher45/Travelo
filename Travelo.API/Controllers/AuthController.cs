@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Security.Claims;
 using Travelo.Application.Common.Responses;
-using System.Security.Claims;
-using System.Security.Claims;
 using Travelo.Application.DTOs.Auth;
 using Travelo.Application.Interfaces;
 using Travelo.Application.UseCases.Auth;
@@ -27,6 +28,27 @@ namespace Travelo.API.Controllers
 
             return !result.Success ? BadRequest(result) : Ok(result);
         }
+        [HttpPost("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(
+            [FromBody] ConfirmEmailDTO confirmEmailDTO,
+            [FromServices] ConfirmEmailUseCase confirmEmailUseCase
+            )
+        {
+            var result = await confirmEmailUseCase.ExecuteAsync(confirmEmailDTO);
+
+            return !result.Success ? BadRequest(result) : Ok(result);
+        }
+        [HttpPost("resend-confirmation-email")]
+        public async Task<IActionResult> ResendConfirmationEmail(
+            [FromBody] ResendConfirmEmailDTO resendConfirmationEmailDTO,
+            [FromServices] ResendConfirmEmailUseCase resendConfirmationEmailUseCase
+            )
+        {
+            var result = await resendConfirmationEmailUseCase.ExecuteAsync(resendConfirmationEmailDTO);
+            return !result.Success ? BadRequest(result) : Ok(result);
+        }   
+
+
         [Authorize]
         [HttpPatch("change-password")]
         public async Task<IActionResult> ChangePassword (
@@ -85,7 +107,7 @@ namespace Travelo.API.Controllers
             }
             return Ok(result);
         }
-    }
+    
 
 
         [HttpGet("Google-Login")]

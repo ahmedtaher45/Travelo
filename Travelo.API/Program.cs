@@ -119,6 +119,8 @@ builder.Services.AddSingleton(emailConfig);
 //builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<ForgotPasswordUseCase>();
 builder.Services.AddScoped<ResetPasswordUseCase>();
+builder.Services.AddScoped<ConfirmEmailUseCase>();
+builder.Services.AddScoped<ResendConfirmEmailUseCase>();
 
 var app = builder.Build();
 
