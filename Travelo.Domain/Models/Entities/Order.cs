@@ -10,7 +10,7 @@ namespace Travelo.Domain.Models.Entities
 {
     public class Order : BaseEntity
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public OrderStatus Status { get; set; }
 

@@ -4,6 +4,8 @@
     {
          IAuthRepository Auth { get; }
          IHotelRepository Hotels { get; }
+        IGenericRepository<T> Repository<T>() where T : class;
+        IReviewRepository Reviews { get; }
 
         Task<int> CompleteAsync();
         Task SaveChangesAsync();
