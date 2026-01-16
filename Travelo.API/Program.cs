@@ -84,6 +84,8 @@ builder.Services.AddScoped(
     typeof(GenericRepository<>)
 );
 
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
 builder.Services.AddScoped<RegisterUseCase>();
 builder.Services.AddScoped<Travelo.Application.UseCases.Hotels.GetFeaturedHotelsUseCase>();
 
