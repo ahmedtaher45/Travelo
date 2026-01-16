@@ -2,10 +2,11 @@
 {
     public interface IUnitOfWork
     {
-         IAuthRepository Auth { get; }
-         IHotelRepository Hotels { get; }
+        IAuthRepository Auth { get; }
+        IHotelRepository Hotels { get; }
+        ICityRepository Cities { get; }
 
-        Task<int> CompleteAsync();
-        Task SaveChangesAsync();
+        Task<int> CompleteAsync ();
+        Task SaveChangesAsync ();
     }
 }

@@ -1,48 +1,57 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Templates\Email\ResetPasswordEmail.html" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Compile Include="obj\Debug\net9.0\.NETCoreApp,Version=v9.0.AssemblyAttributes.cs" />
+	  <Compile Include="obj\Debug\net9.0\Travelo.Application.AssemblyInfo.cs" />
+	  <Compile Include="obj\Debug\net9.0\Travelo.Application.GlobalUsings.g.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Templates\Email\ResetPasswordEmail.html" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Content Include="bin\Debug\net9.0\Travelo.Application.deps.json" />
+	  <Content Include="obj\Debug\net9.0\Travelo.Application.csproj.FileListAbsolute.txt" />
+	  <Content Include="obj\Debug\net9.0\Travelo.Application.sourcelink.json" />
+	  <Content Include="obj\project.assets.json" />
+	  <Content Include="obj\Travelo.Application.csproj.nuget.dgspec.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Interfaces\NewFolder\**" />
-    <EmbeddedResource Remove="Interfaces\NewFolder\**" />
-    <None Remove="Interfaces\NewFolder\**" />
-  </ItemGroup>
+	
+	<ItemGroup>
+		<EmbeddedResource Include="Templates\Email\ResetPasswordEmail.html" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
-    <Compile Remove="Interfaces\NewFolder\**" />
-    <Compile Remove="Mapping\**" />
-    <Compile Remove="Services\**" />
-    <Compile Remove="Templates\**" />
-    <EmbeddedResource Remove="Interfaces\NewFolder\**" />
-    <EmbeddedResource Remove="Mapping\**" />
-    <EmbeddedResource Remove="Services\**" />
-    <EmbeddedResource Remove="Templates\**" />
-    <None Remove="Interfaces\NewFolder\**" />
-    <None Remove="Mapping\**" />
-    <None Remove="Services\**" />
-    <None Remove="Templates\**" />
-  </ItemGroup>
+	
+	<ItemGroup>
+	  <None Include="bin\Debug\net9.0\Travelo.Application.dll" />
+	  <None Include="bin\Debug\net9.0\Travelo.Application.pdb" />
+	  <None Include="bin\Debug\net9.0\Travelo.Domain.dll" />
+	  <None Include="bin\Debug\net9.0\Travelo.Domain.pdb" />
+	  <None Include="obj\Debug\net9.0\refint\Travelo.Application.dll" />
+	  <None Include="obj\Debug\net9.0\ref\Travelo.Application.dll" />
+	  <None Include="obj\Debug\net9.0\Travelo..9D40E495.Up2Date" />
+	  <None Include="obj\Debug\net9.0\Travelo.Application.AssemblyInfoInputs.cache" />
+	  <None Include="obj\Debug\net9.0\Travelo.Application.assets.cache" />
+	  <None Include="obj\Debug\net9.0\Travelo.Application.csproj.AssemblyReference.cache" />
+	  <None Include="obj\Debug\net9.0\Travelo.Application.csproj.BuildWithSkipAnalyzers" />
+	  <None Include="obj\Debug\net9.0\Travelo.Application.csproj.CoreCompileInputs.cache" />
+	  <None Include="obj\Debug\net9.0\Travelo.Application.dll" />
+	  <None Include="obj\Debug\net9.0\Travelo.Application.GeneratedMSBuildEditorConfig.editorconfig" />
+	  <None Include="obj\Debug\net9.0\Travelo.Application.pdb" />
+	  <None Include="obj\project.nuget.cache" />
+	  <None Include="obj\Travelo.Application.csproj.nuget.g.props" />
+	  <None Include="obj\Travelo.Application.csproj.nuget.g.targets" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
-    <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
-  </ItemGroup>
+	<!-- References -->
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+		<PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+		<ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
+	</ItemGroup>
 
 </Project>

@@ -10,6 +10,8 @@ using System.Text;
 using Travelo.API.Middleware;
 using Travelo.Application.Interfaces;
 using Travelo.Application.Services.Auth;
+using Travelo.Application.Services.City;
+using Travelo.Application.Services.FileService;
 using Travelo.Application.UseCases.Auth;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
@@ -35,6 +37,9 @@ builder.Services.AddScoped<Travelo.Application.Interfaces.IEmailSender, EmailSen
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<RegisterUseCase>();
+builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<ICityService, CityService>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
 //Identity Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
@@ -60,21 +65,21 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddDefaultTokenProviders();
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme=JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme=JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
+    options.TokenValidationParameters=new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ClockSkew = TimeSpan.Zero 
+        ValidateIssuer=true,
+        ValidateAudience=true,
+        ValidateLifetime=true,
+        ValidateIssuerSigningKey=true,
+        ValidIssuer=jwtSettings["Issuer"],
+        ValidAudience=jwtSettings["Audience"],
+        IssuerSigningKey=new SymmetricSecurityKey(key),
+        ClockSkew=TimeSpan.Zero
     };
 });
 builder.Services.AddDataProtection();
@@ -91,20 +96,20 @@ builder.Services.AddScoped<Travelo.Application.UseCases.Hotels.GetFeaturedHotels
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
 opt.TokenLifespan=TimeSpan.FromHours(2));
 
-builder.Services.AddAuthentication(options => 
+builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    options.DefaultScheme=CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme=GoogleDefaults.AuthenticationScheme;
 }
-    
+
 )
 .AddCookie(IdentityConstants.ApplicationScheme)
 .AddCookie(IdentityConstants.ExternalScheme)
 .AddGoogle(options =>
 {
-    options.ClientId = builder.Configuration["Google:ClientID"];
-    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
-    options.SaveTokens = true;
+    options.ClientId=builder.Configuration["Google:ClientID"];
+    options.ClientSecret=builder.Configuration["Google:ClientSecret"];
+    options.SaveTokens=true;
     options.Scope.Add("profile");
     options.Scope.Add("email");
     options.ClaimActions.MapJsonKey("picture", "picture");
@@ -128,6 +133,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+app.UseStaticFiles();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
