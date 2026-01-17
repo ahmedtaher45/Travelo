@@ -28,5 +28,7 @@ namespace Travelo.Domain.Models.Entities
         public string ImageUrl { get; set; } = string.Empty; 
         public bool IsFeatured { get; set; } 
 
+
+        public IEnumerable<Review>? Reviews { get; set; } = new List<Review>();
     }
 }
