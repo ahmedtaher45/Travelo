@@ -35,10 +35,6 @@ namespace Travelo.Infrastracture.Contexts
             builder.Ignore<IdentityUserClaim<string>>();
             builder.Ignore<IdentityUserToken<string>>();
             builder.Ignore<IdentityUserClaim<string>>();
-<<<<<<< HEAD
-=======
-
->>>>>>> Add-Featured-Hotels
         }
     }
 }

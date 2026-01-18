@@ -909,15 +909,13 @@ namespace Travelo.Infrastracture.Migrations
                     b.Navigation("CartItems");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Travelo.Domain.Models.Entities.City", b =>
                 {
                     b.Navigation("Hotels");
-=======
+                });
             modelBuilder.Entity("Travelo.Domain.Models.Entities.Hotel", b =>
                 {
                     b.Navigation("Rooms");
->>>>>>> Add-Featured-Hotels
                 });
 
             modelBuilder.Entity("Travelo.Domain.Models.Entities.MenuCategory", b =>

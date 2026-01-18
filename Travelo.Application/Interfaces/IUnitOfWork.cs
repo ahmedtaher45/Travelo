@@ -1,4 +1,6 @@
-﻿namespace Travelo.Application.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Travelo.Application.Interfaces
 {
     public interface IUnitOfWork
     {
