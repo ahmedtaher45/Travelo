@@ -21,6 +21,9 @@ namespace Travelo.Application.DTOs.Hotels
         public List<string> Gallery { get; set; } = new(); 
         public List<string> Amenities { get; set; } = new();
         public List<RoomDto> Rooms { get; set; } = new();
+        public HotelPolicyDto Policies { get; set; }
+        public List<ThingToDoDto> ThingsToDo { get; set; } = new();
+        public List<HotelCardDto> SimilarHotels { get; set; } = new();
 
 
     }
