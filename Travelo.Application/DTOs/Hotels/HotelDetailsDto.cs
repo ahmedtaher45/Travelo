@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Travelo.Application.DTOs.Review;
 
 namespace Travelo.Application.DTOs.Hotels
 {
@@ -24,6 +25,8 @@ namespace Travelo.Application.DTOs.Hotels
         public HotelPolicyDto Policies { get; set; }
         public List<ThingToDoDto> ThingsToDo { get; set; } = new();
         public List<HotelCardDto> SimilarHotels { get; set; } = new();
+
+        public HotelReviewDto ReviewsData { get; set; }
 
 
     }

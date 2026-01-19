@@ -125,6 +125,9 @@ namespace Travelo.Infrastracture.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("PasswordRestCode")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -282,6 +285,10 @@ namespace Travelo.Infrastracture.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -881,7 +888,7 @@ namespace Travelo.Infrastracture.Migrations
             modelBuilder.Entity("Travelo.Domain.Models.Entities.Hotel", b =>
                 {
                     b.HasOne("Travelo.Domain.Models.Entities.City", "City")
-                        .WithMany()
+                        .WithMany("Hotels")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -969,6 +976,10 @@ namespace Travelo.Infrastracture.Migrations
                     b.Navigation("CartItems");
                 });
 
+            modelBuilder.Entity("Travelo.Domain.Models.Entities.City", b =>
+                {
+                    b.Navigation("Hotels");
+                });
             modelBuilder.Entity("Travelo.Domain.Models.Entities.Hotel", b =>
                 {
                     b.Navigation("Rooms");

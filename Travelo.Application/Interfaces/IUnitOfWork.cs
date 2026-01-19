@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Travelo.Application.Interfaces
+﻿namespace Travelo.Application.Interfaces
 {
     public interface IUnitOfWork
     {
-         IAuthRepository Auth { get; }
-         IHotelRepository Hotels { get; }
+        IAuthRepository Auth { get; }
+        IHotelRepository Hotels { get; }
+        ICityRepository Cities { get; }
+        IGenericRepository<T> Repository<T> () where T : class;
+        IReviewRepository Reviews { get; }
 
-        Task<int> CompleteAsync();
-        Task SaveChangesAsync();
+        Task<int> CompleteAsync ();
+        Task SaveChangesAsync ();
     }
 }

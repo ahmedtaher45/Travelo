@@ -33,5 +33,7 @@ namespace Travelo.Domain.Models.Entities
 
 
 
+
+        public IEnumerable<Review>? Reviews { get; set; } = new List<Review>();
     }
 }
