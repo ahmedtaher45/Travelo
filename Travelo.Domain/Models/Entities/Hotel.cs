@@ -31,5 +31,7 @@ namespace Travelo.Domain.Models.Entities
         public ICollection<Room> Rooms { get; set; } = new List<Room>();
 
 
+
+        public IEnumerable<Review>? Reviews { get; set; } = new List<Review>();
     }
 }
