@@ -29,6 +29,8 @@ namespace Travelo.Domain.Models.Entities
         public bool IsFeatured { get; set; }
         public string Description { get; set; } = string.Empty;
         public ICollection<Room> Rooms { get; set; } = new List<Room>();
+        public ICollection<ThingToDo> ThingsToDo { get; set; } = new List<ThingToDo>();
+
 
 
     }
