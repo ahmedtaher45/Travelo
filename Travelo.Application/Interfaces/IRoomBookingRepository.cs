@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Travelo.Application.Interfaces
+﻿namespace Travelo.Application.Interfaces
 {
-    internal interface IRoomBookingRepository
+    public interface IRoomBookingRepository : IGenericRepository<Domain.Models.Entities.RoomBooking>
     {
     }
 }

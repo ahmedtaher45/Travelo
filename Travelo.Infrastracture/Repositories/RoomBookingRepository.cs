@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Travelo.Infrastracture.Contexts;
 
 namespace Travelo.Infrastracture.Repositories
 {
-    internal class RoomBookingRepository
+    public class RoomBookingRepository : GenericRepository<Travelo.Domain.Models.Entities.RoomBooking>, Travelo.Application.Interfaces.IRoomBookingRepository
     {
+        public RoomBookingRepository (ApplicationDbContext _context) : base(_context)
+        {
+        }
     }
 }
