@@ -11,22 +11,46 @@ namespace Travelo.API.Controllers
     {
 
         private readonly GetFeaturedHotelsUseCase _getFeaturedHotelsUseCase;
-
-        public HotelsController(GetFeaturedHotelsUseCase getFeaturedHotelsUseCase)
+        private readonly GetHotelByIdUseCase _getHotelByIdUseCase;
+        public HotelsController(
+            GetFeaturedHotelsUseCase getFeaturedHotelsUseCase,
+            GetHotelByIdUseCase getHotelByIdUseCase)
         {
             _getFeaturedHotelsUseCase = getFeaturedHotelsUseCase;
+            _getHotelByIdUseCase = getHotelByIdUseCase;
         }
+
 
         [HttpGet("featured")]
-        // الرابط النهائي: GET /api/hotels/featured
         public async Task<IActionResult> GetFeatured([FromQuery] PaginationRequest request)
         {
-            // بنبعت الطلب للـ UseCase
-            var result = await _getFeaturedHotelsUseCase.ExecuteAsync(request);
+            var response = await _getFeaturedHotelsUseCase.ExecuteAsync(request);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
 
-            // بنرد بـ 200 OK ومعاه الداتا
-            return Ok(result);
+            return BadRequest(response);
         }
 
+
+       
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var response = await _getHotelByIdUseCase.ExecuteAsync(id);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            if (response.Message == "Hotel not found")
+            {
+                return NotFound(response);
+            }
+
+            return BadRequest(response);
+
+        }
     }
 }

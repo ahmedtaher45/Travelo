@@ -1,17 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Auth;
 using Travelo.Application.Interfaces;
@@ -26,13 +21,18 @@ namespace Travelo.Infrastracture.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
-
-        public AuthRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext context,IConfiguration configuration, IEmailSender emailSender)
+        public AuthRepository (UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailSender)
         {
-            this.userManager = userManager;
-            _context = context;
-            _configuration = configuration;
-            _emailSender = emailSender;
+            this.userManager=userManager;
+            _context=context;
+            _configuration=configuration;
+            _emailSender=emailSender;
+        }
+
+        public AuthRepository (ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context=context;
+            this.userManager=userManager;
         }
 
         public async Task<GenericResponse<string>> ChangePasswordAsync (ChangePasswordDTO changePasswordDTO, string userId)
@@ -94,11 +94,11 @@ namespace Travelo.Infrastracture.Repositories
 
             return GenericResponse<string>.SuccessResponse("Check your Email for Confirmation");
         }
-        public async Task<GenericResponse<AuthResponseDTO>> LoginAsync(LoginDTO loginDTO)
+        public async Task<GenericResponse<AuthResponseDTO>> LoginAsync (LoginDTO loginDTO)
         {
             var user = await userManager.FindByEmailAsync(loginDTO.Email);
 
-            if (user == null || !await userManager.CheckPasswordAsync(user, loginDTO.Password))
+            if (user==null||!await userManager.CheckPasswordAsync(user, loginDTO.Password))
             {
                 return GenericResponse<AuthResponseDTO>.FailureResponse("Invalid Email or Password");
             }
@@ -107,14 +107,14 @@ namespace Travelo.Infrastracture.Repositories
 
             var authData = new AuthResponseDTO
             {
-                Token = token,
-                UserName = user.UserName!,
-                Email = user.Email!
+                Token=token,
+                UserName=user.UserName!,
+                Email=user.Email!
             };
 
             return GenericResponse<AuthResponseDTO>.SuccessResponse(authData, "Login Successful");
         }
-        private string GenerateJwtToken(ApplicationUser user)
+        private string GenerateJwtToken (ApplicationUser user)
         {
             var claims = new List<Claim>
             {
@@ -137,7 +137,7 @@ namespace Travelo.Infrastracture.Repositories
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        public async Task<GenericResponse<string>> ForgotPasswordAsync(ForgotPasswordDTO forgotPasswordDTO)
+        public async Task<GenericResponse<string>> ForgotPasswordAsync (ForgotPasswordDTO forgotPasswordDTO)
         {
             if (string.IsNullOrWhiteSpace(forgotPasswordDTO.Email))
             {
@@ -148,7 +148,7 @@ namespace Travelo.Infrastracture.Repositories
             {
                 var user = await userManager.FindByEmailAsync(forgotPasswordDTO.Email);
 
-                if (user == null)
+                if (user==null)
                 {
                     return GenericResponse<string>.FailureResponse(
                         "Invalid Email"
@@ -185,20 +185,20 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                var errorMessage = ex.InnerException != null
+                var errorMessage = ex.InnerException!=null
                     ? ex.InnerException.Message
                     : ex.Message;
 
                 return GenericResponse<string>.FailureResponse(
-                    "Error: " + errorMessage + " | StackTrace: " + ex.StackTrace
+                    "Error: "+errorMessage+" | StackTrace: "+ex.StackTrace
                 );
             }
         }
 
-        public async Task<GenericResponse<string>> ResetPasswordAsync(ResetPasswordDTO resetPasswordDTO)
+        public async Task<GenericResponse<string>> ResetPasswordAsync (ResetPasswordDTO resetPasswordDTO)
         {
             var user = await userManager.FindByEmailAsync(resetPasswordDTO.Email);
-            if (user == null)
+            if (user==null)
                 return GenericResponse<string>.FailureResponse("User not found.");
 
             var Token = WebUtility.UrlDecode(resetPasswordDTO.Token);

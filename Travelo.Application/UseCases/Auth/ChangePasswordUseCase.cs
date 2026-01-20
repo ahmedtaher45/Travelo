@@ -1,4 +1,5 @@
-﻿using Travelo.Application.Common.Responses;
+﻿using System.Threading.Tasks;
+using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Auth;
 using Travelo.Application.Interfaces;
 

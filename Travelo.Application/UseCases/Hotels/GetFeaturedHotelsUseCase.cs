@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Travelo.Application.DTOs.Common;
 using Travelo.Application.Interfaces;
 using Travelo.Application.DTOs.Hotels;
+using Travelo.Application.Common.Responses;
 
 namespace Travelo.Application.UseCases.Hotels
 {
@@ -18,26 +19,9 @@ namespace Travelo.Application.UseCases.Hotels
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<HotelCardDto>> ExecuteAsync(PaginationRequest request)
-        {
-            
-            var hotels = await _unitOfWork.Hotels.GetFeaturedHotelsAsync(request);
-
-           
-            var hotelDtos = hotels.Select(h => new HotelCardDto
-            {
-                Id = h.Id,
-                Name = h.Name,
-             
-                Location = $"{h.City?.Name ?? h.Address}, {h.Country}",
-
-                Price = h.PricePerNight,
-
-                Rating = h.Rating,
-                ImageUrl = h.ImageUrl
-            });
-
-            return hotelDtos;
+        public async Task<GenericResponse<IEnumerable<HotelCardDto>>> ExecuteAsync(PaginationRequest request)
+        {       
+            return await _unitOfWork.Hotels.GetFeaturedHotelsAsync(request);
         }
 
     }

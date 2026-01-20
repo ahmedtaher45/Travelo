@@ -16,5 +16,7 @@ namespace Travelo.Application.DTOs.Hotels
 
         public double Rating { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
+        public int ReviewsCount { get; set; }
+
     }
 }
