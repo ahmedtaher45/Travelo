@@ -15,6 +15,7 @@ using Travelo.Application.Services.City;
 using Travelo.Application.Services.FileService;
 using Travelo.Application.UseCases.Auth;
 using Travelo.Application.UseCases.Hotels;
+using Travelo.Application.UseCases.Menu;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Identity;
@@ -34,13 +35,14 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddOpenApi();
-//builder.Services.AddScoped<Travelo.Application.Interfaces.IEmailSender, EmailSender>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<RegisterUseCase>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 //Identity Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
@@ -125,11 +127,24 @@ builder.Services.AddScoped<IOAuthGoogleRepository, OAuthGoogleRepository>();
 builder.Services.AddScoped<IJwtTokenRepository, JwtTokenRepository>();
 builder.Services.AddScoped<GoogleLoginUseCase>();
 
-//var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfigruration>();
-//builder.Services.AddSingleton(emailConfig);
-//builder.Services.AddScoped<IEmailSender, EmailSender>();
+var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfigruration>();
+builder.Services.AddSingleton(emailConfig);
 builder.Services.AddScoped<ForgotPasswordUseCase>();
 builder.Services.AddScoped<ResetPasswordUseCase>();
+builder.Services.AddScoped<ConfirmEmailUseCase>();
+builder.Services.AddScoped<ResendConfirmEmailUseCase>();
+
+builder.Services.AddScoped<GetMenuUseCase>();
+builder.Services.AddScoped<GetItemUseCase>();
+builder.Services.AddScoped<AddCategoryUseCase>();
+builder.Services.AddScoped<AddItemUseCase>();
+builder.Services.AddScoped<DeleteItemUseCase>();
+builder.Services.AddScoped<UpdateItemUseCase>();
+builder.Services.AddScoped<UpdateCategoryUseCase>();
+builder.Services.AddScoped<DeleteCategoryUseCase>();
+
+
+
 
 var app = builder.Build();
 

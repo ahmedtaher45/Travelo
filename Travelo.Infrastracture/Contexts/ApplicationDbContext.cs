@@ -23,6 +23,8 @@ namespace Travelo.Infrastracture.Contexts
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<ThingToDo> ThingsToDo { get; set; }
+
 
         override protected void OnModelCreating (ModelBuilder builder)
         {

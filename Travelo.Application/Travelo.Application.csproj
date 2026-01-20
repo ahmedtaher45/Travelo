@@ -6,10 +6,30 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-	<!-- Project Reference -->
-	<ItemGroup>
-		<ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Email\ConfirmEmail.html" />
+    <EmbeddedResource Include="Templates\Email\ResetPasswordEmail.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Interfaces\NewFolder\**" />
+    <EmbeddedResource Remove="Interfaces\NewFolder\**" />
+    <None Remove="Interfaces\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
+    <Compile Remove="Interfaces\NewFolder\**" />
+    <Compile Remove="Mapping\**" />
+    <EmbeddedResource Remove="Interfaces\NewFolder\**" />
+    <EmbeddedResource Remove="Mapping\**" />
+    <None Remove="Interfaces\NewFolder\**" />
+    <None Remove="Mapping\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Templates\Email\ConfirmEmail.html" />
+  </ItemGroup>
 
 	<!-- NuGet Packages -->
 	<ItemGroup>
@@ -17,9 +37,7 @@
 		<PackageReference Include="NETCore.MailKit" Version="2.1.0" />
 	</ItemGroup>
 
-	<!-- Embedded resources -->
-	<ItemGroup>
-		<EmbeddedResource Include="Templates\Email\ResetPasswordEmail.html" />
-	</ItemGroup>
+	
+	
 
 </Project>

@@ -21,21 +21,21 @@ namespace Travelo.Infrastracture.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
-        public AuthRepository (UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailSender)
+        public AuthRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailSender)
         {
-            this.userManager=userManager;
-            _context=context;
-            _configuration=configuration;
-            _emailSender=emailSender;
+            this.userManager = userManager;
+            _context = context;
+            _configuration = configuration;
+            _emailSender = emailSender;
         }
 
-        public AuthRepository (ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AuthRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context=context;
-            this.userManager=userManager;
+            _context = context;
+            this.userManager = userManager;
         }
 
-        public async Task<GenericResponse<string>> ChangePasswordAsync (ChangePasswordDTO changePasswordDTO, string userId)
+        public async Task<GenericResponse<string>> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO, string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
             if (user is null)
@@ -48,9 +48,10 @@ namespace Travelo.Infrastracture.Repositories
                 : GenericResponse<string>.SuccessResponse("Password changed successfully");
         }
 
-        public async Task<GenericResponse<string>> RegisterAsync (RegisterDTO registerDTO)
+
+        public async Task<GenericResponse<string>> RegisterAsync(RegisterDTO registerDTO)
         {
-            if (registerDTO.Email==null)
+            if (registerDTO.Email == null)
             {
                 return GenericResponse<string>.FailureResponse("Invalid Email");
             }
@@ -58,11 +59,11 @@ namespace Travelo.Infrastracture.Repositories
 
             try
             {
-                user=new ApplicationUser
+                user = new ApplicationUser
                 {
-                    Email=registerDTO.Email,
-                    UserName=registerDTO.UserName,
-                    PhoneNumber=registerDTO.PhoneNumber
+                    Email = registerDTO.Email,
+                    UserName = registerDTO.UserName,
+                    PhoneNumber = registerDTO.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, registerDTO.Password!);
 
@@ -77,28 +78,55 @@ namespace Travelo.Infrastracture.Repositories
 
                 await userManager.AddToRoleAsync(user, "User");
 
+
             }
             catch (Exception ex)
             {
-                if (user!=null)
+                if (user != null)
                     await userManager.DeleteAsync(user);
 
-                var errorMessage = ex.InnerException!=null
+                var errorMessage = ex.InnerException != null
                       ? ex.InnerException.Message
                       : ex.Message;
 
-                return GenericResponse<string>.FailureResponse("Error: "+errorMessage+" | StackTrace: "+ex.StackTrace);
+                return GenericResponse<string>.FailureResponse("Error: " + errorMessage + " | StackTrace: " + ex.StackTrace);
             }
 
-            //await SendConfirmationEmail(user, registerDTO.ClientUri!);
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            token = WebUtility.UrlEncode(token);
+            var param = new Dictionary<string, string?>
+                {
+                    {"token",token },
+                    {"email",registerDTO.Email!}
+                };
+
+            var confirmLink = QueryHelpers.AddQueryString(registerDTO.ClientUri!, param);
+
+
+            var assembly = Assembly.Load("Travelo.Application");
+            var resourceName = "Travelo.Application.Templates.Email.ConfirmEmail.html";
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+
+            using var reader = new StreamReader(stream);
+            var htmlTemplate = await reader.ReadToEndAsync();
+
+            var emailBody = htmlTemplate.Replace("{{UserName}}", user.UserName)
+                                         .Replace("{{ConfirmationLink}}", confirmLink)
+                                         .Replace("{{Year}}", DateTime.UtcNow.Year.ToString());
+
+
+            var message = new Message(new[] { user.Email! }, "Confirm your email address ", emailBody);
+
+            await _emailSender.SendEmailAsync(message);
 
             return GenericResponse<string>.SuccessResponse("Check your Email for Confirmation");
         }
-        public async Task<GenericResponse<AuthResponseDTO>> LoginAsync (LoginDTO loginDTO)
+        public async Task<GenericResponse<AuthResponseDTO>> LoginAsync(LoginDTO loginDTO)
         {
+
             var user = await userManager.FindByEmailAsync(loginDTO.Email);
 
-            if (user==null||!await userManager.CheckPasswordAsync(user, loginDTO.Password))
+            if (user == null || !await userManager.CheckPasswordAsync(user, loginDTO.Password))
             {
                 return GenericResponse<AuthResponseDTO>.FailureResponse("Invalid Email or Password");
             }
@@ -156,6 +184,7 @@ namespace Travelo.Infrastracture.Repositories
                 }
 
                 var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                token = WebUtility.UrlEncode(token);
                 var param = new Dictionary<string, string?>
                 {
                     {"token",token },
@@ -195,7 +224,7 @@ namespace Travelo.Infrastracture.Repositories
             }
         }
 
-        public async Task<GenericResponse<string>> ResetPasswordAsync (ResetPasswordDTO resetPasswordDTO)
+        public async Task<GenericResponse<string>> ResetPasswordAsync(ResetPasswordDTO resetPasswordDTO)
         {
             var user = await userManager.FindByEmailAsync(resetPasswordDTO.Email);
             if (user==null)
@@ -214,5 +243,79 @@ namespace Travelo.Infrastracture.Repositories
 
             return GenericResponse<string>.SuccessResponse("Password has been reset successfully.");
         }
+
+        public async Task<GenericResponse<string>> ConfirmEmailAsync(ConfirmEmailDTO confirmEmailDTO)
+        {
+            var user = await userManager.FindByEmailAsync(confirmEmailDTO.Email);
+            if (user == null)
+            {
+                return await Task.FromResult(GenericResponse<string>.FailureResponse("User not found."));
+            }
+
+            if (user.EmailConfirmed)
+            {
+                return GenericResponse<string>.SuccessResponse("Email already confirmed.");
+            }
+
+            var Token = WebUtility.UrlDecode(confirmEmailDTO.Token);
+
+            var result = await userManager.ConfirmEmailAsync(user, Token);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return await Task.FromResult(GenericResponse<string>.FailureResponse($"Email confirmation failed:  {errors}"));
+
+
+            }
+            return await Task.FromResult(GenericResponse<string>.SuccessResponse("Email confirmed successfully."));
+        }
+
+        public async Task<GenericResponse<string>> ResendConfirmationEmailAsync(ResendConfirmEmailDTO resendConfirmEmailDTO)
+        {
+            var user = await userManager.FindByEmailAsync(resendConfirmEmailDTO.Email);
+
+            if (user == null)
+            {
+                return GenericResponse<string>.FailureResponse("User not found.");
+            }
+
+            if (user.EmailConfirmed)
+            {
+                return GenericResponse<string>.SuccessResponse("Email already confirmed.");
+            }
+
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            token = WebUtility.UrlEncode(token);
+
+            var param = new Dictionary<string, string?>
+            {
+                { "token", token },
+                { "email", user.Email }
+            };
+
+            var confirmLink = QueryHelpers.AddQueryString(resendConfirmEmailDTO.ClientURI!, param);
+
+            var assembly = Assembly.Load("Travelo.Application");
+            var resourceName = "Travelo.Application.Templates.Email.ConfirmEmail.html";
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+
+            using var reader = new StreamReader(stream);
+            var htmlTemplate = await reader.ReadToEndAsync();
+
+            var emailBody = htmlTemplate.Replace("{{UserName}}", user.UserName)
+                                         .Replace("{{ConfirmationLink}}", confirmLink)
+                                         .Replace("{{Year}}", DateTime.UtcNow.Year.ToString());
+
+
+            var message = new Message(new[] { user.Email! }, "Confirm your email address ", emailBody);
+
+            await _emailSender.SendEmailAsync(message);
+
+
+            return GenericResponse<string>.SuccessResponse("Confirmation email resent successfully.");
+        }
+
+
+
     }
 }

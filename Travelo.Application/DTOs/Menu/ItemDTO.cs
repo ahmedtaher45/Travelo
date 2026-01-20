@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Travelo.Domain.Shared;
 
-namespace Travelo.Domain.Models.Entities
+namespace Travelo.Application.DTOs.Menu
 {
-    public class MenuItem : BaseEntity
+    public class ItemDTO
     {
-        public int CategoryId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string? Description { get; set; }
         public List<string>? Images { get; set; }
-
         public int Calories { get; set; }
-        public int PrepTime { get; set; }
-        public int Stock { get; set; }
-
+        public int? PrepTime { get; set; }
+        public int? Stock { get; set; }
         public List<string>? Ingredients { get; set; }
-
-
     }
+
+
+
 }
