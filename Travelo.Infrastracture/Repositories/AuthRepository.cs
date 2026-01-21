@@ -10,6 +10,7 @@ using System.Text;
 using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Auth;
 using Travelo.Application.Interfaces;
+using Travelo.Application.Services.Auth;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 

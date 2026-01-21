@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 using Travelo.Domain.models.Entities;
 using Travelo.Domain.Models.Entities;
 
@@ -30,13 +31,14 @@ namespace Travelo.Infrastracture.Contexts
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<Booking>()
+                   .HasOne(b => b.Ticket)
+                   .WithOne(t => t.Booking)
+                   .HasForeignKey<Ticket>(t => t.BookingId);
             builder.Entity<ApplicationUser>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-            builder.Ignore<IdentityUserLogin<string>>();
-            builder.Ignore<IdentityUserClaim<string>>();
-            builder.Ignore<IdentityUserToken<string>>();
-            builder.Ignore<IdentityUserClaim<string>>();
+       
         }
     }
 }
