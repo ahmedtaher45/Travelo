@@ -14,9 +14,15 @@ namespace Travelo.Application.UseCases.Menu
     public class UpdateItemUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
+<<<<<<< HEAD
         private readonly IFileServices _fileService;
 
         public UpdateItemUseCase(IUnitOfWork unitOfWork ,IFileServices fileService)
+=======
+        private readonly IFileService _fileService;
+
+        public UpdateItemUseCase(IUnitOfWork unitOfWork ,IFileService fileService)
+>>>>>>> origin/main
         {
             _unitOfWork = unitOfWork;
             _fileService = fileService;

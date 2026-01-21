@@ -14,9 +14,15 @@ namespace Travelo.Application.UseCases.Menu
     public class DeleteItemUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
+<<<<<<< HEAD
         private readonly IFileServices _fileService;
 
         public DeleteItemUseCase(IUnitOfWork unitOfWork , IFileServices fileService)
+=======
+        private readonly IFileService _fileService;
+
+        public DeleteItemUseCase(IUnitOfWork unitOfWork , IFileService fileService)
+>>>>>>> origin/main
         {
             _unitOfWork = unitOfWork;
             _fileService = fileService;

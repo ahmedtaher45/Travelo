@@ -7,14 +7,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+<<<<<<< HEAD
 using Stripe;
+=======
+>>>>>>> origin/main
 using System.Text;
 using Travelo.API.Middleware;
 using Travelo.Application.Interfaces;
 using Travelo.Application.Services.Auth;
 using Travelo.Application.Services.City;
 using Travelo.Application.Services.FileService;
+<<<<<<< HEAD
 using Travelo.Application.Services.Payment;
+=======
+>>>>>>> origin/main
 using Travelo.Application.UseCases.Auth;
 using Travelo.Application.UseCases.Hotels;
 using Travelo.Application.UseCases.Menu;
@@ -41,7 +47,11 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<RegisterUseCase>();
+<<<<<<< HEAD
 builder.Services.AddScoped<IFileServices, FileServices>();
+=======
+builder.Services.AddScoped<IFileService, FileService>();
+>>>>>>> origin/main
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
@@ -144,12 +154,17 @@ builder.Services.AddScoped<DeleteItemUseCase>();
 builder.Services.AddScoped<UpdateItemUseCase>();
 builder.Services.AddScoped<UpdateCategoryUseCase>();
 builder.Services.AddScoped<DeleteCategoryUseCase>();
+<<<<<<< HEAD
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 
 // Configure Stripe settings
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 StripeConfiguration.ApiKey=builder.Configuration["Stripe:SecretKey"];
+=======
+
+
+>>>>>>> origin/main
 
 
 var app = builder.Build();
