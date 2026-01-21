@@ -1,76 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Travelo.Application.Common.Responses;
+﻿using Travelo.Application.Common.Responses;
+using Travelo.Application.DTOs.Menu;
 using Travelo.Application.Interfaces;
 using Travelo.Application.Services.FileService;
 using Travelo.Domain.Models.Entities;
-using Travelo.Application.DTOs.Menu;
 
 namespace Travelo.Application.UseCases.Menu
 {
     public class AddItemUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
-<<<<<<< HEAD
         private readonly IFileServices _fileService;
 
-        public AddItemUseCase(
+        public AddItemUseCase (
             IUnitOfWork unitOfWork,
             IFileServices fileService)
-=======
-        private readonly IFileService _fileService;
-
-        public AddItemUseCase(
-            IUnitOfWork unitOfWork,
-            IFileService fileService)
->>>>>>> origin/main
         {
-            _unitOfWork = unitOfWork;
-            _fileService = fileService;
+            _unitOfWork=unitOfWork;
+            _fileService=fileService;
         }
 
-        public async Task<GenericResponse<string>> ExecuteAsync(AddItemDTO dto)
+        public async Task<GenericResponse<string>> ExecuteAsync (AddItemDTO dto)
         {
             var category = await _unitOfWork
                 .Repository<MenuCategory>()
                 .GetById(dto.CategoryId);
 
-            if (category == null || category.IsDeleted)
+            if (category==null||category.IsDeleted)
             {
                 return GenericResponse<string>
                     .FailureResponse("Category not found.");
             }
 
-            
+
             var imageNames = new List<string>();
 
-            if (dto.Images != null && dto.Images.Any())
+            if (dto.Images!=null&&dto.Images.Any())
             {
                 foreach (var image in dto.Images)
                 {
                     var fileName = await _fileService
                         .UploadFileAsync(image, "MenuItems");
 
-                    if (fileName != null)
+                    if (fileName!=null)
                         imageNames.Add(fileName);
                 }
             }
             var item = new MenuItem
             {
-                CategoryId = dto.CategoryId,
-                Name = dto.Name,
-                Price = dto.Price,
-                Description = dto.Description,
-                Images = imageNames,
-                Calories = dto.Calories,
-                PrepTime = dto.PrepTime,
-                Stock = dto.Stock,
-                Ingredients = dto.Ingredients ?? new List<string>(),
-                CreatedOn = DateTime.UtcNow
-                
+                CategoryId=dto.CategoryId,
+                Name=dto.Name,
+                Price=dto.Price,
+                Description=dto.Description,
+                Images=imageNames,
+                Calories=dto.Calories,
+                PrepTime=dto.PrepTime,
+                Stock=dto.Stock,
+                Ingredients=dto.Ingredients??new List<string>(),
+                CreatedOn=DateTime.UtcNow
+
             };
 
 

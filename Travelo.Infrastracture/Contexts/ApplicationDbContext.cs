@@ -8,7 +8,6 @@ namespace Travelo.Infrastracture.Contexts
 {
     public class ApplicationDbContext (DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-
         public DbSet<Aircraft> Aircrafts { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -24,24 +23,52 @@ namespace Travelo.Infrastracture.Contexts
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<ThingToDo> ThingsToDo { get; set; }
-<<<<<<< HEAD
         public DbSet<RoomBooking> RoomBookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
-=======
->>>>>>> origin/main
-
-
-        override protected void OnModelCreating (ModelBuilder builder)
+        public DbSet<Review> Reviews { get; set; }
+        protected override void OnModelCreating (ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             builder.Entity<ApplicationUser>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+
             builder.Ignore<IdentityUserLogin<string>>();
             builder.Ignore<IdentityUserClaim<string>>();
             builder.Ignore<IdentityUserToken<string>>();
-            builder.Ignore<IdentityUserClaim<string>>();
+            builder.Entity<Payment>()
+               .HasOne(p => p.Hotel)
+               .WithMany()
+               .HasForeignKey(p => p.HotelId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Payment>()
+                .HasOne(p => p.Room)
+                .WithMany()
+                .HasForeignKey(p => p.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Payment>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Room>()
+                .HasOne(r => r.Hotel)
+                .WithMany(h => h.Rooms)
+                .HasForeignKey(r => r.HotelId)
+                .OnDelete(DeleteBehavior.Restrict);
+            var decimalProperties = builder.Model.GetEntityTypes()
+                   .SelectMany(t => t.GetProperties())
+                   .Where(p => p.ClrType==typeof(decimal)||p.ClrType==typeof(decimal?));
+
+            foreach (var property in decimalProperties)
+            {
+                property.SetPrecision(18);
+                property.SetScale(2);
+            }
         }
     }
 }

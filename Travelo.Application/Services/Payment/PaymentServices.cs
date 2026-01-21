@@ -11,71 +11,80 @@ namespace Travelo.Application.Services.Payment
         private readonly IPaymentRepository _payment;
         private readonly IHotelRepository _hotel;
         private readonly IRoomBookingRepository _roomBooking;
+        private readonly IRoomRepository _roomRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public PaymentServices (IPaymentRepository payment, IHotelRepository hotel, IRoomBookingRepository roomBooking)
+        public PaymentServices (IPaymentRepository payment, IHotelRepository hotel, IRoomBookingRepository roomBooking, IRoomRepository roomRepository, IUnitOfWork unitOfWork)
         {
             _payment=payment;
             _hotel=hotel;
             _roomBooking=roomBooking;
+            _roomRepository=roomRepository;
+            this.unitOfWork=unitOfWork;
         }
 
         public async Task<GenericResponse<RoomBookingPaymentRes>> CreateRoomBookingPayment (RoomBookingPaymentReq req, string userId, string HTTPReq)
         {
-            var hotel = await _hotel.GetHotelByIdAsync(req.HotelId);
-            if (hotel==null)
-            {
-                return GenericResponse<RoomBookingPaymentRes>.FailureResponse("Hotel not found");
-            }
+            var hotelResponse = await _hotel.GetById(req.HotelId);
+            var room = await _roomRepository.GetById(req.RoomId);
 
-            var payment = new Travelo.Domain.Models.Entities.Payment
+            if (hotelResponse==null||hotelResponse==null)
+                return GenericResponse<RoomBookingPaymentRes>.FailureResponse("Hotel not found");
+
+            if (room==null)
+                return GenericResponse<RoomBookingPaymentRes>.FailureResponse("Room not found");
+            var payment = new Domain.Models.Entities.Payment
             {
                 UserId=userId,
-                Amount=100,
-                HotelId=req.HotelId,
                 RoomId=req.RoomId,
-                PaymentDate=DateTime.UtcNow,
-                Status=PaymentStatus.Pending
+                Amount=room.PricePerNight,
+                Status=PaymentStatus.Pending,
             };
             await _payment.Add(payment);
+            int numberOfNights = (req.CheckOutDate-req.CheckInDate).Days;
+            if (numberOfNights<=0) numberOfNights=1;
+
+            decimal totalAmount = room.PricePerNight*numberOfNights;
+
+
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes=new List<string> { "card" },
-                LineItems=new List<SessionLineItemOptions>(),
+                LineItems=new List<SessionLineItemOptions>
+            {
+            new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    Currency = "usd",
+                    UnitAmount = (long)(totalAmount * 100),
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = hotelResponse.Name,
+                        Description = $"Room Type: {room.Type}"
+                    }
+                },
+                Quantity = 1
+            }
+        },
                 Mode="payment",
                 SuccessUrl=$"{HTTPReq}/api/User/Payment/Success/{payment.Id}",
                 CancelUrl=$"{HTTPReq}/api/User/Payment/cancel",
             };
-            options.LineItems.Add(new SessionLineItemOptions
-            {
-                PriceData=new SessionLineItemPriceDataOptions
-                {
-                    Currency="usd",
-                    ProductData=new SessionLineItemPriceDataProductDataOptions
-                    {
-                        Name=hotel.Data.Name,
-                        Description=hotel.Data.Description,
-                        //    Name=Course.Title,
-                        //    Description=Course.Description,
-                        //    Images=new List<string> { $"{HTTPReq}/Images/Products/{Course.ImgeUrl}" }
-                        //},
-                    },
-                    //UnitAmount=(long)(hotel.Data.Room.Price*100),
-                },
-                Quantity=1
-            });
+
             var service = new SessionService();
-            var session = service.Create(options);
+            Session session = await service.CreateAsync(options); // Use Async
+
             payment.PaymentId=session.Id;
             _payment.Update(payment);
-            var response = new RoomBookingPaymentRes
+            await unitOfWork.SaveChangesAsync();
+            return GenericResponse<RoomBookingPaymentRes>.SuccessResponse(new RoomBookingPaymentRes
             {
                 Message="Payment initiated successfully",
                 PaymentId=payment.Id.ToString(),
                 Url=session.Url
-            };
-            return GenericResponse<RoomBookingPaymentRes>.SuccessResponse(response);
+            });
         }
-
         public async Task<GenericResponse<RoomBookingPaymentRes>>? HandelSuccessAsync (int paymentId)
         {
             var payment = await _payment.GetById(paymentId);
@@ -96,6 +105,7 @@ namespace Travelo.Application.Services.Payment
             };
             await _roomBooking.Add(roobooking);
             _payment.Update(payment);
+            await unitOfWork.SaveChangesAsync();
             return GenericResponse<RoomBookingPaymentRes>.SuccessResponse(new RoomBookingPaymentRes
             {
                 Message="Payment successful"

@@ -9,51 +9,44 @@ namespace Travelo.Application.UseCases.Menu
     public class AddCategoryUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
-<<<<<<< HEAD
         private readonly IFileServices _fileService;
-
-        public AddCategoryUseCase(IUnitOfWork unitOfWork ,IFileServices fileService)
-=======
-        private readonly IFileService _fileService;
-
-        public AddCategoryUseCase(IUnitOfWork unitOfWork ,IFileService fileService)
->>>>>>> origin/main
+        public AddCategoryUseCase (IUnitOfWork unitOfWork, IFileService fileService)
         {
-            _unitOfWork = unitOfWork;
-            _fileService = fileService;
+            _unitOfWork=unitOfWork;
+            _fileService=(IFileServices?)fileService;
         }
 
-        public async Task<GenericResponse<string>> ExecuteAsync(AddCategoryDTO dto)
+        public async Task<GenericResponse<string>> ExecuteAsync (AddCategoryDTO dto)
         {
-           
+
             var restaurant = await _unitOfWork
                 .Repository<Domain.Models.Entities.Restaurant>()
                 .GetById(dto.RestaurantId);
 
-            if (restaurant == null)
+            if (restaurant==null)
             {
                 return GenericResponse<string>.FailureResponse("Restaurant not found.");
             }
 
-            
+
             string? fileName = null;
-            if (dto.Image != null)
+            if (dto.Image!=null)
             {
-                fileName = await _fileService.UploadFileAsync(dto.Image, "MenuCategories");
+                fileName=await _fileService.UploadFileAsync(dto.Image, "MenuCategories");
             }
 
-            
+
             var category = new MenuCategory
             {
-                RestaurantId = dto.RestaurantId,
-                Name = dto.Name,
-                Description = dto.Description,
-                Image = fileName,       
-                items = new List<MenuItem>(),
-                CreatedOn = DateTime.UtcNow
+                RestaurantId=dto.RestaurantId,
+                Name=dto.Name,
+                Description=dto.Description,
+                Image=fileName,
+                items=new List<MenuItem>(),
+                CreatedOn=DateTime.UtcNow
             };
 
-            
+
             await _unitOfWork.Repository<MenuCategory>().Add(category);
             await _unitOfWork.SaveChangesAsync();
 
