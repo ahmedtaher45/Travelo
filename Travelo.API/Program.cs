@@ -1,5 +1,4 @@
-
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using Stripe;
 using System.Text;
 using Travelo.API.Middleware;
 using Travelo.Application.Interfaces;
@@ -14,6 +14,7 @@ using Travelo.Application.Services.Auth;
 using Travelo.Application.Services.City;
 using Travelo.Application.Services.FileService;
 using Travelo.Application.Services.Flight;
+using Travelo.Application.Services.Payment;
 using Travelo.Application.UseCases.Auth;
 using Travelo.Application.UseCases.Hotels;
 using Travelo.Application.UseCases.Menu;
@@ -21,6 +22,7 @@ using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Identity;
 using Travelo.Infrastracture.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 //Database Connection
@@ -46,6 +48,7 @@ builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IFlightRepository, FlightRepository>();
 builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 //Identity Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
@@ -132,11 +135,14 @@ builder.Services.AddScoped<GoogleLoginUseCase>();
 
 var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfigruration>();
 builder.Services.AddSingleton(emailConfig);
+builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IPaymentServices, PaymentServices>();
+builder.Services.AddScoped<IRoomBookingRepository, RoomBookingRepository>();
 builder.Services.AddScoped<ForgotPasswordUseCase>();
 builder.Services.AddScoped<ResetPasswordUseCase>();
 builder.Services.AddScoped<ConfirmEmailUseCase>();
 builder.Services.AddScoped<ResendConfirmEmailUseCase>();
-
 builder.Services.AddScoped<GetMenuUseCase>();
 builder.Services.AddScoped<GetItemUseCase>();
 builder.Services.AddScoped<AddCategoryUseCase>();
@@ -145,12 +151,89 @@ builder.Services.AddScoped<DeleteItemUseCase>();
 builder.Services.AddScoped<UpdateItemUseCase>();
 builder.Services.AddScoped<UpdateCategoryUseCase>();
 builder.Services.AddScoped<DeleteCategoryUseCase>();
-
-
-
-
+// Configure Stripe settings
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+StripeConfiguration.ApiKey=builder.Configuration["Stripe:SecretKey"];
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
+    // 2️⃣ Seed Hotel & Rooms using EF Core
+    var context = services.GetRequiredService<ApplicationDbContext>();
+
+    if (!context.Hotels.Any())
+    {
+        // Seed hotel
+        var hotel = new Hotel
+        {
+            Name="Travelo Grand Hotel",
+            ResponsibleName="Norma Khanafseh",
+            Address="Main Street 45",
+            Country="Palestine",
+            CityId=1, // Make sure city with Id=1 exists
+            Latitude=31.9522,
+            Longitude=35.2332,
+            PricePerNight=150,
+            Rating=4.6,
+            ReviewsCount=120,
+            ImageUrl="https://picsum.photos/800/600",
+            IsFeatured=true,
+            Description="Luxury hotel located in the city center with modern rooms."
+        };
+
+        context.Hotels.Add(hotel);
+
+        // Seed rooms
+        var rooms = new List<Room>
+        {
+            new Room
+            {
+                HotelId = hotel.Id,
+                Type = "Single Room",
+                PricePerNight = 80,
+                Capacity = 1,
+                View = "City View",
+                BedType = "Single Bed",
+                Size = 20,
+                ImageUrl = "https://picsum.photos/400/300",
+                IsAvailable = true,
+                Hotel = hotel
+            },
+            new Room
+            {
+                HotelId = hotel.Id,
+                Type = "Double Room",
+                PricePerNight = 120,
+                Capacity = 2,
+                View = "Sea View",
+                BedType = "Queen Bed",
+                Size = 30,
+                ImageUrl = "https://picsum.photos/401/300",
+                IsAvailable = true,
+                Hotel = hotel
+            },
+            new Room
+            {
+                HotelId = hotel.Id,
+                Type = "Family Suite",
+                PricePerNight = 200,
+                Capacity = 4,
+                View = "Garden View",
+                BedType = "King Bed",
+                Size = 50,
+                ImageUrl = "https://picsum.photos/402/300",
+                IsAvailable = true,
+                Hotel= hotel
+            }
+        };
+
+        context.Rooms.AddRange(rooms);
+
+        await context.SaveChangesAsync();
+    }
+}
+// ============================================
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -8,12 +8,12 @@ namespace Travelo.Application.Services.City
     public class CityService : ICityService
     {
         private readonly ICityRepository _cityRepository;
-        private readonly IFileService _fileService;
+        private readonly IFileServices _fileService;
         private readonly IUnitOfWork _unitOfWork;
 
         public CityService (
             ICityRepository cityRepository,
-            IFileService fileService,
+            IFileServices fileService,
             IUnitOfWork unitOfWork)
         {
             _cityRepository=cityRepository;
