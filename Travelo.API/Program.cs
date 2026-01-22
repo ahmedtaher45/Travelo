@@ -22,6 +22,7 @@ using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Identity;
 using Travelo.Infrastracture.Repositories;
+using FileService = Travelo.Application.Services.FileService.FileService;
 
 
 var builder = WebApplication.CreateBuilder(args);

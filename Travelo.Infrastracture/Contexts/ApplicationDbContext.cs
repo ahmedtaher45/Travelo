@@ -25,7 +25,6 @@ namespace Travelo.Infrastracture.Contexts
         public DbSet<RoomBooking> RoomBookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        //protected override void OnModelCreating (ModelBuilder builder)
         public DbSet<Ticket> Ticket { get; set; }
 
 

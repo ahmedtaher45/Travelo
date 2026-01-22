@@ -41,6 +41,12 @@ namespace Travelo.Infrastracture.Repositories
         public IReviewRepository Reviews { get; private set; }
         public IMenuRepository Menu { get; private set; }
 
+        public IRoomRepository Rooms => throw new NotImplementedException();
+
+        public IRoomBookingRepository RoomBookings => throw new NotImplementedException();
+
+        public IPaymentRepository Payment => throw new NotImplementedException();
+
         public IGenericRepository<T> Repository<T>() where T : class
         {
             var type = typeof(T);
