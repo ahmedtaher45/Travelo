@@ -31,7 +31,7 @@ namespace Travelo.API.Controllers
             return Ok(flight);
         }
 
-        // 3️⃣ Create flight
+        
         [HttpPost]
         public async Task<IActionResult> CreateFlight([FromBody] FlightDto flightDto)
         {
@@ -39,7 +39,7 @@ namespace Travelo.API.Controllers
             return CreatedAtAction(nameof(GetFlight), new { id = flight.Id }, flight);
         }
 
-        // 4️⃣ Update flight
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateFlight(int id, [FromBody] FlightDto flightDto)
         {
@@ -48,7 +48,7 @@ namespace Travelo.API.Controllers
             return Ok(updatedFlight);
         }
 
-        // 5️⃣ Delete flight
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFlight(int id)
         {

@@ -23,7 +23,6 @@ using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Identity;
 using Travelo.Infrastracture.Repositories;
-using FileService = Travelo.Application.Services.FileService.FileService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,7 +43,8 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<RegisterUseCase>();
-builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IFileService, Travelo.Application.Services.FileService.FileService>();
+builder.Services.AddScoped<IFileServices, Travelo.Application.Services.FileService.FileServices>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IFlightRepository, FlightRepository>();
@@ -168,38 +168,54 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-
-    // 2️⃣ Seed Hotel & Rooms using EF Core
     var context = services.GetRequiredService<ApplicationDbContext>();
 
+    // 1️⃣ Seed City
+    City city;
+    if (!context.Cities.Any())
+    {
+        city = new City
+        {
+            Name = "Jerusalem",
+            Country = "Palestine",
+            ImageUrl = "https://picsum.photos/600/400"
+        };
+
+        context.Cities.Add(city);
+        await context.SaveChangesAsync();
+    }
+    else
+    {
+        city = context.Cities.First();
+    }
+
+    // 2️⃣ Seed Hotel
     if (!context.Hotels.Any())
     {
-        // Seed hotel
         var hotel = new Hotel
         {
-            Name="Travelo Grand Hotel",
-            ResponsibleName="Norma Khanafseh",
-            Address="Main Street 45",
-            Country="Palestine",
-            CityId=1, // Make sure city with Id=1 exists
-            Latitude=31.9522,
-            Longitude=35.2332,
-            PricePerNight=150,
-            Rating=4.6,
-            ReviewsCount=120,
-            ImageUrl="https://picsum.photos/800/600",
-            IsFeatured=true,
-            Description="Luxury hotel located in the city center with modern rooms."
+            Name = "Travelo Grand Hotel",
+            ResponsibleName = "Norma Khanafseh",
+            Address = "Main Street 45",
+            Country = "Palestine",
+            CityId = city.Id, // ✅ بدل 1
+            Latitude = 31.9522,
+            Longitude = 35.2332,
+            PricePerNight = 150,
+            Rating = 4.6,
+            ReviewsCount = 120,
+            ImageUrl = "https://picsum.photos/800/600",
+            IsFeatured = true,
+            Description = "Luxury hotel located in the city center with modern rooms."
         };
 
         context.Hotels.Add(hotel);
 
-        // Seed rooms
+        // 3️⃣ Seed Rooms
         var rooms = new List<Room>
         {
             new Room
             {
-                HotelId = hotel.Id,
                 Type = "Single Room",
                 PricePerNight = 80,
                 Capacity = 1,
@@ -208,11 +224,10 @@ using (var scope = app.Services.CreateScope())
                 Size = 20,
                 ImageUrl = "https://picsum.photos/400/300",
                 IsAvailable = true,
-                Hotel = hotel
+                Hotel = hotel // ✅ مفيش HotelId
             },
             new Room
             {
-                HotelId = hotel.Id,
                 Type = "Double Room",
                 PricePerNight = 120,
                 Capacity = 2,
@@ -225,7 +240,6 @@ using (var scope = app.Services.CreateScope())
             },
             new Room
             {
-                HotelId = hotel.Id,
                 Type = "Family Suite",
                 PricePerNight = 200,
                 Capacity = 4,
@@ -234,12 +248,11 @@ using (var scope = app.Services.CreateScope())
                 Size = 50,
                 ImageUrl = "https://picsum.photos/402/300",
                 IsAvailable = true,
-                Hotel= hotel
+                Hotel = hotel
             }
         };
 
         context.Rooms.AddRange(rooms);
-
         await context.SaveChangesAsync();
     }
 }
