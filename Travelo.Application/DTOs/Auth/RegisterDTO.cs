@@ -31,11 +31,7 @@ namespace Travelo.Application.DTOs.Auth
 
         [DataType(DataType.PhoneNumber)]
         public string? PhoneNumber { get; set; }
-        public string? Gender { get; set; }
-        public string? FName { get; set; }
-        public string? LName { get; set; }
 
-        public DateTime BirthDate { get; set; }
         [Required(ErrorMessage = "ClientUri is required")]
         public string? ClientUri { get; set; }
     }

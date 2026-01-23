@@ -34,14 +34,13 @@ namespace Travelo.API.Controllers
             [FromServices] ChangePasswordUseCase changePasswordUseCase
             )
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             if (userId==null)
             {
                 return Unauthorized();
             }
             var result = await changePasswordUseCase.ExecuteAsync(changePasswordDTO, userId);
             return !result.Success ? BadRequest(result) : Ok(result);
-            return Ok(result);
         }
 
         [HttpPost("login")]
@@ -85,10 +84,10 @@ namespace Travelo.API.Controllers
             }
             return Ok(result);
         }
-    }
+    
 
 
-        [HttpGet("Google-Login")]
+        [HttpGet("google-login")]
         public async Task<IActionResult> GoogleLogin() 
         {
             var properties = new AuthenticationProperties
@@ -99,7 +98,7 @@ namespace Travelo.API.Controllers
 
         }
 
-        [HttpGet("Google-Response")]
+        [HttpGet("google-response")]
         public async Task<IActionResult> GoogleResponse([FromServices] GoogleLoginUseCase googleLoginUseCase)
         {
             var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);

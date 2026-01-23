@@ -35,6 +35,8 @@ builder.Services.AddScoped<Travelo.Application.Interfaces.IEmailSender, EmailSen
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<RegisterUseCase>();
+builder.Services.AddScoped<ChangePasswordUseCase>();
+
 //Identity Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
@@ -87,7 +89,11 @@ builder.Services.AddScoped(
 builder.Services.AddScoped<RegisterUseCase>();
 builder.Services.AddScoped<Travelo.Application.UseCases.Hotels.GetFeaturedHotelsUseCase>();
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy", policy =>
+        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+});
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
 opt.TokenLifespan=TimeSpan.FromHours(2));
 
@@ -130,6 +136,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
+app.UseCors("MyPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
