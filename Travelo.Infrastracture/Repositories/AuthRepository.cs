@@ -9,6 +9,8 @@ using System.Security.Claims;
 using System.Text;
 using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Auth;
+using Travelo.Application.DTOs.Hotels;
+using Travelo.Application.DTOs.Restaurant;
 using Travelo.Application.Interfaces;
 using Travelo.Application.Services.Auth;
 using Travelo.Domain.Models.Entities;
@@ -121,6 +123,160 @@ namespace Travelo.Infrastracture.Repositories
             await _emailSender.SendEmailAsync(message);
 
             return GenericResponse<string>.SuccessResponse("Check your Email for Confirmation");
+        }
+        public async Task<GenericResponse<string>> AddAdmin(AdminDTO adminDTO)
+        {
+            if (adminDTO == null)
+            {
+                return GenericResponse<string>.FailureResponse("Admin Data can't be null");
+            }
+            try
+            {
+                var user = new ApplicationUser()
+                {
+                    Email = adminDTO.Email,
+                    UserName = adminDTO.UserName,
+                    PhoneNumber = adminDTO.PhoneNumber
+                };
+                var result = await userManager.CreateAsync(user, adminDTO.Password!);
+                if (!result.Succeeded)
+                {
+                    return GenericResponse<string>.FailureResponse("Error with creating admin user");
+                }
+
+                await userManager.AddToRoleAsync(user,"Admin");
+
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                await userManager.ConfirmEmailAsync(user, token);
+
+                return GenericResponse<string>.SuccessResponse("Admin user created successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<string>.FailureResponse("Exception occured: "+ ex.Message);
+            }
+        }
+        public async Task<GenericResponse<string>> AddRestaurant(int cityId,AddRestaurantDto addRestaurantDto)
+        {
+            if (addRestaurantDto == null)
+            {
+                return GenericResponse<string>.FailureResponse("Restaurant Data can't be null");
+            }
+            try
+            {
+                var user = new ApplicationUser()
+                {
+                    Email = addRestaurantDto.Email,
+                    UserName = addRestaurantDto.UserName,
+                    PhoneNumber = addRestaurantDto.PhoneNumber
+                };
+                var result = await userManager.CreateAsync(user, addRestaurantDto.Password!);
+                if (!result.Succeeded)
+                {
+                    return GenericResponse<string>.FailureResponse("Error with creating restaurant user");
+                }
+
+                await userManager.AddToRoleAsync(user, "Restaurant");
+
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                await userManager.ConfirmEmailAsync(user, token);
+
+                var restaurant = new Restaurant()
+                {
+                    Name = addRestaurantDto.Name,
+                    Description = addRestaurantDto.Description,
+                    UserId = user.Id,
+                    CityId = cityId
+                };
+                await _context.Restaurants.AddAsync(restaurant);
+                await _context.SaveChangesAsync();
+                return GenericResponse<string>.SuccessResponse("Restaurant user created successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<string>.FailureResponse("Exception occured: " + ex.Message);
+            }
+        }
+
+        public async Task<GenericResponse<string>> AddHotel(int cityId, AddHotelDTO dto)
+        {
+            if (dto == null)
+            {
+                return GenericResponse<string>.FailureResponse("Hotel Data can't be null");
+            }
+            try
+            {
+                var user = new ApplicationUser()
+                {
+                    Email = dto.Email,
+                    UserName = dto.UserName,
+                    PhoneNumber = dto.PhoneNumber
+                };
+                var result = await userManager.CreateAsync(user, dto.Password!);
+                if (!result.Succeeded)
+                {
+                    return GenericResponse<string>.FailureResponse("Error with creating hotel user");
+                }
+
+                await userManager.AddToRoleAsync(user, "Restaurant");
+
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                await userManager.ConfirmEmailAsync(user, token);
+
+                var hotel = new Hotel
+                {
+                    Name = dto.Name,
+                    ResponsibleName = dto.ResponsibleName,
+                    Address = dto.Address,
+                    Country = dto.Country,
+                    Latitude = dto.Latitude,
+                    Longitude = dto.Longitude,
+                    CityId = dto.CityId,
+                    PricePerNight = dto.PricePerNight,
+                    Rating = dto.Rating,
+                    ReviewsCount = dto.ReviewsCount,
+                    ImageUrl = dto.ImageUrl,
+                    IsFeatured = dto.IsFeatured,
+                    Description = dto.Description,
+                    UserId = user.Id
+                };
+
+                if (dto.Rooms != null && dto.Rooms.Any())
+                {
+                    hotel.Rooms = dto.Rooms.Select(r => new Room
+                    {
+                        Type = r.Type,
+                        PricePerNight = r.PricePerNight,
+                        Capacity = r.Capacity,
+                        View = r.View,
+                        ImageUrl = r.ImageUrl,
+                        IsAvailable = r.IsAvailable,
+                        BedType = r.BedType,
+                        Size = r.Size
+                    }).ToList();
+                }
+
+                if (dto.ThingsToDo != null && dto.ThingsToDo.Any())
+                {
+                    hotel.ThingsToDo = dto.ThingsToDo.Select(t => new ThingToDo
+                    {
+                        Title = t.Title,
+                        Category = t.Category,
+                        Distance = t.Distance,
+                        Price = t.Price,
+                        OldPrice = t.OldPrice,
+                        ImageUrl = t.ImageUrl
+                    }).ToList();
+                }
+
+                await _context.Hotels.AddAsync(hotel);
+                await _context.SaveChangesAsync();
+                return GenericResponse<string>.SuccessResponse("Hotel user created successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<string>.FailureResponse("Exception occured: " + ex.Message);
+            }
         }
         public async Task<GenericResponse<AuthResponseDTO>> LoginAsync(LoginDTO loginDTO)
         {

@@ -12,6 +12,8 @@ namespace Travelo.Domain.Models.Entities
     {
         public string? ResponsibleName { get; set; }
         public string? Address { get; set; }
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
         public string? Country { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }

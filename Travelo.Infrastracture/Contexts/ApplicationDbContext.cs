@@ -20,6 +20,7 @@ namespace Travelo.Infrastracture.Contexts
         public DbSet<MenuCategory> MenuCategories { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<ThingToDo> ThingsToDo { get; set; }
@@ -37,6 +38,17 @@ namespace Travelo.Infrastracture.Contexts
             builder.Ignore<IdentityUserLogin<string>>();
             builder.Ignore<IdentityUserClaim<string>>();
             builder.Ignore<IdentityUserToken<string>>();
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(a => a.Hotel)
+                .WithOne(a => a.User)
+                .HasForeignKey<Hotel>(a => a.UserId);
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(a => a.Restaurant)
+                .WithOne(a => a.User)
+                .HasForeignKey<Restaurant>(a => a.UserId);
+
             builder.Entity<Payment>()
                .HasOne(p => p.Hotel)
                .WithMany()
