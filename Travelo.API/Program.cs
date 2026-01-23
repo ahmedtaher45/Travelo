@@ -53,6 +53,8 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<ChangePasswordUseCase>();
+
 //Identity Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
@@ -110,7 +112,11 @@ builder.Services.AddScoped<Travelo.Application.UseCases.Hotels.GetFeaturedHotels
 builder.Services.AddScoped<GetFeaturedHotelsUseCase>();
 builder.Services.AddScoped<GetHotelByIdUseCase>();
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy", policy =>
+        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+});
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
 opt.TokenLifespan=TimeSpan.FromHours(2));
 
@@ -247,6 +253,7 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
+app.UseCors("MyPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

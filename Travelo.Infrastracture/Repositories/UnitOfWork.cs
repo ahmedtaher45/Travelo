@@ -33,6 +33,9 @@ namespace Travelo.Infrastracture.Repositories
             Cities = new CityRepository(_context);
             Reviews = new ReviewRepository(_context);
             Menu = new MenuRepository(_context);
+            Rooms= new RoomRepository(_context);
+            RoomBookings= new RoomBookingRepository(_context);
+            Payment= new PaymentRepository(_context);
         }
 
         public IAuthRepository Auth { get; private set; }
@@ -40,13 +43,9 @@ namespace Travelo.Infrastracture.Repositories
         public ICityRepository Cities { get; private set; }
         public IReviewRepository Reviews { get; private set; }
         public IMenuRepository Menu { get; private set; }
-
-        public IRoomRepository Rooms => throw new NotImplementedException();
-
-        public IRoomBookingRepository RoomBookings => throw new NotImplementedException();
-
-        public IPaymentRepository Payment => throw new NotImplementedException();
-
+        public IRoomRepository Rooms { get; private set; }
+        public IRoomBookingRepository RoomBookings { get; private set; }
+        public IPaymentRepository Payment { get; private set; }
         public IGenericRepository<T> Repository<T>() where T : class
         {
             var type = typeof(T);

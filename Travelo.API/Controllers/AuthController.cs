@@ -54,14 +54,13 @@ namespace Travelo.API.Controllers
             [FromServices] ChangePasswordUseCase changePasswordUseCase
             )
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             if (userId==null)
             {
                 return Unauthorized();
             }
             var result = await changePasswordUseCase.ExecuteAsync(changePasswordDTO, userId);
             return !result.Success ? BadRequest(result) : Ok(result);
-            return Ok(result);
         }
 
         [HttpPost("login")]
