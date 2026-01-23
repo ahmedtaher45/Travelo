@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Common;
+using Travelo.Application.DTOs.Review;
 using Travelo.Application.UseCases.Hotels;
+using Travelo.Application.UseCases.Review;
 
 namespace Travelo.API.Controllers
 {
@@ -12,12 +15,26 @@ namespace Travelo.API.Controllers
 
         private readonly GetFeaturedHotelsUseCase _getFeaturedHotelsUseCase;
         private readonly GetHotelByIdUseCase _getHotelByIdUseCase;
+        private readonly GetHotelRoomsUseCase _getHotelRoomsUseCase;
+        private readonly GetHotelReviewsUseCase _getHotelReviewsUseCase;
+        private readonly GetThingsToDoUseCase _getThingsToDoUseCase;
+        private readonly GetSimilarHotelsUseCase _getSimilarHotelsUseCase;
+
+
         public HotelsController(
             GetFeaturedHotelsUseCase getFeaturedHotelsUseCase,
-            GetHotelByIdUseCase getHotelByIdUseCase)
+            GetHotelByIdUseCase getHotelByIdUseCase,
+            GetHotelRoomsUseCase getHotelRoomsUseCase,
+            GetHotelReviewsUseCase getHotelReviewsUseCase,
+            GetThingsToDoUseCase getThingsToDoUseCase,
+            GetSimilarHotelsUseCase getSimilarHotelsUseCase)
         {
             _getFeaturedHotelsUseCase = getFeaturedHotelsUseCase;
             _getHotelByIdUseCase = getHotelByIdUseCase;
+            _getHotelRoomsUseCase = getHotelRoomsUseCase;
+            _getHotelReviewsUseCase = getHotelReviewsUseCase;
+            _getThingsToDoUseCase = getThingsToDoUseCase;
+            _getSimilarHotelsUseCase = getSimilarHotelsUseCase;
         }
 
 
@@ -48,9 +65,52 @@ namespace Travelo.API.Controllers
             {
                 return NotFound(response);
             }
+            return BadRequest(response);
+        }
+
+
+
+        [HttpGet("{hotelId}/rooms")] //  api/Hotels/6/rooms
+        public async Task<IActionResult> GetRooms(int hotelId)
+        {
+            var response = await _getHotelRoomsUseCase.ExecuteAsync(hotelId);
+
+            if (response.Success)
+                return Ok(response);
 
             return BadRequest(response);
-
         }
+
+
+        //reviews
+
+
+
+        //  GET /api/Hotels/6/things-to-do
+        [HttpGet("{hotelId}/things-to-do")]
+        public async Task<IActionResult> GetThingsToDo(int hotelId)
+        {
+            var response = await _getThingsToDoUseCase.ExecuteAsync(hotelId);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
+
+        [HttpGet("{hotelId}/similar")]
+        public async Task<IActionResult> GetSimilarHotels(int hotelId)
+        {
+            var response = await _getSimilarHotelsUseCase.ExecuteAsync(hotelId);
+
+            if (response.Success)
+                return Ok(response);
+
+            return BadRequest(response);
+        }
+
     }
 }

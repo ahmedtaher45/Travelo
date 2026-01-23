@@ -15,6 +15,7 @@ using Travelo.Application.Services.City;
 using Travelo.Application.Services.FileService;
 using Travelo.Application.UseCases.Auth;
 using Travelo.Application.UseCases.Hotels;
+using Travelo.Application.UseCases.Review;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Identity;
@@ -94,9 +95,12 @@ builder.Services.AddScoped(
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 builder.Services.AddScoped<RegisterUseCase>();
-builder.Services.AddScoped<Travelo.Application.UseCases.Hotels.GetFeaturedHotelsUseCase>();
+
 builder.Services.AddScoped<GetFeaturedHotelsUseCase>();
 builder.Services.AddScoped<GetHotelByIdUseCase>();
+builder.Services.AddScoped<GetHotelRoomsUseCase>();
+builder.Services.AddScoped<GetThingsToDoUseCase>();
+builder.Services.AddScoped<GetSimilarHotelsUseCase>();
 
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
