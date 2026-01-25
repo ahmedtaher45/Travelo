@@ -56,7 +56,6 @@ namespace Travelo.Infrastracture.Repositories
                 var hotelEntity = await _context.Hotels
                     .Include(h => h.City)
                     .Include(h => h.Rooms)
-                    // 👇 ده السطر المصحح
                     .Include(h => h.Reviews!).ThenInclude(r => r.User!)
                     .Include(h => h.ThingsToDo)
                     .FirstOrDefaultAsync(h => h.Id==id);
@@ -154,6 +153,118 @@ namespace Travelo.Infrastracture.Repositories
                 return GenericResponse<HotelDetailsDto>.FailureResponse($"Error: {errorMessage}");
             }
         }
+
+
+
+        public async Task<GenericResponse<IEnumerable<RoomDto>>> GetRoomsByHotelIdAsync(int hotelId)
+        {
+            try
+            {
+             
+                var hotelExists = await _context.Hotels.AnyAsync(h => h.Id == hotelId);
+                if (!hotelExists)
+                {
+                    return GenericResponse<IEnumerable<RoomDto>>.FailureResponse("Hotel not found");
+                }
+
+                var rooms = await _context.Rooms
+                    .Where(r => r.HotelId == hotelId) 
+                    .Select(r => new RoomDto
+                    {
+                        Id = r.Id,
+                        Type = r.Type,
+                        Price = r.PricePerNight,
+                        Capacity = r.Capacity,
+                        View = r.View,
+                        ImageUrl = r.ImageUrl,
+                        BedType = r.BedType,
+                        Size = r.Size,
+                        IsAvailable = r.IsAvailable,
+                       
+                        RoomAmenities = new List<string> { "Breakfast", "Free Wifi", "AC" }
+                    })
+                    .ToListAsync();
+
+                return GenericResponse<IEnumerable<RoomDto>>.SuccessResponse(rooms, "Rooms retrieved successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<IEnumerable<RoomDto>>.FailureResponse($"Error: {ex.Message}");
+            }
+        }
+
+        //reviews
+
+
+        public async Task<GenericResponse<IEnumerable<ThingToDoDto>>> GetThingsToDoByHotelIdAsync(int hotelId)
+        {
+            try
+            {
+                var hotelExists = await _context.Hotels.AnyAsync(h => h.Id == hotelId);
+                if (!hotelExists)
+                {
+                    return GenericResponse<IEnumerable<ThingToDoDto>>.FailureResponse("Hotel not found");
+                }
+
+                var things = await _context.ThingsToDo
+                    .Where(t => t.HotelId == hotelId) 
+                    .Select(t => new ThingToDoDto
+                    {
+                        Id = t.Id,
+                        Title = t.Title,
+                        Category = t.Category,
+                        Distance = t.Distance,
+                        Price = t.Price,
+                        OldPrice = t.OldPrice,
+                        ImageUrl = t.ImageUrl
+                    })
+                    .ToListAsync();
+
+                return GenericResponse<IEnumerable<ThingToDoDto>>.SuccessResponse(things, "Things to do retrieved successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<IEnumerable<ThingToDoDto>>.FailureResponse($"Error: {ex.Message}");
+            }
+
+        }
+
+
+        public async Task<GenericResponse<IEnumerable<HotelCardDto>>> GetSimilarHotelsAsync(int hotelId)
+        {
+            try
+            {
+               
+                var currentHotel = await _context.Hotels.FindAsync(hotelId);
+
+                if (currentHotel == null)
+                {
+                    return GenericResponse<IEnumerable<HotelCardDto>>.FailureResponse("Hotel not found");
+                }
+            
+                var similarHotels = await _context.Hotels
+                    .Where(h => h.CityId == currentHotel.CityId && h.Id != hotelId)
+                    .Take(4) 
+                    .Select(h => new HotelCardDto
+                    {
+                        Id = h.Id,
+                        Name = h.Name,                     
+                        Location = (h.City != null ? h.City.Name : h.Address) + ", " + h.Country,
+                        Price = h.PricePerNight,
+                        Rating = h.Rating,
+                        ImageUrl = h.ImageUrl,
+                        ReviewsCount = h.ReviewsCount
+                    })
+                    .ToListAsync();
+
+                return GenericResponse<IEnumerable<HotelCardDto>>.SuccessResponse(similarHotels, "Similar hotels retrieved successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<IEnumerable<HotelCardDto>>.FailureResponse($"Error: {ex.Message}");
+            }
+        }
+
 
     }
 }

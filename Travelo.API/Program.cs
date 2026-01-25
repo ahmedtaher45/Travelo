@@ -21,8 +21,12 @@ using Travelo.Application.Services.Ticket;
 using Travelo.Application.UseCases.Auth;
 using Travelo.Application.UseCases.Carts;
 using Travelo.Application.UseCases.Hotels;
+<<<<<<< HEAD
 using Travelo.Application.UseCases.Menu;
 using Travelo.Application.UseCases.Restaurant;
+=======
+using Travelo.Application.UseCases.Review;
+>>>>>>> origin/Add-Featured-Hotels
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Identity;
@@ -122,9 +126,12 @@ builder.Services.AddScoped(
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 builder.Services.AddScoped<RegisterUseCase>();
-builder.Services.AddScoped<Travelo.Application.UseCases.Hotels.GetFeaturedHotelsUseCase>();
+
 builder.Services.AddScoped<GetFeaturedHotelsUseCase>();
 builder.Services.AddScoped<GetHotelByIdUseCase>();
+builder.Services.AddScoped<GetHotelRoomsUseCase>();
+builder.Services.AddScoped<GetThingsToDoUseCase>();
+builder.Services.AddScoped<GetSimilarHotelsUseCase>();
 
 builder.Services.AddCors(options =>
 {
