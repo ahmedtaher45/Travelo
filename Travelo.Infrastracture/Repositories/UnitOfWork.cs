@@ -28,6 +28,7 @@ namespace Travelo.Infrastracture.Repositories
 
             _repositories=new Dictionary<Type, object>();
 
+<<<<<<< HEAD
             Auth=new AuthRepository(_userManager, _context, _configuration, _emailSender);
             Hotels=new HotelRepository(_context);
             Cities=new CityRepository(_context);
@@ -37,6 +38,14 @@ namespace Travelo.Infrastracture.Repositories
             RoomBookings=new RoomBookingRepository(_context);
             Payment=new PaymentRepository(_context);
             Cart=new CartRepository(_context);
+=======
+            Auth = new AuthRepository(_userManager, _context, _configuration, _emailSender);
+            Hotels = new HotelRepository(_context);
+            Cities = new CityRepository(_context);
+            Reviews = new ReviewRepository(_context);
+            Menu = new MenuRepository(_context);
+            Cart = new CartRepository(_context);
+>>>>>>> origin/Reham
         }
 
 
@@ -46,6 +55,7 @@ namespace Travelo.Infrastracture.Repositories
         public IReviewRepository Reviews { get; private set; }
         public IMenuRepository Menu { get; private set; }
 
+<<<<<<< HEAD
         public IRoomRepository Rooms { get; private set; }
         public IRoomBookingRepository RoomBookings { get; private set; }
         public IPaymentRepository Payment { get; private set; }
@@ -54,6 +64,11 @@ namespace Travelo.Infrastracture.Repositories
         public ICartRepository Cart { get; private set; }
 
         public IGenericRepository<T> Repository<T> () where T : class
+=======
+        public ICartRepository Cart { get; private set; }
+
+        public IGenericRepository<T> Repository<T>() where T : class
+>>>>>>> origin/Reham
         {
             var type = typeof(T);
 

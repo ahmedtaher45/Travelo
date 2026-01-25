@@ -9,6 +9,7 @@ using Scalar.AspNetCore;
 using Stripe;
 using System.Text;
 using Travelo.API.Middleware;
+using Travelo.Application.DTOs.Cart;
 using Travelo.Application.Interfaces;
 using Travelo.Application.Services.Auth;
 using Travelo.Application.Services.Booking;
@@ -57,6 +58,7 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+<<<<<<< HEAD
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<ChangePasswordUseCase>();
 builder.Services.AddScoped<AddAdminUseCase>();
@@ -64,6 +66,10 @@ builder.Services.AddScoped<AddRestaurantUseCase>();
 builder.Services.AddScoped<AddHotelUseCase>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 
+=======
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+//Identity Configuration
+>>>>>>> origin/Reham
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
 
@@ -162,11 +168,19 @@ builder.Services.AddScoped<ResetPasswordUseCase>();
 builder.Services.AddScoped<ConfirmEmailUseCase>();
 builder.Services.AddScoped<ResendConfirmEmailUseCase>();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/Reham
 builder.Services.AddScoped<AddRestaurantUseCase>();
 builder.Services.AddScoped<GetRestaurantUseCase>();
 builder.Services.AddScoped<UpdateRestaurantUseCase>();
 builder.Services.AddScoped<RemoveRestaurantUseCase>();
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/Reham
 builder.Services.AddScoped<GetMenuUseCase>();
 builder.Services.AddScoped<GetItemUseCase>();
 builder.Services.AddScoped<AddCategoryUseCase>();
@@ -176,9 +190,19 @@ builder.Services.AddScoped<UpdateItemUseCase>();
 builder.Services.AddScoped<UpdateCategoryUseCase>();
 builder.Services.AddScoped<DeleteCategoryUseCase>();
 
+<<<<<<< HEAD
 // Configure Stripe settings
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 StripeConfiguration.ApiKey=builder.Configuration["Stripe:SecretKey"];
+=======
+builder.Services.AddScoped<AddToCartUseCase>();
+builder.Services.AddScoped<GetCartUseCase>();
+builder.Services.AddScoped<RemoveCartItemUseCase>();
+builder.Services.AddScoped<RemoveFromCartUseCase>();
+
+
+
+>>>>>>> origin/Reham
 
 
 builder.Services.AddScoped<AddToCartUseCase>();

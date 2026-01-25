@@ -1040,7 +1040,11 @@ namespace Travelo.Infrastracture.Migrations
             modelBuilder.Entity("Travelo.Domain.Models.Entities.Restaurant", b =>
                 {
                     b.HasOne("Travelo.Domain.Models.Entities.City", "City")
+<<<<<<<< HEAD:Travelo.Infrastracture/Migrations/20260121151222_AddRestaurantAddEditMenuItem.Designer.cs
                         .WithMany()
+========
+                        .WithMany("Restaurants")
+>>>>>>>> origin/Reham:Travelo.Infrastracture/Migrations/ApplicationDbContextModelSnapshot.cs
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1129,6 +1133,8 @@ namespace Travelo.Infrastracture.Migrations
             modelBuilder.Entity("Travelo.Domain.Models.Entities.City", b =>
                 {
                     b.Navigation("Hotels");
+
+                    b.Navigation("Restaurants");
                 });
 
             modelBuilder.Entity("Travelo.Domain.Models.Entities.Hotel", b =>
