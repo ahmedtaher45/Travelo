@@ -18,6 +18,7 @@ using Travelo.Application.Services.Flight;
 using Travelo.Application.Services.Payment;
 using Travelo.Application.Services.Ticket;
 using Travelo.Application.UseCases.Auth;
+using Travelo.Application.UseCases.Carts;
 using Travelo.Application.UseCases.Hotels;
 using Travelo.Application.UseCases.Menu;
 using Travelo.Application.UseCases.Restaurant;
@@ -61,8 +62,8 @@ builder.Services.AddScoped<ChangePasswordUseCase>();
 builder.Services.AddScoped<AddAdminUseCase>();
 builder.Services.AddScoped<AddRestaurantUseCase>();
 builder.Services.AddScoped<AddHotelUseCase>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
-//Identity Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
 
@@ -160,6 +161,12 @@ builder.Services.AddScoped<ForgotPasswordUseCase>();
 builder.Services.AddScoped<ResetPasswordUseCase>();
 builder.Services.AddScoped<ConfirmEmailUseCase>();
 builder.Services.AddScoped<ResendConfirmEmailUseCase>();
+
+
+builder.Services.AddScoped<AddRestaurantUseCase>();
+builder.Services.AddScoped<GetRestaurantUseCase>();
+builder.Services.AddScoped<UpdateRestaurantUseCase>();
+builder.Services.AddScoped<RemoveRestaurantUseCase>();
 builder.Services.AddScoped<GetMenuUseCase>();
 builder.Services.AddScoped<GetItemUseCase>();
 builder.Services.AddScoped<AddCategoryUseCase>();
@@ -168,101 +175,62 @@ builder.Services.AddScoped<DeleteItemUseCase>();
 builder.Services.AddScoped<UpdateItemUseCase>();
 builder.Services.AddScoped<UpdateCategoryUseCase>();
 builder.Services.AddScoped<DeleteCategoryUseCase>();
+
 // Configure Stripe settings
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 StripeConfiguration.ApiKey=builder.Configuration["Stripe:SecretKey"];
+
+
+builder.Services.AddScoped<AddToCartUseCase>();
+builder.Services.AddScoped<GetCartUseCase>();
+builder.Services.AddScoped<RemoveCartItemUseCase>();
+builder.Services.AddScoped<RemoveFromCartUseCase>();
+
+
 var app = builder.Build();
+
+// 1. DATA SEEDING SECTION
+// Create a temporary scope to resolve services and seed the database
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-
-    // 1️⃣ Seed City
-    City city;
-    if (!context.Cities.Any())
+    try
     {
-        city = new City
-        {
-            Name = "Jerusalem",
-            Country = "Palestine",
-            ImageUrl = "https://picsum.photos/600/400"
-        };
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        // Ensure this method is awaited properly
+        await IdentitySeeder.SeedRoles(roleManager);
 
-        context.Cities.Add(city);
-        await context.SaveChangesAsync();
+        // If you need to seed initial data into the context:
+        // var context = services.GetRequiredService<ApplicationDbContext>();
     }
-    else
+    catch (Exception ex)
     {
-        city = context.Cities.First();
-    }
-
-    // 2️⃣ Seed Hotel
-    if (!context.Hotels.Any())
-    {
-        var hotel = new Hotel
-        {
-            Name = "Travelo Grand Hotel",
-            ResponsibleName = "Norma Khanafseh",
-            Address = "Main Street 45",
-            Country = "Palestine",
-            CityId = city.Id, // ✅ بدل 1
-            Latitude = 31.9522,
-            Longitude = 35.2332,
-            PricePerNight = 150,
-            Rating = 4.6,
-            ReviewsCount = 120,
-            ImageUrl = "https://picsum.photos/800/600",
-            IsFeatured = true,
-            Description = "Luxury hotel located in the city center with modern rooms."
-        };
-
-        context.Hotels.Add(hotel);
-
-        // 3️⃣ Seed Rooms
-        var rooms = new List<Room>
-        {
-            new Room
-            {
-                Type = "Single Room",
-                PricePerNight = 80,
-                Capacity = 1,
-                View = "City View",
-                BedType = "Single Bed",
-                Size = 20,
-                ImageUrl = "https://picsum.photos/400/300",
-                IsAvailable = true,
-                Hotel = hotel // ✅ مفيش HotelId
-            },
-            new Room
-            {
-                Type = "Double Room",
-                PricePerNight = 120,
-                Capacity = 2,
-                View = "Sea View",
-                BedType = "Queen Bed",
-                Size = 30,
-                ImageUrl = "https://picsum.photos/401/300",
-                IsAvailable = true,
-                Hotel = hotel
-            },
-            new Room
-            {
-                Type = "Family Suite",
-                PricePerNight = 200,
-                Capacity = 4,
-                View = "Garden View",
-                BedType = "King Bed",
-                Size = 50,
-                ImageUrl = "https://picsum.photos/402/300",
-                IsAvailable = true,
-                Hotel = hotel
-            }
-        };
-
-        context.Rooms.AddRange(rooms);
-        await context.SaveChangesAsync();
+        // Log errors during seeding
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
     }
 }
+
+// 2. MIDDLEWARE PIPELINE SECTION
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
+
+app.UseStaticFiles();
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseHttpsRedirection();
+app.UseCors("MyPolicy");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+// Start the application
+await app.RunAsync();
+
 // ============================================
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -280,9 +248,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    await IdentitySeeder.SeedRoles(roleManager);
-}
 app.Run();
+
+

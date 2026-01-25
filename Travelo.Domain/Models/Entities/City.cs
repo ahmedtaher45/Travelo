@@ -12,6 +12,6 @@ namespace Travelo.Domain.Models.Entities
         public IEnumerable<Hotel>? Hotels { get; set; }
         public string ImgUrl { get; set; }
         // public  IEnumerable<Restorant>
-        // public IEnumerable<Restaurant>? Restaurants { get; set; } = new List<Restaurant>();
+         public IEnumerable<Restaurant>? Restaurants { get; set; } = new List<Restaurant>();
     }
 }

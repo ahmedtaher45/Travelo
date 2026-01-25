@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Travelo.Application.DTOs.Auth;
 using Travelo.Application.DTOs.Hotels;
@@ -16,43 +15,31 @@ namespace Travelo.API.Controllers
     {
         [HttpPost("add-admin")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddAdmin(
+        public async Task<IActionResult> AddAdmin (
             [FromBody] AdminDTO adminDTO,
             [FromServices] AddAdminUseCase addAdminUseCase)
         {
             var result = await addAdminUseCase.ExecuteAsync(adminDTO);
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return !result.Success ? BadRequest(result) : Ok(result);
         }
 
         [HttpPost("add-restaurant")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddRestaurant(
+        public async Task<IActionResult> AddRestaurant (
             [FromBody] AddRestaurantDto addRestaurantDto,
             [FromServices] AddRestaurantUseCase addRestaurantUseCase)
         {
             var result = await addRestaurantUseCase.AddRestaurant(addRestaurantDto);
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return !result.Success ? BadRequest(result) : Ok(result);
         }
         [HttpPost("add-hotel")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddHotel(
+        public async Task<IActionResult> AddHotel (
             [FromBody] AddHotelDTO addHotelDTO,
             [FromServices] AddHotelUseCase addHotelUseCase)
         {
             var result = await addHotelUseCase.ExecuteAsync(addHotelDTO);
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return !result.Success ? BadRequest(result) : Ok(result);
         }
     }
 }
