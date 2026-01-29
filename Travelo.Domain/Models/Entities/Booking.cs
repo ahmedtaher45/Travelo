@@ -1,5 +1,4 @@
-﻿using Travelo.Domain.Models.Entities;
-using Travelo.Domain.Models.Enums;
+﻿using Travelo.Domain.Models.Enums;
 using Travelo.Domain.Shared;
 
 namespace Travelo.Domain.Models.Entities

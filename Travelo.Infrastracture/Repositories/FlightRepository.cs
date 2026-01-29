@@ -5,49 +5,49 @@ using Travelo.Infrastracture.Contexts;
 
 namespace Travelo.Infrastracture.Repositories
 {
-    public class FlightRepository : IFlightRepository
+    public class FlightRepository : GenericRepository<Flight>, IFlightRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public FlightRepository(ApplicationDbContext context)
+        public FlightRepository (ApplicationDbContext context) : base(context)
         {
-            _context = context;
+            _context=context;
         }
 
-        public async Task<List<Flight>> GetAllAsync()
+        public async Task<List<Flight>> GetAllAsync ()
         {
             return await _context.Flights
                 .Where(f => !f.IsDeleted)
                 .ToListAsync();
         }
 
-        public async Task<Flight?> GetByIdAsync(int id)
+        public async Task<Flight?> GetByIdAsync (int id)
         {
             return await _context.Flights
-                .FirstOrDefaultAsync(f => f.Id == id && !f.IsDeleted);
+                .FirstOrDefaultAsync(f => f.Id==id&&!f.IsDeleted);
         }
 
-        public async Task AddAsync(Flight flight)
+        public async Task AddAsync (Flight flight)
         {
-            flight.CreatedOn = DateTime.UtcNow;
+            flight.CreatedOn=DateTime.UtcNow;
             _context.Flights.Add(flight);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Flight flight)
+        public async Task UpdateAsync (Flight flight)
         {
-            flight.ModifiedOn = DateTime.UtcNow;
+            flight.ModifiedOn=DateTime.UtcNow;
             _context.Flights.Update(flight);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync (int id)
         {
             var flight = await _context.Flights.FindAsync(id);
-            if (flight != null)
+            if (flight!=null)
             {
                 flight.Delete();
-                flight.ModifiedOn = DateTime.UtcNow;
+                flight.ModifiedOn=DateTime.UtcNow;
                 await _context.SaveChangesAsync();
             }
         }

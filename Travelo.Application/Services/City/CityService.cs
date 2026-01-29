@@ -1,5 +1,7 @@
 ﻿using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.City;
+using Travelo.Application.DTOs.Hotels;
+using Travelo.Application.DTOs.Restaurant;
 using Travelo.Application.Interfaces;
 using Travelo.Application.Services.FileService;
 
@@ -118,6 +120,40 @@ namespace Travelo.Application.Services.City
 
             return GenericResponse<string>
                 .SuccessResponse("City deleted successfully");
+        }
+
+        public async Task<GenericResponse<IEnumerable<RestaurantDto>>> GetCityRestorants (int cityId)
+        {
+            var restorants = await _unitOfWork.Restaurant.GetManyAsync(r => r.CityId==cityId);
+            var restorantDtos = restorants.Select(r => new RestaurantDto
+            {
+                Id=r.Id,
+                Name=r.Name,
+                Description=r.Description,
+            });
+            return GenericResponse<IEnumerable<RestaurantDto>>.SuccessResponse(restorantDtos);
+        }
+        public async Task<GenericResponse<IEnumerable<HotelCardDto>>> GetCityHotels (int cityId)
+        {
+            var hotels = await _unitOfWork.Hotels.GetManyAsync(h => h.CityId==cityId);
+
+            if (hotels==null||!hotels.Any())
+                return GenericResponse<IEnumerable<HotelCardDto>>.SuccessResponse(Enumerable.Empty<HotelCardDto>());
+
+            var hotelDtos = hotels
+                .OrderByDescending(h => h.Rating) // optional: top-rated first
+                .Select(h => new HotelCardDto
+                {
+                    Id=h.Id,
+                    Name=h.Name,
+                    Location=h.Address??h.City?.Name??string.Empty,
+                    Price=h.PricePerNight,
+                    Rating=h.Rating,
+                    ReviewsCount=h.ReviewsCount,
+                    ImageUrl=h.ImageUrl
+                });
+
+            return GenericResponse<IEnumerable<HotelCardDto>>.SuccessResponse(hotelDtos);
         }
     }
 }

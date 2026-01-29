@@ -15,6 +15,8 @@
         IOrderItemRepository OrderItems { get; }
         IFlightRepository Flights { get; }
         IFlightBookingRepository FlightBookings { get; }
+        IRestaurantRepository Restaurant { get; }
+
 
         IGenericRepository<T> Repository<T> () where T : class;
 

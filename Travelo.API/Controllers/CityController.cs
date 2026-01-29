@@ -46,5 +46,18 @@ namespace Travelo.API.Controllers
             var result = await cityService.RemoveCity(id);
             return !result.Success ? BadRequest(result) : Ok(result);
         }
+        [HttpGet("{id}/restaurants")]
+        public async Task<IActionResult> GetCityRestaurants (int id)
+        {
+            var result = await cityService.GetCityRestorants(id);
+            return !result.Success ? BadRequest(result) : Ok(result);
+        }
+        [HttpGet("{id}/Hotels")]
+        public async Task<IActionResult> GetCityHotels (int id)
+        {
+            var result = await cityService.GetCityHotels(id);
+            return !result.Success ? BadRequest(result) : Ok(result);
+        }
+
     }
 }

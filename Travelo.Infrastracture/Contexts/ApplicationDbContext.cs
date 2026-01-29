@@ -27,9 +27,7 @@ namespace Travelo.Infrastracture.Contexts
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
-
-
-
+        public DbSet<FlightBooking> FlightBookings { get; set; }
 
         override protected void OnModelCreating (ModelBuilder builder)
         {

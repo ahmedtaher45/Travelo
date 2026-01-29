@@ -6,7 +6,7 @@ namespace Travelo.Domain.Models.Entities
     {
         public Hotel? Hotel { get; set; }
         public Restaurant? Restaurant { get; set; }
-        public bool PasswordRestCode { get; set; }
+        // public bool PasswordRestCode { get; set; } = false;
 
         public IEnumerable<Review>? Reviews { get; set; } = new List<Review>();
     }

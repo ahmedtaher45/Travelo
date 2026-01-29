@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Travelo.Application.Services.Payment;
 
 namespace Travelo.API.Controllers
@@ -14,11 +16,16 @@ namespace Travelo.API.Controllers
             this.payment=payment;
         }
         [HttpPost("CheckOut")]
+        [Authorize]
         public async Task<IActionResult> CreateRoomBookingPayment ([FromBody] Travelo.Application.DTOs.Payment.RoomBookingPaymentReq req)
         {
-            var userId = HttpContext.User.FindFirst("uid")?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId==null)
+            {
+                return Unauthorized();
+            }
             var httpReq = $"{Request.Scheme}://{Request.Host.Value}";
-            var result = await payment.CreateRoomBookingPayment(req, userId!, httpReq);
+            var result = await payment.CreateRoomBookingPayment(req, userId, httpReq);
             return !result.Success ? BadRequest(result) : Ok(result);
         }
         [HttpGet("Success/{paymentId}")]

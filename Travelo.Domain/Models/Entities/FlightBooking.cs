@@ -9,8 +9,7 @@ namespace Travelo.Domain.Models.Entities
         public ApplicationUser User { get; set; }
         public int FlightId { get; set; }
         public Flight Flight { get; set; }
-        public DateTime BookingDate { get; set; } = DateTime.Now;
-        public int NumberOfPassengers { get; set; }
+        public DateTime BookingDate { get; set; } = DateTime.Now; public int NumberOfPassengers { get; set; }
         public FlightBookingStatus Status { get; set; }
     }
 }

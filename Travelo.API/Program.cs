@@ -22,12 +22,11 @@ using Travelo.Application.UseCases.Menu;
 using Travelo.Application.UseCases.Restaurant;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
-using Travelo.Infrastracture.Identity;
 using Travelo.Infrastracture.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database Connection
+//Database Connection
 var connectionString = builder.Configuration.GetConnectionString("IdentityConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -170,25 +169,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MyPolicy", policy =>
         policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 });
-
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+StripeConfiguration.ApiKey=builder.Configuration["Stripe:SecretKey"];
 var app = builder.Build();
-
-// 1. DATA SEEDING SECTION
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        await IdentitySeeder.SeedRoles(roleManager);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
-    }
-}
-
 // 2. MIDDLEWARE PIPELINE
 if (app.Environment.IsDevelopment())
 {
