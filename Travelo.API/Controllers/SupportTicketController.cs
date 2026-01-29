@@ -61,7 +61,7 @@ namespace Diagnosis.API.Controllers
 
             return Ok(reply);
         }
-        [Authorize(Roles = "Doctor, Patient")]
+        [Authorize]
         [HttpGet("ticket/{ticketId}")]
         public async Task<IActionResult> GetSupportTicketAsync([FromServices] GetSupportTicketUseCase getSupportTicketUseCase, [FromRoute] int ticketId)
         {
