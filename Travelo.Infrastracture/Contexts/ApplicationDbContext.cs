@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 using Travelo.Domain.models.Entities;
+using Travelo.Domain.Models.Entites;
 using Travelo.Domain.Models.Entities;
 
 namespace Travelo.Infrastracture.Contexts
@@ -21,6 +23,7 @@ namespace Travelo.Infrastracture.Contexts
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
+        public DbSet<SupportTicket> SupportTickets { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<ThingToDo> ThingsToDo { get; set; }
@@ -43,6 +46,12 @@ namespace Travelo.Infrastracture.Contexts
                 .HasOne(a => a.Hotel)
                 .WithOne(a => a.User)
                 .HasForeignKey<Hotel>(a => a.UserId);
+
+            builder.Entity<ApplicationUser>()
+              .HasMany(u => u.SupportTickets)
+              .WithOne(p => p.User)
+              .HasForeignKey(p => p.userId)
+              .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<ApplicationUser>()
                 .HasOne(a => a.Restaurant)

@@ -12,6 +12,7 @@
         IRoomRepository Rooms { get; }
         IRoomBookingRepository RoomBookings { get; }
         IPaymentRepository Payment { get; }
+        ISupportTicket SupportTicket { get; }
 
         Task<int> CompleteAsync ();
         Task SaveChangesAsync ();
