@@ -10,6 +10,7 @@
         IRoomRepository Rooms { get; }
         IRoomBookingRepository RoomBookings { get; }
         IPaymentRepository Payment { get; }
+        ISupportTicket SupportTicket { get; }
         ICartRepository Cart { get; }
         IOrderRepository OrderRepository { get; }
         IOrderItemRepository OrderItems { get; }

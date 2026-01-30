@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Travelo.Application.Interfaces;
+using Travelo.Domain.Models.Entites;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 
@@ -26,6 +27,16 @@ namespace Travelo.Infrastracture.Repositories
             _configuration=configuration;
             _repositories=new Dictionary<Type, object>();
 
+            Auth = new AuthRepository(_userManager, _context, _configuration, _emailSender);
+            Hotels = new HotelRepository(_context);
+            Cities = new CityRepository(_context);
+            Reviews = new ReviewRepository(_context);
+            Menu = new MenuRepository(_context); 
+            SupportTicket = new SupportTicketRepository(_context, _userManager);
+
+            Rooms = new RoomRepository(_context);
+            RoomBookings= new RoomBookingRepository(_context);
+            Payment= new PaymentRepository(_context);
             // Initialize all repositories
             Auth=new AuthRepository(_userManager, _context, _configuration, _emailSender);
             Hotels=new HotelRepository(_context);
@@ -45,6 +56,8 @@ namespace Travelo.Infrastracture.Repositories
         public IAuthRepository Auth { get; private set; }
         public IHotelRepository Hotels { get; private set; }
         public ICityRepository Cities { get; private set; }
+        public ISupportTicket SupportTicket { get; private set; }
+
         public IReviewRepository Reviews { get; private set; }
         public IMenuRepository Menu { get; private set; }
         public IRoomRepository Rooms { get; private set; }
