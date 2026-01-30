@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Travelo.Application.Interfaces;
+using Travelo.Domain.Models.Entites;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 
@@ -26,6 +27,16 @@ namespace Travelo.Infrastracture.Repositories
             _configuration=configuration;
             _repositories=new Dictionary<Type, object>();
 
+            Auth = new AuthRepository(_userManager, _context, _configuration, _emailSender);
+            Hotels = new HotelRepository(_context);
+            Cities = new CityRepository(_context);
+            Reviews = new ReviewRepository(_context);
+            Menu = new MenuRepository(_context); 
+            SupportTicket = new SupportTicketRepository(_context, _userManager);
+
+            Rooms = new RoomRepository(_context);
+            RoomBookings= new RoomBookingRepository(_context);
+            Payment= new PaymentRepository(_context);
             // Initialize all repositories
             Auth=new AuthRepository(_userManager, _context, _configuration, _emailSender);
             Hotels=new HotelRepository(_context);
@@ -36,17 +47,31 @@ namespace Travelo.Infrastracture.Repositories
             RoomBookings=new RoomBookingRepository(_context);
             Payment=new PaymentRepository(_context);
             Cart=new CartRepository(_context);
+            OrderRepository=new OrderRepository(_context);
+            OrderItems=new OrderItemRepository(_context);
+            Flights=new FlightRepository(_context);
+            FlightBookings=new FlightBookingRepository(_context);
         }
 
         public IAuthRepository Auth { get; private set; }
         public IHotelRepository Hotels { get; private set; }
         public ICityRepository Cities { get; private set; }
+        public ISupportTicket SupportTicket { get; private set; }
+
         public IReviewRepository Reviews { get; private set; }
         public IMenuRepository Menu { get; private set; }
         public IRoomRepository Rooms { get; private set; }
         public IRoomBookingRepository RoomBookings { get; private set; }
         public IPaymentRepository Payment { get; private set; }
         public ICartRepository Cart { get; private set; }
+
+        public IOrderRepository OrderRepository { get; private set; }
+
+        public IOrderItemRepository OrderItems { get; private set; }
+
+        public IFlightRepository Flights { get; private set; }
+
+        public IFlightBookingRepository FlightBookings { get; private set; }
 
         public IGenericRepository<T> Repository<T> () where T : class
         {

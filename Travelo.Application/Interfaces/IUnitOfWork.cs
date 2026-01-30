@@ -10,7 +10,12 @@
         IRoomRepository Rooms { get; }
         IRoomBookingRepository RoomBookings { get; }
         IPaymentRepository Payment { get; }
+        ISupportTicket SupportTicket { get; }
         ICartRepository Cart { get; }
+        IOrderRepository OrderRepository { get; }
+        IOrderItemRepository OrderItems { get; }
+        IFlightRepository Flights { get; }
+        IFlightBookingRepository FlightBookings { get; }
 
         IGenericRepository<T> Repository<T> () where T : class;
 

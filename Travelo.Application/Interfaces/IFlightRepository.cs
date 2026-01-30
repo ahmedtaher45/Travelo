@@ -8,7 +8,7 @@ using Travelo.Domain.Models.Entities;
 
 namespace Travelo.Application.Interfaces
 {
-    public interface IFlightRepository
+    public interface IFlightRepository : IGenericRepository<Flight>
     {
         IQueryable<Flight> GetAllQueryable();
         Task<Flight?> GetByIdAsync(int id);

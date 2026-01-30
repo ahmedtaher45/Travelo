@@ -1,6 +1,6 @@
 ﻿namespace Travelo.Application.DTOs.Payment
 {
-    public class RoomBookingPaymentRes
+    public class PaymentRes
     {
         public string Message { get; set; }
         public string? PaymentId { get; set; }
