@@ -361,9 +361,9 @@ namespace Travelo.Infrastracture.Repositories
                 var emailBody = htmlTemplate.Replace("{{RESET_LINK}}", resetLink);
 
 
-                var message = new Message(new[] { user.Email! }, "Reset Password ", emailBody);
+                //var message = new Message(new[] { user.Email! }, "Reset Password ", emailBody);
 
-                await _emailSender.SendEmailAsync(message);
+                //await _emailSender.SendEmailAsync(message);
 
                 return GenericResponse<string>.SuccessResponse(
                     $"An email with a reset link has been sent."

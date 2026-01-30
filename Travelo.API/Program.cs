@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +9,14 @@ using System.Text;
 using Travelo.API.Middleware;
 using Travelo.Application.Interfaces;
 using Travelo.Application.Services.Auth;
+using Travelo.Application.Services.Booking;
 using Travelo.Application.Services.City;
 using Travelo.Application.Services.FileService;
+using Travelo.Application.Services.Flight;
 using Travelo.Application.Services.Payment;
+using Travelo.Application.Services.Ticket;
 using Travelo.Application.UseCases.Auth;
+using Travelo.Application.UseCases.Carts;
 using Travelo.Application.UseCases.Hotels;
 using Travelo.Application.UseCases.Menu;
 using Travelo.Application.UseCases.Restaurant;
@@ -23,9 +25,9 @@ using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Identity;
 using Travelo.Infrastracture.Repositories;
 
-
 var builder = WebApplication.CreateBuilder(args);
-//Database Connection
+
+// Database Connection
 var connectionString = builder.Configuration.GetConnectionString("IdentityConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -35,46 +37,103 @@ var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
-
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddDataProtection();
+
+// Infrastructure & Repositories
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-builder.Services.AddScoped<LoginUseCase>();
-builder.Services.AddScoped<RegisterUseCase>();
-builder.Services.AddScoped<IFileServices, FileServices>();
-builder.Services.AddScoped<IFileService, Travelo.Application.Services.FileService.FileService>();
-builder.Services.AddScoped<ICityService, CityService>(); builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IFlightRepository, FlightRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IRoomBookingRepository, RoomBookingRepository>();
+builder.Services.AddScoped<IOAuthGoogleRepository, OAuthGoogleRepository>();
+builder.Services.AddScoped<IJwtTokenRepository, JwtTokenRepository>();
+
+// Services
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IFileService, Travelo.Application.Services.FileService.FileService>();
+builder.Services.AddScoped<IFileServices, Travelo.Application.Services.FileService.FileServices>();
+builder.Services.AddScoped<ICityService, CityService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IFlightService, FlightService>();
+builder.Services.AddScoped<IPaymentServices, PaymentServices>();
+
+// Use Cases
+builder.Services.AddScoped<LoginUseCase>();
+builder.Services.AddScoped<RegisterUseCase>();
 builder.Services.AddScoped<ChangePasswordUseCase>();
 builder.Services.AddScoped<AddAdminUseCase>();
+builder.Services.AddScoped<ForgotPasswordUseCase>();
+builder.Services.AddScoped<ResetPasswordUseCase>();
+builder.Services.AddScoped<ConfirmEmailUseCase>();
+builder.Services.AddScoped<ResendConfirmEmailUseCase>();
+builder.Services.AddScoped<GoogleLoginUseCase>();
+
+// Restaurant & Menu Use Cases
 builder.Services.AddScoped<AddRestaurantUseCase>();
+builder.Services.AddScoped<GetRestaurantUseCase>();
+builder.Services.AddScoped<UpdateRestaurantUseCase>();
+builder.Services.AddScoped<RemoveRestaurantUseCase>();
+builder.Services.AddScoped<GetMenuUseCase>();
+builder.Services.AddScoped<GetItemUseCase>();
+builder.Services.AddScoped<AddCategoryUseCase>();
+builder.Services.AddScoped<AddItemUseCase>();
+builder.Services.AddScoped<DeleteItemUseCase>();
+builder.Services.AddScoped<UpdateItemUseCase>();
+builder.Services.AddScoped<UpdateCategoryUseCase>();
+builder.Services.AddScoped<DeleteCategoryUseCase>();
+
+// Hotel Use Cases
 builder.Services.AddScoped<AddHotelUseCase>();
+builder.Services.AddScoped<GetFeaturedHotelsUseCase>();
+builder.Services.AddScoped<GetHotelByIdUseCase>();
+builder.Services.AddScoped<GetHotelRoomsUseCase>();
+builder.Services.AddScoped<GetThingsToDoUseCase>();
+builder.Services.AddScoped<GetSimilarHotelsUseCase>();
 
-//Identity Configuration
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
+// Cart Use Cases
+builder.Services.AddScoped<AddToCartUseCase>();
+builder.Services.AddScoped<GetCartUseCase>();
+builder.Services.AddScoped<RemoveCartItemUseCase>();
+builder.Services.AddScoped<RemoveFromCartUseCase>();
 
+// Configuration & External
+var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfigruration>();
+builder.Services.AddSingleton(emailConfig);
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+StripeConfiguration.ApiKey=builder.Configuration["Stripe:SecretKey"];
+
+// Identity Configuration
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
     options.User.RequireUniqueEmail=true;
     options.SignIn.RequireConfirmedEmail=true;
-
-    // Password settings 
     options.Password.RequireDigit=true;
     options.Password.RequiredLength=6;
     options.Password.RequireNonAlphanumeric=false;
     options.Password.RequireUppercase=true;
     options.Password.RequireLowercase=true;
-
-    // Lockout settings 
     options.Lockout.DefaultLockoutTimeSpan=TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts=5;
 })
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+    opt.TokenLifespan=TimeSpan.FromHours(2));
+
+// Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme=JwtBearerDefaults.AuthenticationScheme;
@@ -93,37 +152,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey=new SymmetricSecurityKey(key),
         ClockSkew=TimeSpan.Zero
     };
-});
-builder.Services.AddDataProtection();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-builder.Services.AddScoped(
-    typeof(IGenericRepository<>),
-    typeof(GenericRepository<>)
-);
-
-builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-
-builder.Services.AddScoped<RegisterUseCase>();
-builder.Services.AddScoped<Travelo.Application.UseCases.Hotels.GetFeaturedHotelsUseCase>();
-builder.Services.AddScoped<GetFeaturedHotelsUseCase>();
-builder.Services.AddScoped<GetHotelByIdUseCase>();
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("MyPolicy", policy =>
-        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-});
-builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
-opt.TokenLifespan=TimeSpan.FromHours(2));
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme=CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme=GoogleDefaults.AuthenticationScheme;
-}
-
-)
+})
 .AddCookie(IdentityConstants.ApplicationScheme)
 .AddCookie(IdentityConstants.ExternalScheme)
 .AddGoogle(options =>
@@ -136,117 +165,37 @@ builder.Services.AddAuthentication(options =>
     options.ClaimActions.MapJsonKey("picture", "picture");
 });
 
-builder.Services.AddScoped<IOAuthGoogleRepository, OAuthGoogleRepository>();
-builder.Services.AddScoped<IJwtTokenRepository, JwtTokenRepository>();
-builder.Services.AddScoped<GoogleLoginUseCase>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy", policy =>
+        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+});
 
-var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfigruration>();
-builder.Services.AddSingleton(emailConfig);
-builder.Services.AddScoped<IHotelRepository, HotelRepository>();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-builder.Services.AddScoped<IPaymentServices, PaymentServices>();
-builder.Services.AddScoped<IRoomBookingRepository, RoomBookingRepository>();
-builder.Services.AddScoped<ForgotPasswordUseCase>();
-builder.Services.AddScoped<ResetPasswordUseCase>();
-builder.Services.AddScoped<ConfirmEmailUseCase>();
-builder.Services.AddScoped<ResendConfirmEmailUseCase>();
-builder.Services.AddScoped<GetMenuUseCase>();
-builder.Services.AddScoped<GetItemUseCase>();
-builder.Services.AddScoped<AddCategoryUseCase>();
-builder.Services.AddScoped<AddItemUseCase>();
-builder.Services.AddScoped<DeleteItemUseCase>();
-builder.Services.AddScoped<UpdateItemUseCase>();
-builder.Services.AddScoped<UpdateCategoryUseCase>();
-builder.Services.AddScoped<DeleteCategoryUseCase>();
-// Configure Stripe settings
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
-StripeConfiguration.ApiKey=builder.Configuration["Stripe:SecretKey"];
 var app = builder.Build();
+
+// 1. DATA SEEDING SECTION
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-
-    // 2️⃣ Seed Hotel & Rooms using EF Core
-    var context = services.GetRequiredService<ApplicationDbContext>();
-
-    if (!context.Hotels.Any())
+    try
     {
-        // Seed hotel
-        var hotel = new Hotel
-        {
-            Name="Travelo Grand Hotel",
-            ResponsibleName="Norma Khanafseh",
-            Address="Main Street 45",
-            Country="Palestine",
-            CityId=1, // Make sure city with Id=1 exists
-            Latitude=31.9522,
-            Longitude=35.2332,
-            PricePerNight=150,
-            Rating=4.6,
-            ReviewsCount=120,
-            ImageUrl="https://picsum.photos/800/600",
-            IsFeatured=true,
-            Description="Luxury hotel located in the city center with modern rooms."
-        };
-
-        context.Hotels.Add(hotel);
-
-        // Seed rooms
-        var rooms = new List<Room>
-        {
-            new Room
-            {
-                HotelId = hotel.Id,
-                Type = "Single Room",
-                PricePerNight = 80,
-                Capacity = 1,
-                View = "City View",
-                BedType = "Single Bed",
-                Size = 20,
-                ImageUrl = "https://picsum.photos/400/300",
-                IsAvailable = true,
-                Hotel = hotel
-            },
-            new Room
-            {
-                HotelId = hotel.Id,
-                Type = "Double Room",
-                PricePerNight = 120,
-                Capacity = 2,
-                View = "Sea View",
-                BedType = "Queen Bed",
-                Size = 30,
-                ImageUrl = "https://picsum.photos/401/300",
-                IsAvailable = true,
-                Hotel = hotel
-            },
-            new Room
-            {
-                HotelId = hotel.Id,
-                Type = "Family Suite",
-                PricePerNight = 200,
-                Capacity = 4,
-                View = "Garden View",
-                BedType = "King Bed",
-                Size = 50,
-                ImageUrl = "https://picsum.photos/402/300",
-                IsAvailable = true,
-                Hotel= hotel
-            }
-        };
-
-        context.Rooms.AddRange(rooms);
-
-        await context.SaveChangesAsync();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        await IdentitySeeder.SeedRoles(roleManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
     }
 }
-// ============================================
-// Configure the HTTP request pipeline.
+
+// 2. MIDDLEWARE PIPELINE
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
 app.UseStaticFiles();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
@@ -257,9 +206,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    await IdentitySeeder.SeedRoles(roleManager);
-}
-app.Run();
+await app.RunAsync();

@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
-using Travelo.Domain.models.Entities;
 using Travelo.Domain.Models.Entites;
-using Travelo.Domain.Models.Entities;
 
 namespace Travelo.Infrastracture.Contexts
 {
@@ -30,10 +28,19 @@ namespace Travelo.Infrastracture.Contexts
         public DbSet<RoomBooking> RoomBookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        protected override void OnModelCreating (ModelBuilder builder)
+        public DbSet<Ticket> Ticket { get; set; }
+
+
+
+
+        override protected void OnModelCreating (ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<Booking>()
+                   .HasOne(b => b.Ticket)
+                   .WithOne(t => t.Booking)
+                   .HasForeignKey<Ticket>(t => t.BookingId);
             builder.Entity<ApplicationUser>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");

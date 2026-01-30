@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Travelo.Application.DTOs.Restaurant;
-using Travelo.Application.DTOs.Review;
 using Travelo.Application.UseCases.Restaurant;
 
 namespace Travelo.API.Controllers
@@ -15,16 +13,16 @@ namespace Travelo.API.Controllers
         private readonly UpdateRestaurantUseCase _updateRestaurantUseCase;
         private readonly RemoveRestaurantUseCase _removeRestaurantUseCase;
 
-        public RestaurantController(AddRestaurantUseCase addRestaurantUseCase, GetRestaurantUseCase getRestaurantUseCase, UpdateRestaurantUseCase updateRestaurantUseCase, RemoveRestaurantUseCase removeRestaurantUseCase)
+        public RestaurantController (AddRestaurantUseCase addRestaurantUseCase, GetRestaurantUseCase getRestaurantUseCase, UpdateRestaurantUseCase updateRestaurantUseCase, RemoveRestaurantUseCase removeRestaurantUseCase)
         {
-            _addRestaurantUseCase = addRestaurantUseCase;
-            _getRestaurantUseCase = getRestaurantUseCase;
-            _updateRestaurantUseCase = updateRestaurantUseCase;
-            _removeRestaurantUseCase = removeRestaurantUseCase;
+            _addRestaurantUseCase=addRestaurantUseCase;
+            _getRestaurantUseCase=getRestaurantUseCase;
+            _updateRestaurantUseCase=updateRestaurantUseCase;
+            _removeRestaurantUseCase=removeRestaurantUseCase;
         }
 
         [HttpGet("id")]
-        public async Task<IActionResult> GetRestaurant(int id)
+        public async Task<IActionResult> GetRestaurant (int id)
         {
             try
             {
@@ -39,11 +37,11 @@ namespace Travelo.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRestaurant(int cityId, AddRestaurantDto dto)
+        public async Task<IActionResult> AddRestaurant (int cityId, AddRestaurantDto dto)
         {
             try
             {
-                var res = await _addRestaurantUseCase.AddRestaurant(cityId, dto);
+                var res = await _addRestaurantUseCase.AddRestaurant(dto);
                 return Created("", res);
             }
             catch (Exception ex)
@@ -53,7 +51,7 @@ namespace Travelo.API.Controllers
         }
 
         [HttpPut("id")]
-        public async Task<IActionResult> UpdateRestaurant([FromRoute] int id, [FromBody] AddRestaurantDto dto)
+        public async Task<IActionResult> UpdateRestaurant ([FromRoute] int id, [FromBody] AddRestaurantDto dto)
         {
             try
             {
@@ -67,7 +65,7 @@ namespace Travelo.API.Controllers
         }
 
         [HttpDelete("id")]
-        public async Task<IActionResult> RemoveRestaurant([FromRoute] int id)
+        public async Task<IActionResult> RemoveRestaurant ([FromRoute] int id)
         {
             try
             {

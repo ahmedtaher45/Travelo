@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Travelo.Application.Services.Auth;
 
+
 namespace Travelo.Application.Interfaces
 {
     public interface IEmailSender

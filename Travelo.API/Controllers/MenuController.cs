@@ -44,14 +44,14 @@ namespace Travelo.API.Controllers
             return !result.Success ? BadRequest(result) : Ok(result);
         }
         [HttpPost("category")]
-        public async Task<IActionResult> AddCategory([FromBody] AddCategoryDTO dto)
+        public async Task<IActionResult> AddCategory([FromForm] AddCategoryDTO dto)
         {
             var result = await _addCategoryUseCase.ExecuteAsync(dto);
 
             return !result.Success ? BadRequest(result) : Ok(result);
         }
         [HttpPost("item")]
-        public async Task<IActionResult> AddItem([FromBody] AddItemDTO dto)
+        public async Task<IActionResult> AddItem([FromForm] AddItemDTO dto)
         {
             var result = await _addItemUseCase.ExecuteAsync(dto);
             return !result.Success ? BadRequest(result) : Ok(result);
