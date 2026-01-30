@@ -19,5 +19,6 @@ namespace Travelo.Domain.Models.Entities
         public decimal Price { get; set; }
 
         public int AircraftId { get; set; }
+        public Aircraft Aircraft { get; set; }
     }
 }

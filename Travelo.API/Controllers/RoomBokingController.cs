@@ -24,7 +24,7 @@ namespace Travelo.API.Controllers
         [HttpGet("Success/{paymentId}")]
         public async Task<IActionResult> HandelSuccessAsync (int paymentId)
         {
-            var result = await payment.HandelSuccessAsync(paymentId);
+            var result = await payment.HandleSuccessAsync(paymentId);
             return !result!.Success ? BadRequest(result) : Ok(result);
         }
         [HttpGet("Cancel")]

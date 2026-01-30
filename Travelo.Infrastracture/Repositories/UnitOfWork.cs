@@ -47,6 +47,10 @@ namespace Travelo.Infrastracture.Repositories
             RoomBookings=new RoomBookingRepository(_context);
             Payment=new PaymentRepository(_context);
             Cart=new CartRepository(_context);
+            OrderRepository=new OrderRepository(_context);
+            OrderItems=new OrderItemRepository(_context);
+            Flights=new FlightRepository(_context);
+            FlightBookings=new FlightBookingRepository(_context);
         }
 
         public IAuthRepository Auth { get; private set; }
@@ -60,6 +64,14 @@ namespace Travelo.Infrastracture.Repositories
         public IRoomBookingRepository RoomBookings { get; private set; }
         public IPaymentRepository Payment { get; private set; }
         public ICartRepository Cart { get; private set; }
+
+        public IOrderRepository OrderRepository { get; private set; }
+
+        public IOrderItemRepository OrderItems { get; private set; }
+
+        public IFlightRepository Flights { get; private set; }
+
+        public IFlightBookingRepository FlightBookings { get; private set; }
 
         public IGenericRepository<T> Repository<T> () where T : class
         {
