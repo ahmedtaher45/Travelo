@@ -20,6 +20,7 @@ using Travelo.Application.UseCases.Carts;
 using Travelo.Application.UseCases.Hotels;
 using Travelo.Application.UseCases.Menu;
 using Travelo.Application.UseCases.Restaurant;
+using Travelo.Application.UseCases.Review;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Identity;
@@ -106,6 +107,18 @@ builder.Services.AddScoped<AddToCartUseCase>();
 builder.Services.AddScoped<GetCartUseCase>();
 builder.Services.AddScoped<RemoveCartItemUseCase>();
 builder.Services.AddScoped<RemoveFromCartUseCase>();
+
+//review Use Cases
+builder.Services.AddScoped<AddReviewUseCase>();
+builder.Services.AddScoped<GetAirlineReviewsUseCase>();
+builder.Services.AddScoped<GetHotelReviewsUseCase>();
+builder.Services.AddScoped<GetFlightReviewsUseCase>();
+builder.Services.AddScoped<GetReviewByIdUseCase>();
+builder.Services.AddScoped<GetUserReviewsUseCase>();
+builder.Services.AddScoped<RemoveReviewUseCase>();
+builder.Services.AddScoped<UpdateReviewUseCase>();
+
+
 
 // Configuration & External
 var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfigruration>();

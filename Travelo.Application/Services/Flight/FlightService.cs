@@ -86,6 +86,10 @@ namespace Travelo.Application.Services.Flight
                     _flightRepository.GetAllQueryable(), filter)
                     .Where(f => f.FromAirport == segment.From)
                     .Where(f => f.ToAirport == segment.To)
+                    //.Where(f =>
+                    //f.DepartureDateTime >= segment.Date.Date &&
+                    //f.DepartureDateTime < segment.Date.Date.AddDays(1))
+
                     .Where(f => f.DepartureDateTime.Date == segment.Date.Date);
 
                 var flights = await query.ToListAsync();
@@ -188,6 +192,7 @@ namespace Travelo.Application.Services.Flight
             flight.Price = dto.Price;
             flight.BaggageAllowance = dto.Baggage;
             flight.IsNonStop = dto.NonStop;
+            flight.AverageRating = dto.Rating;
 
             await _flightRepository.UpdateAsync(flight);
             return MapToDto(flight);
