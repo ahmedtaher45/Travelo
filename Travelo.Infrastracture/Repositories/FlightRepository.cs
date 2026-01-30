@@ -7,11 +7,11 @@ namespace Travelo.Infrastracture.Repositories
 {
     public class FlightRepository : GenericRepository<Flight>, IFlightRepository
     {
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
 
         public FlightRepository (ApplicationDbContext context) : base(context)
         {
-            this.context=context;
+            _context=context;
         }
 
         public IQueryable<Flight> GetAllQueryable()
