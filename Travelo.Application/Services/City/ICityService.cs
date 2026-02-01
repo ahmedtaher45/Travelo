@@ -1,5 +1,7 @@
 ﻿using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.City;
+using Travelo.Application.DTOs.Hotels;
+using Travelo.Application.DTOs.Restaurant;
 
 namespace Travelo.Application.Services.City
 {
@@ -11,5 +13,8 @@ namespace Travelo.Application.Services.City
         Task<GenericResponse<string>> CreateCity (CityReqDTO cityReq);
         Task<GenericResponse<string>> UpdateCity (int cityId, CityReqDTO cityReq);
         Task<GenericResponse<string>> RemoveCity (int cityId);
+        Task<GenericResponse<IEnumerable<RestaurantDto>>> GetCityRestorants (int cityId);
+        Task<GenericResponse<IEnumerable<RestaurantDto>>> GetCityTopRestorants (int cityId);
+        Task<GenericResponse<IEnumerable<HotelDetailsDto>>> GetCityHotels (int cityId);
     }
 }

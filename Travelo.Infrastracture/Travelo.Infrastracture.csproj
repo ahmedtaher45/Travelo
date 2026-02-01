@@ -8,16 +8,18 @@
 
   <ItemGroup>
     <Compile Remove="NewFolder1\**" />
-    <Compile Remove="NewFolder\**" />
     <EmbeddedResource Remove="NewFolder1\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="NewFolder1\**" />
-    <None Remove="NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Travelo.Application\Travelo.Application.csproj" />
     <ProjectReference Include="..\Travelo.Domain\Travelo.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="InternalMigrations\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,16 @@
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\bin\Debug\net9.0\Travelo.Application.deps.json
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\bin\Debug\net9.0\Travelo.Application.dll
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\bin\Debug\net9.0\Travelo.Application.pdb
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\bin\Debug\net9.0\Travelo.Domain.dll
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\bin\Debug\net9.0\Travelo.Domain.pdb
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo.Application.csproj.AssemblyReference.cache
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo.Application.AssemblyInfoInputs.cache
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo.Application.AssemblyInfo.cs
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo.Application.csproj.CoreCompileInputs.cache
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo.Application.sourcelink.json
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo..9D40E495.Up2Date
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo.Application.dll
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\refint\Travelo.Application.dll
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\Travelo.Application.pdb
+C:\fullstack\trvelo\projct\Travelo\Travelo.Application\obj\Debug\net9.0\ref\Travelo.Application.dll

@@ -73,6 +73,8 @@ namespace Travelo.Infrastracture.Repositories
 
         public IFlightBookingRepository FlightBookings { get; private set; }
 
+        public IRestaurantRepository Restaurant => throw new NotImplementedException();
+
         public IGenericRepository<T> Repository<T> () where T : class
         {
             var type = typeof(T);

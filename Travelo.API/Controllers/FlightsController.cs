@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Travelo.Application.DTOs.Flight;
 using Travelo.Application.Services.Flight;
 
@@ -11,9 +10,9 @@ namespace Travelo.API.Controllers
     {
         private readonly IFlightService _flightService;
 
-        public FlightsController(IFlightService flightService)
+        public FlightsController (IFlightService flightService)
         {
-            _flightService = flightService;
+            _flightService=flightService;
         }
 
         [HttpPost("search")]
@@ -24,45 +23,43 @@ namespace Travelo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetFlights()
+        public async Task<IActionResult> GetFlights ()
         {
             var flights = await _flightService.GetAllFlightsAsync();
             return Ok(flights);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetFlight(int id)
+        public async Task<IActionResult> GetFlight (int id)
         {
             var flight = await _flightService.GetFlightByIdAsync(id);
-            if (flight == null) return NotFound();
-            return Ok(flight);
+            return flight==null ? NotFound() : Ok(flight);
         }
 
-        
+
         [HttpPost]
-        public async Task<IActionResult> CreateFlight([FromBody] FlightDto flightDto)
+        public async Task<IActionResult> CreateFlight ([FromBody] FlightDto flightDto)
         {
             var flight = await _flightService.CreateFlightAsync(flightDto);
             return CreatedAtAction(nameof(GetFlight), new { id = flight.Id }, flight);
         }
 
-        
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFlight(int id, [FromBody] FlightDto flightDto)
+        public async Task<IActionResult> UpdateFlight (int id, [FromBody] FlightDto flightDto)
         {
             var updatedFlight = await _flightService.UpdateFlightAsync(id, flightDto);
-            if (updatedFlight == null) return NotFound();
-            return Ok(updatedFlight);
+            return updatedFlight==null ? NotFound() : Ok(updatedFlight);
         }
 
-        
+
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFlight(int id)
+        public async Task<IActionResult> DeleteFlight (int id)
         {
             var deleted = await _flightService.DeleteFlightAsync(id);
-            if (!deleted) return NotFound();
-            return NoContent();
+            return !deleted ? NotFound() : NoContent();
         }
+
     }
 
 }

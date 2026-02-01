@@ -24,21 +24,21 @@ namespace Travelo.Infrastracture.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
-        public AuthRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailSender)
+        public AuthRepository (UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailSender)
         {
-            this.userManager = userManager;
-            _context = context;
-            _configuration = configuration;
-            _emailSender = emailSender;
+            this.userManager=userManager;
+            _context=context;
+            _configuration=configuration;
+            _emailSender=emailSender;
         }
 
-        public AuthRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AuthRepository (ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
-            this.userManager = userManager;
+            _context=context;
+            this.userManager=userManager;
         }
 
-        public async Task<GenericResponse<string>> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO, string userId)
+        public async Task<GenericResponse<string>> ChangePasswordAsync (ChangePasswordDTO changePasswordDTO, string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
             if (user is null)
@@ -52,9 +52,9 @@ namespace Travelo.Infrastracture.Repositories
         }
 
 
-        public async Task<GenericResponse<string>> RegisterAsync(RegisterDTO registerDTO)
+        public async Task<GenericResponse<string>> RegisterAsync (RegisterDTO registerDTO)
         {
-            if (registerDTO.Email == null)
+            if (registerDTO.Email==null)
             {
                 return GenericResponse<string>.FailureResponse("Invalid Email");
             }
@@ -62,11 +62,11 @@ namespace Travelo.Infrastracture.Repositories
 
             try
             {
-                user = new ApplicationUser
+                user=new ApplicationUser
                 {
-                    Email = registerDTO.Email,
-                    UserName = registerDTO.UserName,
-                    PhoneNumber = registerDTO.PhoneNumber
+                    Email=registerDTO.Email,
+                    UserName=registerDTO.UserName,
+                    PhoneNumber=registerDTO.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, registerDTO.Password!);
 
@@ -85,18 +85,18 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                if (user != null)
+                if (user!=null)
                     await userManager.DeleteAsync(user);
 
-                var errorMessage = ex.InnerException != null
+                var errorMessage = ex.InnerException!=null
                       ? ex.InnerException.Message
                       : ex.Message;
 
-                return GenericResponse<string>.FailureResponse("Error: " + errorMessage + " | StackTrace: " + ex.StackTrace);
+                return GenericResponse<string>.FailureResponse("Error: "+errorMessage+" | StackTrace: "+ex.StackTrace);
             }
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            token = WebUtility.UrlEncode(token);
+            token=WebUtility.UrlEncode(token);
             var param = new Dictionary<string, string?>
                 {
                     {"token",token },
@@ -124,9 +124,9 @@ namespace Travelo.Infrastracture.Repositories
 
             return GenericResponse<string>.SuccessResponse("Check your Email for Confirmation");
         }
-        public async Task<GenericResponse<string>> AddAdmin(AdminDTO adminDTO)
+        public async Task<GenericResponse<string>> AddAdmin (AdminDTO adminDTO)
         {
-            if (adminDTO == null)
+            if (adminDTO==null)
             {
                 return GenericResponse<string>.FailureResponse("Admin Data can't be null");
             }
@@ -134,9 +134,9 @@ namespace Travelo.Infrastracture.Repositories
             {
                 var user = new ApplicationUser()
                 {
-                    Email = adminDTO.Email,
-                    UserName = adminDTO.UserName,
-                    PhoneNumber = adminDTO.PhoneNumber
+                    Email=adminDTO.Email,
+                    UserName=adminDTO.UserName,
+                    PhoneNumber=adminDTO.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, adminDTO.Password!);
                 if (!result.Succeeded)
@@ -144,7 +144,7 @@ namespace Travelo.Infrastracture.Repositories
                     return GenericResponse<string>.FailureResponse("Error with creating admin user");
                 }
 
-                await userManager.AddToRoleAsync(user,"Admin");
+                await userManager.AddToRoleAsync(user, "Admin");
 
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 await userManager.ConfirmEmailAsync(user, token);
@@ -153,12 +153,12 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                return GenericResponse<string>.FailureResponse("Exception occured: "+ ex.Message);
+                return GenericResponse<string>.FailureResponse("Exception occured: "+ex.Message);
             }
         }
-        public async Task<GenericResponse<string>> AddRestaurant(int cityId,AddRestaurantDto addRestaurantDto)
+        public async Task<GenericResponse<string>> AddRestaurant (int cityId, AddRestaurantDto addRestaurantDto)
         {
-            if (addRestaurantDto == null)
+            if (addRestaurantDto==null)
             {
                 return GenericResponse<string>.FailureResponse("Restaurant Data can't be null");
             }
@@ -166,9 +166,9 @@ namespace Travelo.Infrastracture.Repositories
             {
                 var user = new ApplicationUser()
                 {
-                    Email = addRestaurantDto.Email,
-                    UserName = addRestaurantDto.UserName,
-                    PhoneNumber = addRestaurantDto.PhoneNumber
+                    Email=addRestaurantDto.Email,
+                    UserName=addRestaurantDto.UserName,
+                    PhoneNumber=addRestaurantDto.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, addRestaurantDto.Password!);
                 if (!result.Succeeded)
@@ -183,10 +183,10 @@ namespace Travelo.Infrastracture.Repositories
 
                 var restaurant = new Restaurant()
                 {
-                    Name = addRestaurantDto.Name,
-                    Description = addRestaurantDto.Description,
-                    UserId = user.Id,
-                    CityId = cityId
+                    Name=addRestaurantDto.Name,
+                    Description=addRestaurantDto.Description,
+                    UserId=user.Id,
+                    CityId=cityId
                 };
                 await _context.Restaurants.AddAsync(restaurant);
                 await _context.SaveChangesAsync();
@@ -194,13 +194,13 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                return GenericResponse<string>.FailureResponse("Exception occured: " + ex.Message);
+                return GenericResponse<string>.FailureResponse("Exception occured: "+ex.Message);
             }
         }
 
-        public async Task<GenericResponse<string>> AddHotel(int cityId, AddHotelDTO dto)
+        public async Task<GenericResponse<string>> AddHotel (int cityId, AddHotelDTO dto)
         {
-            if (dto == null)
+            if (dto==null)
             {
                 return GenericResponse<string>.FailureResponse("Hotel Data can't be null");
             }
@@ -208,9 +208,9 @@ namespace Travelo.Infrastracture.Repositories
             {
                 var user = new ApplicationUser()
                 {
-                    Email = dto.Email,
-                    UserName = dto.UserName,
-                    PhoneNumber = dto.PhoneNumber
+                    Email=dto.Email,
+                    UserName=dto.UserName,
+                    PhoneNumber=dto.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, dto.Password!);
                 if (!result.Succeeded)
@@ -225,47 +225,47 @@ namespace Travelo.Infrastracture.Repositories
 
                 var hotel = new Hotel
                 {
-                    Name = dto.Name,
-                    ResponsibleName = dto.ResponsibleName,
-                    Address = dto.Address,
-                    Country = dto.Country,
-                    Latitude = dto.Latitude,
-                    Longitude = dto.Longitude,
-                    CityId = dto.CityId,
-                    PricePerNight = dto.PricePerNight,
-                    Rating = dto.Rating,
-                    ReviewsCount = dto.ReviewsCount,
-                    ImageUrl = dto.ImageUrl,
-                    IsFeatured = dto.IsFeatured,
-                    Description = dto.Description,
-                    UserId = user.Id
+                    Name=dto.Name,
+                    ResponsibleName=dto.ResponsibleName,
+                    Address=dto.Address,
+                    Country=dto.Country,
+                    Latitude=dto.Latitude,
+                    Longitude=dto.Longitude,
+                    CityId=dto.CityId,
+                    PricePerNight=dto.PricePerNight,
+                    Rating=dto.Rating,
+                    ReviewsCount=dto.ReviewsCount,
+                    ImageUrl=dto.ImageUrl,
+                    IsFeatured=dto.IsFeatured,
+                    Description=dto.Description,
+                    UserId=user.Id
                 };
 
-                if (dto.Rooms != null && dto.Rooms.Any())
+                if (dto.Rooms!=null&&dto.Rooms.Any())
                 {
-                    hotel.Rooms = dto.Rooms.Select(r => new Room
+                    hotel.Rooms=dto.Rooms.Select(r => new Room
                     {
-                        Type = r.Type,
-                        PricePerNight = r.PricePerNight,
-                        Capacity = r.Capacity,
-                        View = r.View,
-                        ImageUrl = r.ImageUrl,
-                        IsAvailable = r.IsAvailable,
-                        BedType = r.BedType,
-                        Size = r.Size
+                        Type=r.Type,
+                        PricePerNight=r.PricePerNight,
+                        Capacity=r.Capacity,
+                        View=r.View,
+                        ImageUrl=r.ImageUrl,
+                        IsAvailable=r.IsAvailable,
+                        BedType=r.BedType,
+                        Size=r.Size
                     }).ToList();
                 }
 
-                if (dto.ThingsToDo != null && dto.ThingsToDo.Any())
+                if (dto.ThingsToDo!=null&&dto.ThingsToDo.Any())
                 {
-                    hotel.ThingsToDo = dto.ThingsToDo.Select(t => new ThingToDo
+                    hotel.ThingsToDo=dto.ThingsToDo.Select(t => new ThingToDo
                     {
-                        Title = t.Title,
-                        Category = t.Category,
-                        Distance = t.Distance,
-                        Price = t.Price,
-                        OldPrice = t.OldPrice,
-                        ImageUrl = t.ImageUrl
+                        Title=t.Title,
+                        Category=t.Category,
+                        Distance=t.Distance,
+                        Price=t.Price,
+                        OldPrice=t.OldPrice,
+                        ImageUrl=t.ImageUrl
                     }).ToList();
                 }
 
@@ -275,15 +275,15 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                return GenericResponse<string>.FailureResponse("Exception occured: " + ex.Message);
+                return GenericResponse<string>.FailureResponse("Exception occured: "+ex.Message);
             }
         }
-        public async Task<GenericResponse<AuthResponseDTO>> LoginAsync(LoginDTO loginDTO)
+        public async Task<GenericResponse<AuthResponseDTO>> LoginAsync (LoginDTO loginDTO)
         {
 
             var user = await userManager.FindByEmailAsync(loginDTO.Email);
 
-            if (user == null || !await userManager.CheckPasswordAsync(user, loginDTO.Password))
+            if (user==null||!await userManager.CheckPasswordAsync(user, loginDTO.Password))
             {
                 return GenericResponse<AuthResponseDTO>.FailureResponse("Invalid Email or Password");
             }
@@ -341,7 +341,7 @@ namespace Travelo.Infrastracture.Repositories
                 }
 
                 var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                token = WebUtility.UrlEncode(token);
+                token=WebUtility.UrlEncode(token);
                 var param = new Dictionary<string, string?>
                 {
                     {"token",token },
@@ -381,7 +381,7 @@ namespace Travelo.Infrastracture.Repositories
             }
         }
 
-        public async Task<GenericResponse<string>> ResetPasswordAsync(ResetPasswordDTO resetPasswordDTO)
+        public async Task<GenericResponse<string>> ResetPasswordAsync (ResetPasswordDTO resetPasswordDTO)
         {
             var user = await userManager.FindByEmailAsync(resetPasswordDTO.Email);
             if (user==null)
@@ -401,10 +401,10 @@ namespace Travelo.Infrastracture.Repositories
             return GenericResponse<string>.SuccessResponse("Password has been reset successfully.");
         }
 
-        public async Task<GenericResponse<string>> ConfirmEmailAsync(ConfirmEmailDTO confirmEmailDTO)
+        public async Task<GenericResponse<string>> ConfirmEmailAsync (ConfirmEmailDTO confirmEmailDTO)
         {
             var user = await userManager.FindByEmailAsync(confirmEmailDTO.Email);
-            if (user == null)
+            if (user==null)
             {
                 return await Task.FromResult(GenericResponse<string>.FailureResponse("User not found."));
             }
@@ -427,11 +427,11 @@ namespace Travelo.Infrastracture.Repositories
             return await Task.FromResult(GenericResponse<string>.SuccessResponse("Email confirmed successfully."));
         }
 
-        public async Task<GenericResponse<string>> ResendConfirmationEmailAsync(ResendConfirmEmailDTO resendConfirmEmailDTO)
+        public async Task<GenericResponse<string>> ResendConfirmationEmailAsync (ResendConfirmEmailDTO resendConfirmEmailDTO)
         {
             var user = await userManager.FindByEmailAsync(resendConfirmEmailDTO.Email);
 
-            if (user == null)
+            if (user==null)
             {
                 return GenericResponse<string>.FailureResponse("User not found.");
             }
@@ -442,7 +442,7 @@ namespace Travelo.Infrastracture.Repositories
             }
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            token = WebUtility.UrlEncode(token);
+            token=WebUtility.UrlEncode(token);
 
             var param = new Dictionary<string, string?>
             {

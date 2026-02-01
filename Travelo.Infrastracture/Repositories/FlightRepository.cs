@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Travelo.Application.Interfaces;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
