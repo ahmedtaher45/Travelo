@@ -16,6 +16,13 @@ namespace Travelo.API.Controllers
             _flightService = flightService;
         }
 
+        [HttpPost("search")]
+        public async Task<IActionResult> Search([FromBody] FlightFilterDto filter)
+        {
+            var result = await _flightService.SearchFlightsAsync(filter);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetFlights()
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +8,9 @@ using Travelo.Domain.Models.Entities;
 
 namespace Travelo.Application.Interfaces
 {
-    public interface IFlightRepository
+    public interface IFlightRepository : IGenericRepository<Flight>
     {
-        Task<List<Flight>> GetAllAsync();
+        IQueryable<Flight> GetAllQueryable();
         Task<Flight?> GetByIdAsync(int id);
         Task AddAsync(Flight flight);
         Task UpdateAsync(Flight flight);

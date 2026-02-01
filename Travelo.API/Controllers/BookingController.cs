@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Travelo.Application.DTOs.Booking;
-using Travelo.Application.Interfaces;
 using Travelo.Application.Services.Booking;
 
 namespace Travelo.API.Controllers

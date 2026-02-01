@@ -14,8 +14,14 @@ namespace Travelo.Application.DTOs.Review
         public string UserName { get; set; }
         public string UserImage { get; set; }
 
-        public int HotelId { get; set; }
-        public string HotelName { get; set; }
+        public int? HotelId { get; set; }
+        public string? HotelName { get; set; }
+
+        public int? FlightId { get; set; }
+        public string? FlightNumber { get; set; }
+
+        public int? AirlineId { get; set; }
+        public string? AirlineName { get; set; }
 
         public decimal OverallRate { get; set; }
         public decimal? AmenityRate { get; set; }
@@ -26,6 +32,6 @@ namespace Travelo.Application.DTOs.Review
         public string Comment { get; set; }
         public ReviewStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
-        
     }
+
 }
