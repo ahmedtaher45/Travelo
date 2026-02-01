@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Travelo.Infrastracture.Migrations
 {
     /// <inheritdoc />
-    public partial class editData : Migration
+    public partial class flightSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,6 +31,23 @@ namespace Travelo.Infrastracture.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Airlines",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Airlines", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cities",
                 columns: table => new
                 {
@@ -46,31 +65,6 @@ namespace Travelo.Infrastracture.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Flights",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Airline = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FlightNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FromAirport = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ToAirport = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DepartureDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ArrivalDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
-                    Stop = table.Column<bool>(type: "bit", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    AircraftId = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Flights", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,25 +129,42 @@ namespace Travelo.Infrastracture.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bookings",
+                name: "Flights",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FlightId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    AirlineId = table.Column<int>(type: "int", nullable: false),
+                    FlightNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FromAirport = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ToAirport = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DepartureDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ArrivalDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    AvailableSeats = table.Column<int>(type: "int", nullable: false),
+                    Class = table.Column<int>(type: "int", nullable: false),
+                    IsNonStop = table.Column<bool>(type: "bit", nullable: false),
+                    BaggageAllowance = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AircraftId = table.Column<int>(type: "int", nullable: false),
+                    AverageRating = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    ReviewsCount = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.PrimaryKey("PK_Flights", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bookings_Flights_FlightId",
-                        column: x => x.FlightId,
-                        principalTable: "Flights",
+                        name: "FK_Flights_Aircrafts_AircraftId",
+                        column: x => x.AircraftId,
+                        principalTable: "Aircrafts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Flights_Airlines_AirlineId",
+                        column: x => x.AirlineId,
+                        principalTable: "Airlines",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -323,53 +334,25 @@ namespace Travelo.Infrastracture.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookingPrices",
+                name: "Bookings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingId = table.Column<int>(type: "int", nullable: false),
-                    BaseFare = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Taxes = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    ServiceFee = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookingPrices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BookingPrices_Bookings_BookingId",
-                        column: x => x.BookingId,
-                        principalTable: "Bookings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ticket",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingId = table.Column<int>(type: "int", nullable: false),
-                    TicketNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SeatNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gate = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Barcode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FlightId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ticket", x => x.Id);
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ticket_Bookings_BookingId",
-                        column: x => x.BookingId,
-                        principalTable: "Bookings",
+                        name: "FK_Bookings_Flights_FlightId",
+                        column: x => x.FlightId,
+                        principalTable: "Flights",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -405,7 +388,9 @@ namespace Travelo.Infrastracture.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    HotelId = table.Column<int>(type: "int", nullable: false),
+                    HotelId = table.Column<int>(type: "int", nullable: true),
+                    FlightId = table.Column<int>(type: "int", nullable: true),
+                    AirlineId = table.Column<int>(type: "int", nullable: true),
                     OverallRating = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     AmenityRating = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     CleanlinessRating = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
@@ -422,11 +407,20 @@ namespace Travelo.Infrastracture.Migrations
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Reviews_Airlines_AirlineId",
+                        column: x => x.AirlineId,
+                        principalTable: "Airlines",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reviews_Flights_FlightId",
+                        column: x => x.FlightId,
+                        principalTable: "Flights",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Reviews_Hotels_HotelId",
                         column: x => x.HotelId,
                         principalTable: "Hotels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Reviews_Users_UserId",
                         column: x => x.UserId,
@@ -514,6 +508,59 @@ namespace Travelo.Infrastracture.Migrations
                         name: "FK_MenuCategories_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookingPrices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookingId = table.Column<int>(type: "int", nullable: false),
+                    BaseFare = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Taxes = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    ServiceFee = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookingPrices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookingPrices_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ticket",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookingId = table.Column<int>(type: "int", nullable: false),
+                    TicketNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SeatNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Barcode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FlightClass = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ticket", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ticket_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -677,6 +724,37 @@ namespace Travelo.Infrastracture.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Aircrafts",
+                columns: new[] { "Id", "CountOfSeats", "CreatedOn", "IsDeleted", "Model", "ModifiedOn" },
+                values: new object[,]
+                {
+                    { 1, 180, null, false, "Airbus A320", null },
+                    { 2, 250, null, false, "Airbus A330", null },
+                    { 3, 189, null, false, "Boeing 737-800", null },
+                    { 4, 396, null, false, "Boeing 777", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Airlines",
+                columns: new[] { "Id", "CreatedOn", "IsDeleted", "LogoUrl", "ModifiedOn", "Name" },
+                values: new object[,]
+                {
+                    { 1, null, false, "https://example.com/logos/egyptair.png", null, "EgyptAir" },
+                    { 2, null, false, "https://example.com/logos/flydubai.png", null, "FlyDubai" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Flights",
+                columns: new[] { "Id", "AircraftId", "AirlineId", "ArrivalDateTime", "AvailableSeats", "AverageRating", "BaggageAllowance", "Class", "CreatedOn", "DepartureDateTime", "FlightNumber", "FromAirport", "IsDeleted", "IsNonStop", "ModifiedOn", "Price", "ReviewsCount", "ToAirport" },
+                values: new object[,]
+                {
+                    { 5, 1, 1, new DateTime(2026, 2, 10, 14, 0, 0, 0, DateTimeKind.Unspecified), 50, 4.5m, "20kg", 0, new DateTime(2026, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2026, 2, 10, 10, 0, 0, 0, DateTimeKind.Unspecified), "MS101", "CAI", false, true, null, 450m, 120, "DXB" },
+                    { 6, 2, 1, new DateTime(2026, 2, 20, 19, 0, 0, 0, DateTimeKind.Unspecified), 60, 4.6m, "25kg", 0, new DateTime(2026, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2026, 2, 20, 15, 0, 0, 0, DateTimeKind.Unspecified), "MS202", "DXB", false, true, null, 480m, 95, "CAI" },
+                    { 7, 3, 2, new DateTime(2026, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified), 80, 4.1m, "20kg", 0, new DateTime(2026, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2026, 2, 12, 9, 30, 0, 0, DateTimeKind.Unspecified), "FD303", "CAI", false, false, null, 300m, 60, "JED" },
+                    { 8, 4, 2, new DateTime(2026, 2, 12, 1, 0, 0, 0, DateTimeKind.Unspecified), 40, 4.8m, "35kg", 1, new DateTime(2026, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2026, 2, 11, 20, 0, 0, 0, DateTimeKind.Unspecified), "FD404", "CAI", false, true, null, 520m, 200, "DXB" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -716,6 +794,16 @@ namespace Travelo.Infrastracture.Migrations
                 name: "IX_Comment_BlogPostId",
                 table: "Comment",
                 column: "BlogPostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Flights_AircraftId",
+                table: "Flights",
+                column: "AircraftId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Flights_AirlineId",
+                table: "Flights",
+                column: "AirlineId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hotels_CityId",
@@ -775,6 +863,16 @@ namespace Travelo.Infrastracture.Migrations
                 column: "UserId",
                 unique: true,
                 filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_AirlineId",
+                table: "Reviews",
+                column: "AirlineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_FlightId",
+                table: "Reviews",
+                column: "FlightId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_HotelId",
@@ -841,9 +939,6 @@ namespace Travelo.Infrastracture.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Aircrafts");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -908,6 +1003,12 @@ namespace Travelo.Infrastracture.Migrations
 
             migrationBuilder.DropTable(
                 name: "Restaurants");
+
+            migrationBuilder.DropTable(
+                name: "Aircrafts");
+
+            migrationBuilder.DropTable(
+                name: "Airlines");
 
             migrationBuilder.DropTable(
                 name: "Cities");

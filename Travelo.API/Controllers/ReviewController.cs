@@ -14,6 +14,8 @@ namespace Travelo.API.Controllers
         private readonly GetReviewByIdUseCase _getReviewByIdUseCase;
         private readonly GetUserReviewsUseCase _getUserReviewsUseCase;
         private readonly GetHotelReviewsUseCase _getHotelReviewsUseCase;
+        private readonly GetFlightReviewsUseCase _getFlightReviewsUseCase;
+        private readonly GetAirlineReviewsUseCase _getAirlineReviewsUseCase;
         private readonly UpdateReviewUseCase _updateReviewUseCase;
         private readonly RemoveReviewUseCase _removeReviewUseCase;
 
@@ -22,6 +24,8 @@ namespace Travelo.API.Controllers
             GetReviewByIdUseCase getReviewByIdUseCase,
             GetUserReviewsUseCase getUserReviewsUseCase,
             GetHotelReviewsUseCase getHotelReviewsUseCase,
+            GetFlightReviewsUseCase getFlightReviewsUseCase,
+           GetAirlineReviewsUseCase getAirlineReviewsUseCase,
             UpdateReviewUseCase updateReviewUseCase,
             RemoveReviewUseCase removeReviewUseCase
             )
@@ -30,7 +34,9 @@ namespace Travelo.API.Controllers
             _getReviewByIdUseCase=getReviewByIdUseCase;
             _getUserReviewsUseCase=getUserReviewsUseCase;
             _getHotelReviewsUseCase=getHotelReviewsUseCase;
-            _updateReviewUseCase=updateReviewUseCase;
+            _getFlightReviewsUseCase = getFlightReviewsUseCase;
+            _getAirlineReviewsUseCase = getAirlineReviewsUseCase;
+            _updateReviewUseCase = updateReviewUseCase;
             _removeReviewUseCase=removeReviewUseCase;
         }
 
@@ -107,6 +113,36 @@ namespace Travelo.API.Controllers
             try
             {
                 var reviews = await _getHotelReviewsUseCase.GetHotelReview(hotelId);
+                return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("airline/{airlineId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAirlinesReviews([FromRoute] int airlineId)
+        {
+            try
+            {
+                var reviews = await _getAirlineReviewsUseCase.GetAirlineReview(airlineId);
+                return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("flight/{flightId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetFlightReviews([FromRoute] int flightId)
+        {
+            try
+            {
+                var reviews = await _getFlightReviewsUseCase.GetFlightReviews(flightId);
                 return Ok(reviews);
             }
             catch (Exception ex)

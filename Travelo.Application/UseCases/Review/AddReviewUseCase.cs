@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Travelo.Application.Common.Responses;
+﻿using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Review;
 using Travelo.Application.Interfaces;
 
@@ -18,19 +13,19 @@ namespace Travelo.Application.UseCases.Review
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<GenericResponse<string>> AddReview(string userId,AddReviewDto dto)
+
+        public async Task<GenericResponse<string>> AddReview(string userId, AddReviewDto dto)
         {
-            var existReview = await _unitOfWork.Reviews.GetUserReviewForHotel
-                (userId, dto.HotelId);
-            if(existReview != null)
-            {
-                //throw new InvalidOperationException("You have already reviewed this hotel");
-                return GenericResponse<string>.FailureResponse("You have already reviewed this hotel");
-            }
-            var review = new Domain.Models.Entities.Review
+            var existReview = await _unitOfWork.Reviews.GetUserReviewForEntity(userId, dto.HotelId, dto.FlightId, dto.AirlineId);
+            if (existReview.Data != null)
+                return GenericResponse<string>.FailureResponse("You already reviewed this entity");
+
+            var review = new Travelo.Domain.Models.Entities.Review
             {
                 UserId = userId,
                 HotelId = dto.HotelId,
+                FlightId = dto.FlightId,
+                AirlineId = dto.AirlineId,
                 OverallRating = dto.OverallRate,
                 AmenityRating = dto.AmenityRate,
                 CleanlinessRating = dto.CleanlinessRate,
@@ -39,13 +34,14 @@ namespace Travelo.Application.UseCases.Review
                 ValueRating = dto.ValueRate,
                 Comment = dto.Comment,
                 CreatedOn = DateTime.UtcNow
-                
+            };
 
-            } ;
             await _unitOfWork.Reviews.Add(review);
             await _unitOfWork.SaveChangesAsync();
 
-            return  GenericResponse<string>.SuccessResponse("Review added successfully");
+            return GenericResponse<string>.SuccessResponse("Review added successfully");
         }
+
+
     }
 }

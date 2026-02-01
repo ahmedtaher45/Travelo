@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Travelo.Domain.Models.Entites;
 using Travelo.Domain.Models.Entities;
+using Travelo.Domain.Models.Enums;
 
 namespace Travelo.Infrastracture.Contexts
 {
     public class ApplicationDbContext (DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Aircraft> Aircrafts { get; set; }
+        public DbSet<Airline> Airlines { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingPrice> BookingPrices { get; set; }
@@ -34,6 +36,127 @@ namespace Travelo.Infrastracture.Contexts
         override protected void OnModelCreating (ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Airline>().HasData(
+                new Airline
+                {
+                    Id = 1,
+                    Name = "EgyptAir",
+                    LogoUrl = "https://example.com/logos/egyptair.png"
+                },
+                new Airline
+                {
+                    Id = 2,
+                    Name = "FlyDubai",
+                    LogoUrl = "https://example.com/logos/flydubai.png"
+                }
+            );
+
+            builder.Entity<Aircraft>().HasData(
+                new Aircraft
+                {
+                    Id = 1,
+                    Model = "Airbus A320",
+                    CountOfSeats = 180
+                },
+                new Aircraft
+                {
+                    Id = 2,
+                    Model = "Airbus A330",
+                    CountOfSeats = 250
+                },
+                new Aircraft
+                {
+                    Id = 3,
+                    Model = "Boeing 737-800",
+                    CountOfSeats = 189
+                },
+                new Aircraft
+                {
+                    Id = 4,
+                    Model = "Boeing 777",
+                    CountOfSeats = 396
+                }
+            );
+
+            builder.Entity<Flight>().HasData(
+                new Flight
+                {
+                    Id = 5,
+                    AirlineId = 1, // EgyptAir
+                    AircraftId = 1,
+                    FlightNumber = "MS101",
+                    FromAirport = "CAI",
+                    ToAirport = "DXB",
+                    DepartureDateTime = new DateTime(2026, 2, 10, 10, 00, 00),
+                    ArrivalDateTime = new DateTime(2026, 2, 10, 14, 00, 00),
+                    Price = 450,
+                    AvailableSeats = 50,
+                    Class = FlightClass.Economy,
+                    IsNonStop = true,
+                    BaggageAllowance = "20kg",
+                    AverageRating = 4.5m,
+                    ReviewsCount = 120,
+                    CreatedOn = new DateTime(2026, 1, 29)
+                },
+                new Flight
+                {
+                    Id = 6,
+                    AirlineId = 1,
+                    AircraftId = 2,
+                    FlightNumber = "MS202",
+                    FromAirport = "DXB",
+                    ToAirport = "CAI",
+                    DepartureDateTime = new DateTime(2026, 2, 20, 15, 00, 00),
+                    ArrivalDateTime = new DateTime(2026, 2, 20, 19, 00, 00),
+                    Price = 480,
+                    AvailableSeats = 60,
+                    Class = FlightClass.Economy,
+                    IsNonStop = true,
+                    BaggageAllowance = "25kg",
+                    AverageRating = 4.6m,
+                    ReviewsCount = 95,
+                    CreatedOn = new DateTime(2026, 1, 29)
+                },
+                new Flight
+                {
+                    Id = 7,
+                    AirlineId = 2, // FlyDubai
+                    AircraftId = 3,
+                    FlightNumber = "FD303",
+                    FromAirport = "CAI",
+                    ToAirport = "JED",
+                    DepartureDateTime = new DateTime(2026, 2, 12, 09, 30, 00),
+                    ArrivalDateTime = new DateTime(2026, 2, 12, 12, 00, 00),
+                    Price = 300,
+                    AvailableSeats = 80,
+                    Class = FlightClass.Economy,
+                    IsNonStop = false,
+                    BaggageAllowance = "20kg",
+                    AverageRating = 4.1m,
+                    ReviewsCount = 60,
+                    CreatedOn = new DateTime(2026, 1, 29)
+                },
+                new Flight
+                {
+                    Id = 8,
+                    AirlineId = 2,
+                    AircraftId = 4,
+                    FlightNumber = "FD404",
+                    FromAirport = "CAI",
+                    ToAirport = "DXB",
+                    DepartureDateTime = new DateTime(2026, 2, 11, 20, 00, 00),
+                    ArrivalDateTime = new DateTime(2026, 2, 12, 01, 00, 00),
+                    Price = 520,
+                    AvailableSeats = 40,
+                    Class = FlightClass.Business,
+                    IsNonStop = true,
+                    BaggageAllowance = "35kg",
+                    AverageRating = 4.8m,
+                    ReviewsCount = 200,
+                    CreatedOn = new DateTime(2026, 1, 29)
+                }
+            );
 
             builder.Entity<Booking>()
                    .HasOne(b => b.Ticket)

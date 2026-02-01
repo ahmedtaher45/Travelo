@@ -49,16 +49,17 @@ namespace Travelo.Infrastracture.Repositories
             //    .Include(t => t.User)
             //        .ThenInclude(u => u.Patient)
             var tickets = await _context.SupportTickets
-            .Include(t => t.User)
-            .Select(t => new GetSupportTicketDTO
-            {
-                userName=t.User.UserName!,
-                //Experience = t.User.Doctor != null
-                //    ? t.User.Doctor.ExperienceYears
-                //    : null,
-                Subject=t.Subject,
-                Status=t.Status
-            })
+                .Include(t => t.User)
+                    .ThenInclude(u => u.Hotel)
+                .Include(t => t.User)
+                    .ThenInclude(u => u.Restaurant)
+               
+                .Select(t => new GetSupportTicketDTO
+                {
+                    userName = t.User.UserName!,
+                    Subject = t.Subject,
+                    Status = t.Status
+                })
                 .ToListAsync();
 
             return tickets;
@@ -80,11 +81,11 @@ namespace Travelo.Infrastracture.Repositories
         {
             var ticket = await _context.SupportTickets
                 .Include(t => t.User)
-                //.ThenInclude(u => u.Doctor)
-                //.Include(t => t.User)
-                //    .ThenInclude(u => u.Patient)
-                .Where(t => t.userId==userId&&!string.IsNullOrEmpty(t.Reply))
-                .OrderByDescending(t => t.Id)
+                    .ThenInclude(u => u.Hotel)
+                .Include(t => t.User)
+                    .ThenInclude(u => u.Restaurant)
+                .Where(t => t.userId == userId && !string.IsNullOrEmpty(t.Reply))
+                .OrderByDescending(t => t.Id) 
                 .FirstOrDefaultAsync();
 
             return ticket==null

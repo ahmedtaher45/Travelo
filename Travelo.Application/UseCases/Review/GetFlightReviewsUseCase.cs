@@ -9,27 +9,27 @@ using Travelo.Application.Interfaces;
 
 namespace Travelo.Application.UseCases.Review
 {
-    public class GetHotelReviewsUseCase
+    public class GetFlightReviewsUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetHotelReviewsUseCase(IUnitOfWork unitOfWork)
+        public GetFlightReviewsUseCase(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<GenericResponse<List<HotelReviewDto>>> GetHotelReview(
-            int hotelId,
+        public async Task<GenericResponse<List<FlightReviewDto>>> GetFlightReviews(
+            int flightId,
             int? pageNum = 0,
             int? pageSize = 3)
         {
-            var reviews = await _unitOfWork.Reviews.GetHotelReviews(
-                hotelId, pageNum, pageSize);
+            var reviews = await _unitOfWork.Reviews.GetFlightReviews(
+                flightId, pageNum, pageSize);
 
             var reviewDto = reviews.Data.Select(
-                v => new HotelReviewDto
+                v => new FlightReviewDto
                 {
-                    HotelId = hotelId,
+                    FlightId = flightId,
                     AvgOverallRate = reviews.Data.Average(r => r.OverallRating),
                     AvgValueRate = reviews.Data.Average(r => r.ValueRating) ?? 0,
                     AvgLocationRate = reviews.Data.Average(r => r.LocationRating) ?? 0,
@@ -42,8 +42,7 @@ namespace Travelo.Application.UseCases.Review
                             Id = r.Id,
                             UserId = r.UserId,
                             UserName = r.User.UserName,
-                            HotelId = hotelId,
-                            HotelName = r.Hotel.Name,
+                            FlightId = flightId,
                             OverallRate = r.OverallRating,
                             CleanlinessRate = r.CleanlinessRating,
                             LocationRate = r.LocationRating,
@@ -59,7 +58,9 @@ namespace Travelo.Application.UseCases.Review
 
                 }
                 );
-            return new GenericResponse<List<HotelReviewDto>> { Data = reviewDto.ToList()};
+            return new GenericResponse<List<FlightReviewDto>> { Data = reviewDto.ToList() };
+
+
         }
     }
 }

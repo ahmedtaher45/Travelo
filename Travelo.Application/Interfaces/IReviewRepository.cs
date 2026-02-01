@@ -11,14 +11,29 @@ namespace Travelo.Application.Interfaces
 {
     public interface IReviewRepository : IGenericRepository<Review>
     {
-        Task<GenericResponse<List<Review>>>  GetHotelReviews(
+        Task<GenericResponse<List<Review>>> GetHotelReviews(
             int hotelId,
             int? pageNum = null,
             int? pageSize = null);
+
+        Task<GenericResponse<List<Review>>> GetAirlineReviews(
+            int airlineId,
+            int? pageNum = null,
+            int? pageSize = null);
+
+        Task<GenericResponse<List<Review>>> GetFlightReviews(
+            int flightId,
+            int? pageNum = null,
+            int? pageSize = null);
+
         Task<GenericResponse<List<Review>>> GetUserReviews(
             string userId,
             int? pageNum = null,
             int? pageSize = null);
-        Task<GenericResponse<Review>> GetUserReviewForHotel(string userId, int hotelId);
+        Task<GenericResponse<Review>> GetUserReviewForEntity(
+            string userId,
+            int? hotelId = null,
+            int? flightId = null,
+            int? airlineId = null);
     }
 }
