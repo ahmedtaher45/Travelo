@@ -33,10 +33,10 @@ namespace Travelo.Application.Services.WishlistItem
             }
             var existingItem = await unitOfWork.WishlistItems
                 .GetManyAsync(i =>
-                    i.WishlistId==reqDTO.ListId||
+                    i.WishlistId==reqDTO.ListId&&
                     i.HotelId==reqDTO.HotelId);
 
-            if (existingItem!=null)
+            if (existingItem.Any())
             {
                 return GenericResponse<string>
                     .FailureResponse("Hotel already exists in this wishlist.");

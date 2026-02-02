@@ -74,5 +74,12 @@ namespace Travelo.API.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetWishListDetals (int id)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value!;
+            var result = await wishlistService.GetWishlistWithDetalsAsync(userId, id);
+            return (result.Success ? Ok(result) : NotFound());
+        }
     }
 }

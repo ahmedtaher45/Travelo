@@ -26,6 +26,7 @@ using Travelo.Application.UseCases.Review;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Repositories;
+using Travelo.Persistence.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -197,6 +198,12 @@ builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Str
 StripeConfiguration.ApiKey=builder.Configuration["Stripe:SecretKey"];
 var app = builder.Build();
 // 2. MIDDLEWARE PIPELINE
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    await SeedData.SeedAsync(context);
+}
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

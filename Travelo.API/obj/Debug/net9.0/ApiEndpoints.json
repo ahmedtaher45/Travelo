@@ -528,6 +528,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Travelo.API.Controllers.HotelsController",
+    "Method": "SearchAvailableRooms",
+    "RelativePath": "api/Hotels/search",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Travelo.Application.DTOs.Hotels.RoomSearchDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Travelo.API.Controllers.MenuController",
     "Method": "AddCategory",
     "RelativePath": "api/Menu/category",
@@ -1187,6 +1203,22 @@
     "Method": "DeleteWishlist",
     "RelativePath": "api/Wishlist/{id}",
     "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Travelo.API.Controllers.WishlistController",
+    "Method": "GetWishListDetals",
+    "RelativePath": "api/Wishlist/{id}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
