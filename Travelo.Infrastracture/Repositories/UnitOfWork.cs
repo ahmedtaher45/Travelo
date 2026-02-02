@@ -52,6 +52,7 @@ namespace Travelo.Infrastracture.Repositories
             FlightBookings=new FlightBookingRepository(_context);
             Wishlists=new WishlistRepository(_context);
             WishlistItems=new WishlistItemRepository(_context);
+            Ticket=new TicketRepository(_context);
         }
 
         public IAuthRepository Auth { get; private set; }
@@ -79,6 +80,8 @@ namespace Travelo.Infrastracture.Repositories
         public IWishlistItemRepository WishlistItems { get; private set; }
 
         public IWishlistRepository Wishlists { get; private set; }
+
+        public ITicketRepository Ticket { get; private set; }
 
         public IGenericRepository<T> Repository<T> () where T : class
         {

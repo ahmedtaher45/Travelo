@@ -10,7 +10,8 @@ namespace Travelo.Domain.Models.Enums
     {
         Pending,
         Confirmed,
-        Cancelled
+        Cancelled,
+        Active
     }
 
 }

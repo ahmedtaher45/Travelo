@@ -70,12 +70,10 @@ public class WishlistService : IWishlistService
         return GenericResponse<IEnumerable<WishListUpdateDTO>>
             .SuccessResponse(wishlistDTOs, "Wishlists retrieved successfully.");
     }
-
-    public async Task<GenericResponse<IEnumerable<WishlistDTO>>> GetWishlistWithDetalsAsync (
-        string userId)
+    public async Task<GenericResponse<IEnumerable<WishlistDTO>>> GetWishlistWithDetalsAsync (string userId, int wishlistId)
     {
         var wishlists = await unitOfWork.Wishlists
-            .GetManyAsync(w => w.UserId==userId)
+            .GetWishlistsWithItemsAndHotelsAsync(w => w.UserId==userId&&w.Id==wishlistId)
             ??Enumerable.Empty<Travelo.Domain.Models.Entities.Wishlist>();
 
         if (!wishlists.Any())
@@ -84,27 +82,61 @@ public class WishlistService : IWishlistService
                 .FailureResponse("No wishlists found for the user.");
         }
 
-        foreach (var wishlist in wishlists)
+        var wishlistDTOs = wishlists.Select(w => new WishlistDTO
         {
-            wishlist.Items=await unitOfWork.WishlistItems
-                .GetManyAsync(i => i.WishlistId==wishlist.Id);
+            Id=w.Id,
+            Title=w.Title,
+            Items=w.Items
+                .Where(i => i.Hotel!=null)
+                .Select(i => new WishlistItemDTO
+                {
+                    Id=i.Id,
+                    HotelId=i.HotelId,
+                    Name=i.Hotel?.Name??"Unknown Hotel",
+                    Location=i.Hotel?.Description??"",
+                    Price=i.Hotel?.PricePerNight??0,
+                    Rating=i.Hotel?.Rating??0,
+                    ImageUrl=i.Hotel?.ImageUrl??"",
+                    ReviewsCount=i.Hotel?.ReviewsCount??0
+                })
+                .ToList()
+        });
+
+        return GenericResponse<IEnumerable<WishlistDTO>>
+            .SuccessResponse(wishlistDTOs, "Wishlists retrieved successfully.");
+    }
+
+
+    public async Task<GenericResponse<IEnumerable<WishlistDTO>>> GetWishlistWithDetalsAsync (string userId)
+    {
+        var wishlists = await unitOfWork.Wishlists
+            .GetWishlistsWithItemsAndHotelsAsync(w => w.UserId==userId)
+            ??Enumerable.Empty<Travelo.Domain.Models.Entities.Wishlist>();
+
+        if (!wishlists.Any())
+        {
+            return GenericResponse<IEnumerable<WishlistDTO>>
+                .FailureResponse("No wishlists found for the user.");
         }
 
         var wishlistDTOs = wishlists.Select(w => new WishlistDTO
         {
             Id=w.Id,
             Title=w.Title,
-            Items=w.Items.Select(i => new WishlistItemDTO
-            {
-                Id=i.Id,
-                HotelId=i.HotelId,
-                Name=i.Hotel.Name,
-                Location=i.Hotel.Description,
-                Price=i.Hotel.PricePerNight,
-                Rating=i.Hotel.Rating,
-                ImageUrl=i.Hotel.ImageUrl,
-                ReviewsCount=i.Hotel.ReviewsCount
-            }).ToList()
+            Items=w.Items
+                .Where(i => i.Hotel!=null)
+                .Select(i => new WishlistItemDTO
+                {
+                    Id=i.Id,
+                    HotelId=i.HotelId,
+                    Name=i.Hotel?.Name??"Unknown Hotel",
+                    Location=i.Hotel?.Description??"",
+                    Price=i.Hotel?.PricePerNight??0,
+                    Rating=i.Hotel?.Rating??0,
+                    ImageUrl=i.Hotel?.ImageUrl??"",
+                    ReviewsCount=i.Hotel?.ReviewsCount??0
+                })
+                .ToList()
         });
 
         return GenericResponse<IEnumerable<WishlistDTO>>

@@ -111,17 +111,17 @@ namespace Travelo.Application.Services.Payment
         public async Task<GenericResponse<PaymentRes>> CreateRoomBookingPayment (RoomBookingPaymentReq req, string userId, string HTTPReq)
         {
             var hotelResponse = await _hotel.GetById(req.HotelId);
-            var room = await _roomRepository.GetById(req.RoomId);
-            var user = await userManager.FindByIdAsync(userId);
-            if (user==null)
-            {
-                return GenericResponse<PaymentRes>.FailureResponse("User not found");
-            }
             if (hotelResponse==null)
                 return GenericResponse<PaymentRes>.FailureResponse("Hotel not found");
-
+            var room = await _roomRepository.GetById(req.RoomId);
             if (room==null)
                 return GenericResponse<PaymentRes>.FailureResponse("Room not found");
+            var user = await userManager.FindByIdAsync(userId);
+            if (user==null)
+                return GenericResponse<PaymentRes>.FailureResponse("User not found");
+            var isConflict = await _roomBooking.GetManyAsync(e => e.RoomId==req.RoomId&&e.CheckInDate<req.CheckOutDate&&req.CheckInDate<e.CheckOutDate);
+            if (isConflict.Any())
+                return GenericResponse<PaymentRes>.FailureResponse("This room is already booked for the selected dates.");
             var payment = new Domain.Models.Entities.Payment
             {
                 UserId=userId,
@@ -136,10 +136,7 @@ namespace Travelo.Application.Services.Payment
             await _payment.Add(payment);
             int numberOfNights = (req.CheckOutDate-req.CheckInDate).Days;
             if (numberOfNights<=0) numberOfNights=1;
-
             decimal totalAmount = room.PricePerNight*numberOfNights;
-
-
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes=new List<string> { "card" },
@@ -161,8 +158,8 @@ namespace Travelo.Application.Services.Payment
             }
         },
                 Mode="payment",
-                SuccessUrl=$"{HTTPReq}/api/Payment/OrderSuccess/{payment.Id}",
-                CancelUrl=$"{HTTPReq}/api/Payment/cancel",
+                SuccessUrl=$"{HTTPReq}/api/RoomBoking/Success/{payment.Id}",
+                CancelUrl=$"{HTTPReq}/api/RoomBoking/cancel",
             };
 
             var service = new SessionService();
@@ -369,7 +366,5 @@ namespace Travelo.Application.Services.Payment
             }
             return GenericResponse<PaymentRes>.FailureResponse("Invalid payment for type");
         }
-
-
     }
 }
