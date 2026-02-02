@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Common;
+using Travelo.Application.DTOs.Hotels;
 using Travelo.Application.DTOs.Review;
 using Travelo.Application.UseCases.Hotels;
 using Travelo.Application.UseCases.Review;
@@ -19,7 +20,7 @@ namespace Travelo.API.Controllers
         private readonly GetHotelReviewsUseCase _getHotelReviewsUseCase;
         private readonly GetThingsToDoUseCase _getThingsToDoUseCase;
         private readonly GetSimilarHotelsUseCase _getSimilarHotelsUseCase;
-
+        private readonly SearchAvailableRoomsUseCase _searchAvailableRoomsUse;
 
         public HotelsController(
             GetFeaturedHotelsUseCase getFeaturedHotelsUseCase,
@@ -27,7 +28,8 @@ namespace Travelo.API.Controllers
             GetHotelRoomsUseCase getHotelRoomsUseCase,
             GetHotelReviewsUseCase getHotelReviewsUseCase,
             GetThingsToDoUseCase getThingsToDoUseCase,
-            GetSimilarHotelsUseCase getSimilarHotelsUseCase)
+            GetSimilarHotelsUseCase getSimilarHotelsUseCase,
+            SearchAvailableRoomsUseCase searchAvailableRoomsUse)
         {
             _getFeaturedHotelsUseCase = getFeaturedHotelsUseCase;
             _getHotelByIdUseCase = getHotelByIdUseCase;
@@ -35,6 +37,7 @@ namespace Travelo.API.Controllers
             _getHotelReviewsUseCase = getHotelReviewsUseCase;
             _getThingsToDoUseCase = getThingsToDoUseCase;
             _getSimilarHotelsUseCase = getSimilarHotelsUseCase;
+            _searchAvailableRoomsUse = searchAvailableRoomsUse;
         }
 
 
@@ -110,6 +113,20 @@ namespace Travelo.API.Controllers
                 return Ok(response);
 
             return BadRequest(response);
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> SearchAvailableRooms(
+            [FromBody] RoomSearchDto dto)
+        {
+            var result = await _searchAvailableRoomsUse.ExecuteAsync(dto);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
     }
