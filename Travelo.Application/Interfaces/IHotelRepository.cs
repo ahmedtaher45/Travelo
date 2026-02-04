@@ -12,5 +12,8 @@ namespace Travelo.Application.Interfaces
         Task<GenericResponse<IEnumerable<RoomDto>>> GetRoomsByHotelIdAsync (int hotelId);
         Task<GenericResponse<IEnumerable<ThingToDoDto>>> GetThingsToDoByHotelIdAsync (int hotelId);
         Task<GenericResponse<IEnumerable<HotelCardDto>>> GetSimilarHotelsAsync (int hotelId);
+        Task<GenericResponse<IEnumerable<HotelCardDto>>> GetAllHotelsAsync (PaginationRequest request);
+
+
     }
 }

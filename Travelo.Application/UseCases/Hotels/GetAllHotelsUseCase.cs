@@ -5,19 +5,18 @@ using Travelo.Application.Interfaces;
 
 namespace Travelo.Application.UseCases.Hotels
 {
-    public class GetFeaturedHotelsUseCase
+    public class GetAllHotelsUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetFeaturedHotelsUseCase (IUnitOfWork unitOfWork)
+        public GetAllHotelsUseCase (IUnitOfWork unitOfWork)
         {
             _unitOfWork=unitOfWork;
         }
 
-        public async Task<GenericResponse<IEnumerable<HotelCardDto>>> ExecuteAsync (PaginationRequest request)
+        public async Task<GenericResponse<IEnumerable<HotelCardDto>>> Execute (PaginationRequest request)
         {
-            return await _unitOfWork.Hotels.GetFeaturedHotelsAsync(request);
+            return await _unitOfWork.Hotels.GetAllHotelsAsync(request);
         }
-
     }
 }
