@@ -49,3 +49,10 @@ bld/
 ## --- [ Node.js (if used in UI) ] ---
 node_modules/
 .ntvs_analysis.dat
+# Rider / VS Code
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
