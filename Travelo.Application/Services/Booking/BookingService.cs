@@ -1,4 +1,7 @@
-﻿using Travelo.Application.DTOs.Booking;
+﻿using Microsoft.EntityFrameworkCore;
+using Travelo.Application.Common.Responses;
+using Travelo.Application.DTOs.Booking;
+using Travelo.Application.DTOs.Payment;
 using Travelo.Application.Interfaces;
 using Travelo.Domain.Models.Entities;
 using Travelo.Domain.Models.Enums;
@@ -7,107 +10,174 @@ namespace Travelo.Application.Services.Booking
 {
     public class BookingService : IBookingService
     {
-        private readonly IBookingRepository _bookingRepository;
+        private readonly IGeneralBookingRepository _bookingRepository;
         private readonly IFlightRepository _flightRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public BookingService(
-            IBookingRepository bookingRepository,
-            IFlightRepository flightRepository)
+        public BookingService (
+            IGeneralBookingRepository bookingRepository,
+            IFlightRepository flightRepository,
+            IUnitOfWork unitOfWork)
         {
-            _bookingRepository = bookingRepository;
-            _flightRepository = flightRepository;
+            _bookingRepository=bookingRepository;
+            _flightRepository=flightRepository;
+            this.unitOfWork=unitOfWork;
+        }
+        public async Task<GenericResponse<IEnumerable<BookingDetailsDto>>> GetAllFlightBookingAsync ()
+        {
+            var flightBookings = await unitOfWork.GeneralBooking
+                .GetManyAsync(b => b.Type==BookingType.Flight, include: q => q.Include(b => b.Flight).Include(b => b.User));
+            if (flightBookings==null||!flightBookings.Any())
+                return GenericResponse<IEnumerable<BookingDetailsDto>>.FailureResponse("No flight bookings found");
+
+            var flightBookingDtos = flightBookings.Select(b => new BookingDetailsDto
+            {
+                Id=b.Id,
+                UserId=b.User.Id,
+                UserNamw=b.User.UserName,
+                Name=b.Flight!=null ? b.Flight.FlightNumber : $"Flight #{b.FlightId}",
+                Address=b.Flight!=null ? $"{b.Flight.FromAirport} → {b.Flight.ToAirport}" : "",
+                Type=b.Type,
+                FromDate=b.FromDate,
+                ToDate=b.ToDate,
+                BasePrice=b.TotalPrice,
+                Taxes=b.PriceDetails?.Taxes??0,
+                Total=b.TotalPrice,
+                Status=b.Status
+            }).ToList();
+
+            return GenericResponse<IEnumerable<BookingDetailsDto>>.SuccessResponse(flightBookingDtos);
+        }
+        public async Task<GenericResponse<IEnumerable<RoomBookingPaymentRes>>> GetAllRoomBookingAsync ()
+        {
+            var roomboking = await unitOfWork.GeneralBooking.GetManyAsync(e => e.Type==BookingType.Room, include: q => q.Include(b => b.Hotel).Include(b => b.Room).Include(b => b.User));
+            if (roomboking==null||!roomboking.Any())
+                return GenericResponse<IEnumerable<RoomBookingPaymentRes>>.FailureResponse("No Room bookings found");
+            var roomsBooking = roomboking.Select(b => new RoomBookingPaymentRes
+            {
+                id=b.Id,
+                UserId=b.UserId,
+                UserName=b.User.UserName,
+                HotelId=(int)b.HotelId,
+                HotelName=b.Hotel.Name,
+                RoomId=(int)b.RoomId,
+                CheckInDate=b.FromDate,
+                CheckOutDate=b.ToDate
+            });
+            return GenericResponse<IEnumerable<RoomBookingPaymentRes>>.SuccessResponse(roomsBooking);
         }
 
-        public async Task<BookingDto> CreateFlightBookingAsync(CreateBookingDto dto)
+        public async Task<GenericResponse<IEnumerable<RoomBookingPaymentRes>>> GetHotelRoomBookingAsync (int hotilId)
+        {
+            var hotelBookingRoom = await unitOfWork.GeneralBooking.GetManyAsync(e => e.HotelId==hotilId&&e.Type==BookingType.Room, include: q => q.Include(b => b.Hotel).Include(b => b.Room).Include(b => b.User));
+            if (hotelBookingRoom==null||!hotelBookingRoom.Any()) return GenericResponse<IEnumerable<RoomBookingPaymentRes>>.FailureResponse($"No Room Booking for this Hotel {hotilId} ");
+            var lestOfRoomBooking = hotelBookingRoom.Select(b => new RoomBookingPaymentRes
+            {
+                id=b.Id,
+                UserId=b.UserId,
+                UserName=b.User.UserName,
+                HotelId=(int)b.HotelId,
+                HotelName=b.Hotel.Name,
+                RoomId=(int)b.RoomId,
+                CheckInDate=b.FromDate,
+                CheckOutDate=b.ToDate
+            });
+            return GenericResponse<IEnumerable<RoomBookingPaymentRes>>.SuccessResponse(lestOfRoomBooking);
+        }
+        public async Task<BookingDto> CreateFlightBookingAsync (CreateBookingDto dto)
         {
             var flight = await _flightRepository.GetByIdAsync(dto.FlightId);
-            if (flight == null)
+            if (flight==null)
                 throw new Exception("Flight not found");
 
-            var booking = new Travelo.Domain.Models.Entities.Booking
+            var booking = new Travelo.Domain.Models.Entities.GeneralBooking
             {
-                FlightId = flight.Id,
-                Status = BookingStatus.Pending,
-                TotalPrice = flight.Price
+                FlightId=flight.Id,
+                Status=BookingStatus.Pending,
+                TotalPrice=flight.Price,
+                FromDate=flight.ArrivalDateTime,
+                ToDate=flight.ArrivalDateTime,
+                //UserId = dto.
             };
 
-            await _bookingRepository.AddAsync(booking);
-            await _bookingRepository.SaveChangesAsync();
+            //await _bookingRepository.Add(booking);
+            //await _bookingRepository.SaveChangesAsync();
 
             return MapToDto(booking);
         }
 
-        public async Task<BookingDto> ConfirmBookingAsync(int bookingId)
+        public async Task<BookingDto> ConfirmBookingAsync (int bookingId)
         {
-            var booking = await _bookingRepository.GetByIdAsync(bookingId);
-            if (booking == null)
+            var booking = await _bookingRepository.GetById(bookingId);
+            if (booking==null)
                 throw new Exception("Booking not found");
 
-            if (booking.Status == BookingStatus.Cancelled)
+            if (booking.Status==BookingStatus.Cancelled)
                 throw new Exception("Booking is cancelled");
 
-            if (booking.Status != BookingStatus.Pending)
+            if (booking.Status!=BookingStatus.Pending)
                 throw new Exception("Booking cannot be confirmed");
 
 
-            booking.Status = BookingStatus.Confirmed;
+            booking.Status=BookingStatus.Confirmed;
 
-            await _bookingRepository.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
 
             return MapToDto(booking);
         }
 
-        public async Task CancelBookingAsync(int bookingId)
+        public async Task CancelBookingAsync (int bookingId)
         {
-            var booking = await _bookingRepository.GetByIdAsync(bookingId);
-            if (booking == null)
+            var booking = await _bookingRepository.GetById(bookingId);
+            if (booking==null)
                 throw new Exception("Booking not found");
 
-            booking.Status = BookingStatus.Cancelled;
-            await _bookingRepository.SaveChangesAsync();
+            booking.Status=BookingStatus.Cancelled;
+            await unitOfWork.SaveChangesAsync();
         }
 
-        private BookingDto MapToDto(Travelo.Domain.Models.Entities.Booking b)
+        private BookingDto MapToDto (GeneralBooking b)
         {
             return new BookingDto
             {
-                Id = b.Id,
-                FlightId = b.FlightId,
-                Status = b.Status,
-                TotalPrice = b.TotalPrice,
-                TicketId = b.Ticket?.Id
+                Id=b.Id,
+                FlightId=(int)b.FlightId,
+                Status=b.Status,
+                TotalPrice=b.TotalPrice,
+                TicketId=b.Id
             };
         }
 
-        public async Task<TripDto> CreateAsync(
+        public async Task<TripDto> CreateAsync (
             string userId,
             CreateGeneralBookingDto dto)
         {
             var booking = new GeneralBooking
             {
-                UserId = userId ,
-                Type = dto.Type,
+                UserId=userId,
+                Type=dto.Type,
 
-                FlightId = dto.FlightId,
-                HotelId = dto.HotelId,
-                RoomId = dto.RoomId,
+                FlightId=dto.FlightId,
+                HotelId=dto.HotelId,
+                RoomId=dto.RoomId,
 
-                FromDate = dto.FromDate,
-                ToDate = dto.ToDate,
+                FromDate=dto.FromDate,
+                ToDate=dto.ToDate,
 
-                Status = BookingStatus.Pending,
-                TotalPrice = 0
+                Status=BookingStatus.Pending,
+                TotalPrice=0
             };
 
-            await _bookingRepository.AddGeneralAsync(booking);
+            await _bookingRepository.Add(booking);
+            await unitOfWork.SaveChangesAsync();
 
             return MapToTripDto(booking);
         }
 
-        public async Task<List<TripDto>> GetMyTripsAsync(string userId)
+        public async Task<List<TripDto>> GetMyTripsAsync (string userId)
         {
             var bookings =
-                await _bookingRepository.GetByUserIdAsync(userId);
+                await _bookingRepository.GetManyAsync(e => e.UserId==userId);
 
             return bookings
                 .Select(b => MapToTripDto(b))
@@ -115,63 +185,62 @@ namespace Travelo.Application.Services.Booking
         }
 
 
-        public async Task<BookingDetailsDto?> GetDetailsAsync(int id)
+        public async Task<BookingDetailsDto?> GetDetailsAsync (int id)
         {
             var booking =
-                await _bookingRepository.GetGeneralByIdAsync(id);
+                await _bookingRepository.GetById(id);
 
-            if (booking == null) return null;
-
-            return MapToDetailsDto(booking);
+            return booking==null ? null : MapToDetailsDto(booking);
         }
 
 
-        public async Task CancelAsync(int id)
+        public async Task CancelAsync (int id)
         {
             var booking =
-                await _bookingRepository.GetByIdAsync(id);
+                await _bookingRepository.GetById(id);
 
-            if (booking == null)
+            if (booking==null)
                 throw new Exception("Not found");
 
-            booking.Status = BookingStatus.Cancelled;
+            booking.Status=BookingStatus.Cancelled;
 
-            await _bookingRepository.SaveChangesAsync();
+            _bookingRepository.Update(booking);
+            await unitOfWork.SaveChangesAsync();
         }
 
         // ===================== Mappers =====================
 
-        private TripDto MapToTripDto(GeneralBooking b)
+        private TripDto MapToTripDto (GeneralBooking b)
         {
             return new TripDto
             {
-                Id = b.Id,
+                Id=b.Id,
 
-                Title = b.Type switch
+                Title=b.Type switch
                 {
-                    BookingType.Flight => b.Flight?.FromAirport + " → " + b.Flight?.ToAirport,
+                    BookingType.Flight => b.Flight?.FromAirport+" → "+b.Flight?.ToAirport,
                     BookingType.Hotel => b.Hotel?.Name,
                     BookingType.Room => b.Room?.View,
                     _ => "Trip"
                 },
 
-                Type = b.Type,
+                Type=b.Type,
 
-                From = b.FromDate,
-                To = b.ToDate,
+                From=b.FromDate,
+                To=b.ToDate,
 
-                Status = b.Status,
-                Price = b.TotalPrice
+                Status=b.Status,
+                Price=b.TotalPrice
             };
         }
 
-        private BookingDetailsDto MapToDetailsDto(GeneralBooking b)
+        private BookingDetailsDto MapToDetailsDto (GeneralBooking b)
         {
             return new BookingDetailsDto
             {
-                Id = b.Id,
+                Id=b.Id,
 
-                Name = b.Type switch
+                Name=b.Type switch
                 {
                     BookingType.Flight => b.Flight?.FlightNumber,
                     BookingType.Hotel => b.Hotel?.Name,
@@ -179,16 +248,16 @@ namespace Travelo.Application.Services.Booking
                     _ => ""
                 },
 
-                Type = b.Type,
+                Type=b.Type,
 
-                FromDate = b.FromDate,
-                ToDate = b.ToDate,
+                FromDate=b.FromDate,
+                ToDate=b.ToDate,
 
-                BasePrice = b.PriceDetails?.BaseFare ?? 0,
-                Taxes = b.PriceDetails?.Taxes ?? 0,
-                Total = b.TotalPrice,
+                BasePrice=b.PriceDetails?.BaseFare??0,
+                Taxes=b.PriceDetails?.Taxes??0,
+                Total=b.TotalPrice,
 
-                Status = b.Status
+                Status=b.Status
             };
         }
 

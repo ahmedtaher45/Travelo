@@ -10,17 +10,17 @@ namespace Travelo.Infrastracture.Repositories
 
         public RoomRepository (ApplicationDbContext context) : base(context)
         {
-            _context = context;
+            _context=context;
         }
-        public async Task<List<Room>> GetAvailableRoomsAsync(int hotelId,DateTime checkIn,  DateTime checkOut  )
+        public async Task<List<Room>> GetAvailableRoomsAsync (int hotelId, DateTime checkIn, DateTime checkOut)
         {
             var roomsQuery = _context.Rooms
-                .Where(r => r.HotelId == hotelId && r.IsAvailable);
+                .Where(r => r.HotelId==hotelId&&r.IsAvailable);
 
-            var bookedRoomIds = _context.RoomBookings
+            var bookedRoomIds = _context.GeneralBooking
                 .Where(b =>
-                    checkIn < b.CheckOutDate &&
-                    checkOut > b.CheckInDate
+                    checkIn<b.FromDate&&
+                    checkOut>b.ToDate
                 )
                 .Select(b => b.RoomId)
                 .Distinct();

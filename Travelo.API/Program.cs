@@ -77,6 +77,7 @@ builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IWishlistItemService, WishlistItemService>();
+builder.Services.AddScoped<IGeneralBookingRepository, GeneralBookingRepository>();
 
 // Use Cases
 builder.Services.AddScoped<LoginUseCase>();
