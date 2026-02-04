@@ -1,24 +1,25 @@
-## --- [ Visual Studio & .NET ] ---
+## =====================================================
+## Visual Studio & .NET
+## =====================================================
+
 [Bb]in/
 [Oo]bj/
 [Dd]ebug/
 [Rr]elease/
-*.user
-*.userosscache
-*.sln.docstates
 .vs/
 
-## --- [ User-specific files ] ---
+*.user
 *.rsuser
 *.suo
-*.user
 *.userosscache
+*.sln.docstates
+*.userprefs
 
-## --- [ Build results ] ---
+## Build results
 [Dd]ebugPublic/
+[Rr]eleases/
 x64/
 x86/
-[Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
@@ -26,33 +27,116 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-## --- [ NuGet Packages ] ---
+## Visual Studio generated
+Generated Files/
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+
+## Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+## Benchmark
+BenchmarkDotNet.Artifacts/
+
+## .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ASP.NET
+ScaffoldingReadMe.txt
+publish/
+*.publish.xml
+*.azurePubxml
+*.pubxml
+*.publishproj
+PublishScripts/
+
+## NuGet
 *.nupkg
+*.snupkg
 **/[Pp]ackages/*
 !**/[Pp]ackages/build/
 *.nuget.props
 *.nuget.targets
 
-## --- [ Common Extensions to Ignore ] ---
-*.dll
-*.pdb
-*.exe
-*.cache
-*.log
-*.tmp
+## Azure
+csx/
+*.build.csdef
+ecf/
+rcf/
 
-## --- [ Database Files ] ---
+## =====================================================
+## Node / Frontend
+## =====================================================
+
+node_modules/
+.ntvs_analysis.dat
+
+## Rider / VS Code / IDEs
+.idea/
+.vscode/
+
+## =====================================================
+## Database
+## =====================================================
+
 *.mdf
 *.ldf
 *.ndf
 
-## --- [ Node.js (if used in UI) ] ---
-node_modules/
-.ntvs_analysis.dat
-# Rider / VS Code
-.idea/
-.vscode/
+## =====================================================
+## OS Files
+## =====================================================
 
-# OS files
 .DS_Store
 Thumbs.db
+desktop.ini
+
+## =====================================================
+## Python (if used)
+## =====================================================
+
+__pycache__/
+*.pyc
+
+## =====================================================
+## Project-specific (Travelo)
+## =====================================================
+
+/Travelo.API/obj/
+/Travelo.Application/obj/
+/Travelo.Domain/obj/
+/Travelo.Infrastracture/obj/
+
+## =====================================================
+## Misc
+## =====================================================
+
+*.dll
+*.exe
+*.cache
+*.tmp
+*.log
