@@ -20,6 +20,7 @@
         IWishlistItemRepository WishlistItems { get; }
         IWishlistRepository Wishlists { get; }
         ITicketRepository Ticket { get; }
+        IGeneralBookingRepository GeneralBooking { get; }
 
         IGenericRepository<T> Repository<T> () where T : class;
 

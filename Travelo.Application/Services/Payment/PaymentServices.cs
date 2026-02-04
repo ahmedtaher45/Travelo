@@ -13,7 +13,6 @@ namespace Travelo.Application.Services.Payment
     {
         private readonly IPaymentRepository _payment;
         private readonly IHotelRepository _hotel;
-        private readonly IRoomBookingRepository _roomBooking;
         private readonly IRoomRepository _roomRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly ICartRepository _cartRepository;
@@ -23,7 +22,6 @@ namespace Travelo.Application.Services.Payment
         {
             _payment=payment;
             _hotel=hotel;
-            _roomBooking=roomBooking;
             _roomRepository=roomRepository;
             this.unitOfWork=unitOfWork;
             _cartRepository=cartRepository;
@@ -119,7 +117,7 @@ namespace Travelo.Application.Services.Payment
             var user = await userManager.FindByIdAsync(userId);
             if (user==null)
                 return GenericResponse<PaymentRes>.FailureResponse("User not found");
-            var isConflict = await _roomBooking.GetManyAsync(e => e.RoomId==req.RoomId&&e.CheckInDate<req.CheckOutDate&&req.CheckInDate<e.CheckOutDate);
+            var isConflict = await unitOfWork.GeneralBooking.GetManyAsync(e => e.RoomId==req.RoomId&&e.FromDate<req.CheckOutDate&&req.CheckInDate<e.ToDate);
             if (isConflict.Any())
                 return GenericResponse<PaymentRes>.FailureResponse("This room is already booked for the selected dates.");
             var payment = new Domain.Models.Entities.Payment
@@ -328,16 +326,17 @@ namespace Travelo.Application.Services.Payment
                 flight.Aircraft.CountOfSeats-=(int)payment.NumberOfTickets;
                 payment.Status=PaymentStatus.Completed;
                 await unitOfWork.Flights.UpdateAsync(flight);
-                payment.Status=PaymentStatus.Completed;
-                var flightBooking = new FlightBooking
+                var flightBooking = new Travelo.Domain.Models.Entities.GeneralBooking
                 {
-                    FlightId=(int)payment.FlightId,
                     UserId=payment.UserId,
-                    NumberOfPassengers=(int)payment.NumberOfTickets,
-                    BookingDate=DateTime.UtcNow,
-                    Status=FlightBookingStatus.Confirmed
+                    Type=BookingType.Flight,
+                    FlightId=payment.FlightId,
+                    Status=BookingStatus.Confirmed,
+                    TotalPrice=payment.Amount,
+                    FromDate=flight.ArrivalDateTime,
+                    ToDate=flight.ArrivalDateTime,
                 };
-                await unitOfWork.FlightBookings.Add(flightBooking);
+                await unitOfWork.GeneralBooking.Add(flightBooking);
                 _payment.Update(payment);
                 await unitOfWork.SaveChangesAsync();
 
@@ -348,15 +347,19 @@ namespace Travelo.Application.Services.Payment
             }
             if (payment.PaymentFor==PaymentFor.Room)
             {
-                var roomBooking = new RoomBooking
+                var roomBooking = new Travelo.Domain.Models.Entities.GeneralBooking
                 {
-                    RoomId=(int)payment.RoomId,
                     UserId=payment.UserId,
-                    CheckInDate=(DateTime)payment.CheckInDate,
-                    CheckOutDate=(DateTime)payment.CheckOutDate
+                    Type=BookingType.Room,
+                    HotelId=payment.HotelId,
+                    RoomId=payment.RoomId,
+                    FromDate=(DateTime)payment.CheckInDate,
+                    ToDate=(DateTime)payment.CheckOutDate,
+                    Status=BookingStatus.Confirmed,
+                    TotalPrice=payment.Amount,
                 };
                 payment.Status=PaymentStatus.Completed;
-                await _roomBooking.Add(roomBooking);
+                await unitOfWork.GeneralBooking.Add(roomBooking);
                 _payment.Update(payment);
                 await unitOfWork.SaveChangesAsync();
                 return GenericResponse<PaymentRes>.SuccessResponse(new PaymentRes
