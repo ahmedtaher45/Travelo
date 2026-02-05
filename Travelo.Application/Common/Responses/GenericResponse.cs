@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Travelo.Application.DTOs.Hotels;
 
 namespace Travelo.Application.Common.Responses
 {
@@ -27,5 +28,10 @@ namespace Travelo.Application.Common.Responses
                 Message = message,
                 Data = default
             };
+
+        internal GenericResponse<IEnumerable<HotelCardDto>> SuccessResponse (IEnumerable<HotelCardDto> data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

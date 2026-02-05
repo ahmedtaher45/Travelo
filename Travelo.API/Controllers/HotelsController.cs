@@ -18,6 +18,7 @@ namespace Travelo.API.Controllers
         private readonly GetThingsToDoUseCase _getThingsToDoUseCase;
         private readonly GetSimilarHotelsUseCase _getSimilarHotelsUseCase;
         private readonly SearchAvailableRoomsUseCase _searchAvailableRoomsUse;
+        private readonly GetAllHotelsUseCase getAllHotelsUseCase;
 
         public HotelsController (
             GetFeaturedHotelsUseCase getFeaturedHotelsUseCase,
@@ -26,7 +27,8 @@ namespace Travelo.API.Controllers
             GetHotelReviewsUseCase getHotelReviewsUseCase,
             GetThingsToDoUseCase getThingsToDoUseCase,
             GetSimilarHotelsUseCase getSimilarHotelsUseCase,
-            SearchAvailableRoomsUseCase searchAvailableRoomsUse)
+            SearchAvailableRoomsUseCase searchAvailableRoomsUse,
+            GetAllHotelsUseCase getAllHotelsUseCase)
         {
             _getFeaturedHotelsUseCase=getFeaturedHotelsUseCase;
             _getHotelByIdUseCase=getHotelByIdUseCase;
@@ -35,6 +37,7 @@ namespace Travelo.API.Controllers
             _getThingsToDoUseCase=getThingsToDoUseCase;
             _getSimilarHotelsUseCase=getSimilarHotelsUseCase;
             _searchAvailableRoomsUse=searchAvailableRoomsUse;
+            this.getAllHotelsUseCase=getAllHotelsUseCase;
         }
 
 
@@ -44,6 +47,12 @@ namespace Travelo.API.Controllers
             var response = await _getFeaturedHotelsUseCase.ExecuteAsync(request);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        [HttpGet("GetAllHotels")]
+        public async Task<IActionResult> GetAll ([FromQuery] PaginationRequest request)
+        {
+            var res = await getAllHotelsUseCase.Execute(request);
+            return res.Success ? Ok(res) : BadRequest(res);
+        }
 
 
 
@@ -51,12 +60,7 @@ namespace Travelo.API.Controllers
         public async Task<IActionResult> GetById (int id)
         {
             var response = await _getHotelByIdUseCase.ExecuteAsync(id);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-
-            return response.Message=="Hotel not found" ? NotFound(response) : BadRequest(response);
+            return response.Success ? Ok(response) : response.Message=="Hotel not found" ? NotFound(response) : BadRequest(response);
         }
 
 

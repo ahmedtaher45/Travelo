@@ -14,6 +14,7 @@ using Travelo.Application.Services.City;
 using Travelo.Application.Services.FileService;
 using Travelo.Application.Services.Flight;
 using Travelo.Application.Services.Payment;
+using Travelo.Application.Services.Room;
 using Travelo.Application.Services.Ticket;
 using Travelo.Application.Services.Wishlist;
 using Travelo.Application.Services.WishlistItem;
@@ -78,7 +79,7 @@ builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IWishlistItemService, WishlistItemService>();
 builder.Services.AddScoped<IGeneralBookingRepository, GeneralBookingRepository>();
-
+builder.Services.AddScoped<IRoomService, RoomService>();
 // Use Cases
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<RegisterUseCase>();
@@ -91,6 +92,9 @@ builder.Services.AddScoped<ResendConfirmEmailUseCase>();
 builder.Services.AddScoped<GoogleLoginUseCase>();
 builder.Services.AddScoped<GetUserProfileUseCase>();
 builder.Services.AddScoped<UpdateUserProfileUseCase>();
+builder.Services.AddScoped<SearchAvailableRoomsUseCase>();
+builder.Services.AddScoped<GetAllHotelsUseCase>();
+
 
 // Restaurant & Menu Use Cases
 builder.Services.AddScoped<AddRestaurantUseCase>();
@@ -207,11 +211,11 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<ApplicationDbContext>();
     await SeedData.SeedAsync(context);
 }
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+//if (app.Environment.IsDevelopment())
+//{
+app.MapOpenApi();
+app.MapScalarApiReference();
+//}
 
 app.UseStaticFiles();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
