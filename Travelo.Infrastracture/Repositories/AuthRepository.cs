@@ -88,8 +88,11 @@ namespace Travelo.Infrastracture.Repositories
                 return GenericResponse<string>.FailureResponse("Error: "+errorMessage+" | StackTrace: "+ex.StackTrace);
             }
 
+            //var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            ////token=WebUtility.UrlEncode(token);
+            //token=WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            token=WebUtility.UrlEncode(token);
+            token=WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             var param = new Dictionary<string, string?>
                 {
                     {"token",token },
@@ -97,12 +100,9 @@ namespace Travelo.Infrastracture.Repositories
                 };
 
             var confirmLink = QueryHelpers.AddQueryString(registerDTO.ClientUri!, param);
-
-
             var assembly = Assembly.Load("Travelo.Application");
             var resourceName = "Travelo.Application.Templates.Email.ConfirmEmail.html";
             using var stream = assembly.GetManifestResourceStream(resourceName);
-
             using var reader = new StreamReader(stream);
             var htmlTemplate = await reader.ReadToEndAsync();
 
@@ -407,14 +407,18 @@ namespace Travelo.Infrastracture.Repositories
                 return GenericResponse<string>.SuccessResponse("Email already confirmed.");
             }
 
-            var Token = WebUtility.UrlDecode(confirmEmailDTO.Token);
+            //var Token = WebUtility.UrlDecode(confirmEmailDTO.Token);
+            //            var decodedToken = Encoding.UTF8.GetString(
+            //             WebEncoders.Base64UrlDecode(confirmEmailDTO.Token)
+            //);
+            var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(confirmEmailDTO.Token));
 
-            var result = await userManager.ConfirmEmailAsync(user, Token);
+            // var result = await userManager.ConfirmEmailAsync(user, Token);
+            var result = await userManager.ConfirmEmailAsync(user, decodedToken);
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                 return await Task.FromResult(GenericResponse<string>.FailureResponse($"Email confirmation failed:  {errors}"));
-
 
             }
             return await Task.FromResult(GenericResponse<string>.SuccessResponse("Email confirmed successfully."));
