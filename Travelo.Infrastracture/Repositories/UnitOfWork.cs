@@ -53,6 +53,8 @@ namespace Travelo.Infrastracture.Repositories
             Wishlists=new WishlistRepository(_context);
             WishlistItems=new WishlistItemRepository(_context);
             Ticket=new TicketRepository(_context);
+            Restaurant=new RestaurantRepository(_context);
+
         }
 
         public IAuthRepository Auth { get; private set; }

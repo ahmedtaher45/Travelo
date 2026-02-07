@@ -21,6 +21,7 @@ namespace Travelo.API.Controllers
         private readonly GetThingsToDoUseCase _getThingsToDoUseCase;
         private readonly GetSimilarHotelsUseCase _getSimilarHotelsUseCase;
         private readonly SearchAvailableRoomsUseCase _searchAvailableRoomsUse;
+        private readonly GetAllHotelsUseCase _getAllHotelsUseCase;
 
         public HotelsController(
             GetFeaturedHotelsUseCase getFeaturedHotelsUseCase,
@@ -29,7 +30,8 @@ namespace Travelo.API.Controllers
             GetHotelReviewsUseCase getHotelReviewsUseCase,
             GetThingsToDoUseCase getThingsToDoUseCase,
             GetSimilarHotelsUseCase getSimilarHotelsUseCase,
-            SearchAvailableRoomsUseCase searchAvailableRoomsUse)
+            SearchAvailableRoomsUseCase searchAvailableRoomsUse,
+            GetAllHotelsUseCase getAllHotelsUseCase)
         {
             _getFeaturedHotelsUseCase = getFeaturedHotelsUseCase;
             _getHotelByIdUseCase = getHotelByIdUseCase;
@@ -38,6 +40,7 @@ namespace Travelo.API.Controllers
             _getThingsToDoUseCase = getThingsToDoUseCase;
             _getSimilarHotelsUseCase = getSimilarHotelsUseCase;
             _searchAvailableRoomsUse = searchAvailableRoomsUse;
+            _getAllHotelsUseCase = getAllHotelsUseCase;
         }
 
 
@@ -53,8 +56,20 @@ namespace Travelo.API.Controllers
             return BadRequest(response);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllHotels([FromQuery] PaginationRequest request)
+        {
+            var response = await _getAllHotelsUseCase.ExecuteAsync(request);
 
-       
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

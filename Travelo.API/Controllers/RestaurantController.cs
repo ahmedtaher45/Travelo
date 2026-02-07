@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Travelo.Application.DTOs.Restaurant;
 using Travelo.Application.UseCases.Restaurant;
 
@@ -12,16 +13,17 @@ namespace Travelo.API.Controllers
         private readonly GetRestaurantUseCase _getRestaurantUseCase;
         private readonly UpdateRestaurantUseCase _updateRestaurantUseCase;
         private readonly RemoveRestaurantUseCase _removeRestaurantUseCase;
-
-        public RestaurantController (AddRestaurantUseCase addRestaurantUseCase, GetRestaurantUseCase getRestaurantUseCase, UpdateRestaurantUseCase updateRestaurantUseCase, RemoveRestaurantUseCase removeRestaurantUseCase)
+        private readonly GetAllRestaurantsUseCase _getAllRestaurantsUseCase;
+        public RestaurantController (AddRestaurantUseCase addRestaurantUseCase, GetRestaurantUseCase getRestaurantUseCase, UpdateRestaurantUseCase updateRestaurantUseCase, RemoveRestaurantUseCase removeRestaurantUseCase, GetAllRestaurantsUseCase getAllRestaurantsUseCase)
         {
-            _addRestaurantUseCase=addRestaurantUseCase;
-            _getRestaurantUseCase=getRestaurantUseCase;
-            _updateRestaurantUseCase=updateRestaurantUseCase;
-            _removeRestaurantUseCase=removeRestaurantUseCase;
+            _addRestaurantUseCase = addRestaurantUseCase;
+            _getRestaurantUseCase = getRestaurantUseCase;
+            _updateRestaurantUseCase = updateRestaurantUseCase;
+            _removeRestaurantUseCase = removeRestaurantUseCase;
+            _getAllRestaurantsUseCase = getAllRestaurantsUseCase;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRestaurant (int id)
         {
             try
@@ -37,6 +39,7 @@ namespace Travelo.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddRestaurant (int cityId, AddRestaurantDto dto)
         {
             try
@@ -50,7 +53,8 @@ namespace Travelo.API.Controllers
             }
         }
 
-        [HttpPut("id")]
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRestaurant ([FromRoute] int id, [FromBody] AddRestaurantDto dto)
         {
             try
@@ -64,7 +68,8 @@ namespace Travelo.API.Controllers
             }
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveRestaurant ([FromRoute] int id)
         {
             try
@@ -77,5 +82,24 @@ namespace Travelo.API.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [HttpGet] // GET: api/Restaurant
+        public async Task<IActionResult> GetAllRestaurants()
+        {
+            try
+            {
+                var result = await _getAllRestaurantsUseCase.ExecuteAsync();
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
     }
 }

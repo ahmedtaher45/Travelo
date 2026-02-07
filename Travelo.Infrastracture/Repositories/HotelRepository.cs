@@ -49,6 +49,36 @@ namespace Travelo.Infrastracture.Repositories
             }
         }
 
+        public async Task<GenericResponse<IEnumerable<HotelCardDto>>> GetAllHotelsAsync(PaginationRequest request)
+        {
+            try
+            {
+                var query = _context.Hotels
+                    .AsNoTracking() 
+                    .OrderByDescending(h => h.Id) 
+                    .Skip((request.PageNumber - 1) * request.PageSize)
+                    .Take(request.PageSize)
+                    .Select(h => new HotelCardDto
+                    {
+                        Id = h.Id,
+                        Name = h.Name,
+                        Location = (h.City != null ? h.City.Name : h.Address) + ", " + h.Country,
+                        Price = h.PricePerNight,
+                        Rating = h.Rating,
+                        ImageUrl = h.ImageUrl,
+                        ReviewsCount = h.ReviewsCount
+                    });
+
+                var data = await query.ToListAsync();
+
+                return GenericResponse<IEnumerable<HotelCardDto>>.SuccessResponse(data, "All hotels retrieved successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<IEnumerable<HotelCardDto>>.FailureResponse($"Error: {ex.Message}");
+            }
+        }
+
         public async Task<GenericResponse<HotelDetailsDto>> GetHotelByIdAsync (int id)
         {
             try
