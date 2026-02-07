@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Stripe;
+using System.Security.Claims;
 using System.Text;
 using Travelo.API.Middleware;
 using Travelo.Application.Interfaces;
@@ -183,7 +184,8 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer=jwtSettings["Issuer"],
         ValidAudience=jwtSettings["Audience"],
         IssuerSigningKey=new SymmetricSecurityKey(key),
-        ClockSkew=TimeSpan.Zero
+        ClockSkew=TimeSpan.Zero,
+        RoleClaimType=ClaimTypes.Role
     };
 })
 .AddCookie(IdentityConstants.ApplicationScheme)
@@ -197,6 +199,7 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("email");
     options.ClaimActions.MapJsonKey("picture", "picture");
 });
+
 
 builder.Services.AddCors(options =>
 {

@@ -22,7 +22,6 @@ namespace Travelo.API.Controllers
             var result = await addAdminUseCase.ExecuteAsync(adminDTO);
             return !result.Success ? BadRequest(result) : Ok(result);
         }
-
         [HttpPost("add-restaurant")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddRestaurant (

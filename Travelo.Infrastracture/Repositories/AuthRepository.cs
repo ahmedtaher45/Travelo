@@ -281,7 +281,7 @@ namespace Travelo.Infrastracture.Repositories
                 return GenericResponse<AuthResponseDTO>.FailureResponse("Invalid Email or Password");
             }
 
-            var token = GenerateJwtToken(user);
+            var token = await GenerateJwtToken(user);
 
             var authData = new AuthResponseDTO
             {
@@ -292,8 +292,9 @@ namespace Travelo.Infrastracture.Repositories
 
             return GenericResponse<AuthResponseDTO>.SuccessResponse(authData, "Login Successful");
         }
-        private string GenerateJwtToken (ApplicationUser user)
+        private async Task<string> GenerateJwtToken (ApplicationUser user)
         {
+            var roles = await userManager.GetRolesAsync(user);
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
@@ -301,6 +302,10 @@ namespace Travelo.Infrastracture.Repositories
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, user.UserName!)
             };
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
