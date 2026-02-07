@@ -47,12 +47,12 @@ namespace Travelo.API.Controllers
             var response = await _getFeaturedHotelsUseCase.ExecuteAsync(request);
             return response.Success ? Ok(response) : BadRequest(response);
         }
-        [HttpGet("GetAllHotels")]
-        public async Task<IActionResult> GetAll ([FromQuery] PaginationRequest request)
-        {
-            var res = await getAllHotelsUseCase.Execute(request);
-            return res.Success ? Ok(res) : BadRequest(res);
-        }
+        //[HttpGet("GetAllHotels")]
+        //public async Task<IActionResult> GetAll ([FromQuery] PaginationRequest request)
+        //{
+        //    var res = await GetAllHotelsUseCase.Execute(request);
+        //    return res.Success ? Ok(res) : BadRequest(res);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> GetAllHotels([FromQuery] PaginationRequest request)
