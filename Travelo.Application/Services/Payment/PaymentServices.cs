@@ -4,6 +4,7 @@ using Stripe.Checkout;
 using Travelo.Application.Common.Responses;
 using Travelo.Application.DTOs.Payment;
 using Travelo.Application.Interfaces;
+using Travelo.Application.Services.Auth;
 using Travelo.Domain.Models.Entities;
 using Travelo.Domain.Models.Enums;
 
@@ -12,18 +13,18 @@ namespace Travelo.Application.Services.Payment
     public class PaymentServices : IPaymentServices
     {
         private readonly IPaymentRepository _payment;
+        private readonly IEmailSender _emailSender;
         private readonly IHotelRepository _hotel;
-        private readonly IRoomBookingRepository _roomBooking;
         private readonly IRoomRepository _roomRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly ICartRepository _cartRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public PaymentServices (IPaymentRepository payment, IHotelRepository hotel, IRoomBookingRepository roomBooking, IRoomRepository roomRepository, IUnitOfWork unitOfWork, ICartRepository cartRepository, UserManager<ApplicationUser> userManager)
+        public PaymentServices (IPaymentRepository payment, IEmailSender emailSender, IHotelRepository hotel, IRoomBookingRepository roomBooking, IRoomRepository roomRepository, IUnitOfWork unitOfWork, ICartRepository cartRepository, UserManager<ApplicationUser> userManager)
         {
             _payment=payment;
+            _emailSender=emailSender;
             _hotel=hotel;
-            _roomBooking=roomBooking;
             _roomRepository=roomRepository;
             this.unitOfWork=unitOfWork;
             _cartRepository=cartRepository;
@@ -119,7 +120,7 @@ namespace Travelo.Application.Services.Payment
             var user = await userManager.FindByIdAsync(userId);
             if (user==null)
                 return GenericResponse<PaymentRes>.FailureResponse("User not found");
-            var isConflict = await _roomBooking.GetManyAsync(e => e.RoomId==req.RoomId&&e.CheckInDate<req.CheckOutDate&&req.CheckInDate<e.CheckOutDate);
+            var isConflict = await unitOfWork.GeneralBooking.GetManyAsync(e => e.RoomId==req.RoomId&&e.FromDate<req.CheckOutDate&&req.CheckInDate<e.ToDate);
             if (isConflict.Any())
                 return GenericResponse<PaymentRes>.FailureResponse("This room is already booked for the selected dates.");
             var payment = new Domain.Models.Entities.Payment
@@ -298,73 +299,146 @@ namespace Travelo.Application.Services.Payment
                 ? GenericResponse<PaymentRes>.FailureResponse("Cash payment Placed Successfully")
                 : GenericResponse<PaymentRes>.FailureResponse("Invalid payment type");
         }
-
         public async Task<GenericResponse<PaymentRes>> HandleSuccessAsync (int paymentId)
         {
             var payment = await _payment.GetById(paymentId);
             if (payment==null)
-            {
                 return GenericResponse<PaymentRes>.FailureResponse("Payment not found");
-            }
+
             if (payment.Status==PaymentStatus.Completed)
                 return GenericResponse<PaymentRes>.SuccessResponse(new PaymentRes { Message="Already processed" });
-            //  payment.Status=PaymentStatus.Completed;
+
+            var user = await unitOfWork.Auth.GetUserData(payment.UserId);
+            if (user==null)
+                return GenericResponse<PaymentRes>.FailureResponse("User not found");
+
+            // --- Read embedded template ---
+            var assembly = typeof(PaymentServices).Assembly;
+            var resourceName = "Travelo.Application.Templates.Email.BookingConfigration.html";
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream==null)
+                throw new FileNotFoundException($"Embedded email template '{resourceName}' not found.");
+            using var reader = new StreamReader(stream);
+            var template = await reader.ReadToEndAsync();
+
             if (payment.PaymentFor==PaymentFor.Flight)
             {
                 var flight = await unitOfWork.Flights.GetById((int)payment.FlightId, q => q.Include(f => f.Aircraft));
                 if (flight==null)
-                {
-                    return GenericResponse<PaymentRes>.FailureResponse("Flight details could not be found.");
-                }
+                    return GenericResponse<PaymentRes>.FailureResponse("Flight not found");
 
-                if (flight.Aircraft==null)
-                {
-                    return GenericResponse<PaymentRes>.FailureResponse("Aircraft information is missing for this flight. Cannot verify seats.");
-                }
-                if (flight.Aircraft.CountOfSeats<payment.NumberOfTickets)
-                {
+                if (flight.Aircraft==null||flight.Aircraft.CountOfSeats<payment.NumberOfTickets)
                     return GenericResponse<PaymentRes>.FailureResponse("Not enough seats available");
-                }
+
                 flight.Aircraft.CountOfSeats-=(int)payment.NumberOfTickets;
                 payment.Status=PaymentStatus.Completed;
                 await unitOfWork.Flights.UpdateAsync(flight);
-                payment.Status=PaymentStatus.Completed;
-                var flightBooking = new FlightBooking
+
+                var flightBooking = new GeneralBooking
                 {
-                    FlightId=(int)payment.FlightId,
                     UserId=payment.UserId,
-                    NumberOfPassengers=(int)payment.NumberOfTickets,
-                    BookingDate=DateTime.UtcNow,
-                    Status=FlightBookingStatus.Confirmed
+                    Type=BookingType.Flight,
+                    FlightId=payment.FlightId,
+                    Status=BookingStatus.Confirmed,
+                    TotalPrice=payment.Amount,
+                    FromDate=flight.ArrivalDateTime,
+                    ToDate=flight.ArrivalDateTime
                 };
-                await unitOfWork.FlightBookings.Add(flightBooking);
+                await unitOfWork.GeneralBooking.Add(flightBooking);
+
+                var ticket = new Travelo.Domain.Models.Entities.Ticket
+                {
+                    BookingId=flightBooking.Id,
+                    TicketNumber=Guid.NewGuid().ToString(),
+                    SeatNumber="TBD",
+                    Gate="TBD",
+                    Barcode=Guid.NewGuid().ToString(),
+                    FlightClass=FlightClass.Economy,
+                    Status=TicketStatus.Active
+                };
+                await unitOfWork.Ticket.AddAsync(ticket);
+
                 _payment.Update(payment);
                 await unitOfWork.SaveChangesAsync();
 
-                return GenericResponse<PaymentRes>.SuccessResponse(new PaymentRes
+                var detailsHtml = $@"
+<ul>
+    <li><strong>Ticket Number:</strong> {ticket.TicketNumber}</li>
+    <li><strong>Flight:</strong> {flight.FlightNumber}</li>
+    <li><strong>From:</strong> {flight.FromAirport}</li>
+    <li><strong>To:</strong> {flight.ToAirport}</li>
+    <li><strong>Departure:</strong> {flight.DepartureDateTime:dd/MM/yyyy HH:mm}</li>
+    <li><strong>Arrival:</strong> {flight.ArrivalDateTime:dd/MM/yyyy HH:mm}</li>
+    <li><strong>Seat Number:</strong> {ticket.SeatNumber}</li>
+    <li><strong>Gate:</strong> {ticket.Gate}</li>
+</ul>";
+
+                var emailBody = template
+                    .Replace("{{UserName}}", user.Data.UserName)
+                    .Replace("{{BookingType}}", "Flight")
+                    .Replace("{{Details}}", detailsHtml)
+                    .Replace("{{TotalPaid}}", payment.Amount.ToString("C"))
+                    .Replace("{{Year}}", DateTime.Now.Year.ToString());
+
+                try
                 {
-                    Message="Flight payment successful"
-                });
+                    await _emailSender.SendEmailAsync(new Message(new List<string> { user.Data.Email! }, "Flight Booking Confirmation", emailBody));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to send email: {ex.Message}");
+                }
+
+                return GenericResponse<PaymentRes>.SuccessResponse(new PaymentRes { Message="Flight payment successful" });
             }
+
             if (payment.PaymentFor==PaymentFor.Room)
             {
-                var roomBooking = new RoomBooking
+                var roomBooking = new GeneralBooking
                 {
-                    RoomId=(int)payment.RoomId,
                     UserId=payment.UserId,
-                    CheckInDate=(DateTime)payment.CheckInDate,
-                    CheckOutDate=(DateTime)payment.CheckOutDate
+                    Type=BookingType.Room,
+                    HotelId=payment.HotelId,
+                    RoomId=payment.RoomId,
+                    FromDate=(DateTime)payment.CheckInDate,
+                    ToDate=(DateTime)payment.CheckOutDate,
+                    Status=BookingStatus.Confirmed,
+                    TotalPrice=payment.Amount
                 };
+
                 payment.Status=PaymentStatus.Completed;
-                await _roomBooking.Add(roomBooking);
+                await unitOfWork.GeneralBooking.Add(roomBooking);
                 _payment.Update(payment);
                 await unitOfWork.SaveChangesAsync();
-                return GenericResponse<PaymentRes>.SuccessResponse(new PaymentRes
+
+                var detailsHtml = $@"<ul>
+    <li><strong>Hotel ID:</strong> {payment.HotelId}</li>
+    <li><strong>Room ID:</strong> {payment.RoomId}</li>
+    <li><strong>Check-in:</strong> {payment.CheckInDate:dd/MM/yyyy}</li>
+    <li><strong>Check-out:</strong> {payment.CheckOutDate:dd/MM/yyyy}</li>
+    <li><strong>Guests:</strong> {payment.NumberOfTickets}</li></ul>";
+
+                var emailBody = template
+                    .Replace("{{UserName}}", user.Data.UserName)
+                    .Replace("{{BookingType}}", "Room")
+                    .Replace("{{Details}}", detailsHtml)
+                    .Replace("{{TotalPaid}}", payment.Amount.ToString("C"))
+                    .Replace("{{Year}}", DateTime.Now.Year.ToString());
+
+                try
                 {
-                    Message="Payment successful"
-                });
+                    await _emailSender.SendEmailAsync(new Message(new List<string> { user.Data.Email! }, "Room Booking Confirmation", emailBody));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to send email: {ex.Message}");
+                }
+
+                return GenericResponse<PaymentRes>.SuccessResponse(new PaymentRes { Message="Room payment successful" });
             }
-            return GenericResponse<PaymentRes>.FailureResponse("Invalid payment for type");
+
+            return GenericResponse<PaymentRes>.FailureResponse("Invalid payment type");
         }
+
     }
 }

@@ -55,6 +55,7 @@ namespace Travelo.Infrastracture.Repositories
             Ticket=new TicketRepository(_context);
             Restaurant=new RestaurantRepository(_context);
 
+            GeneralBooking=new GeneralBookingRepository(_context);
         }
 
         public IAuthRepository Auth { get; private set; }
@@ -84,6 +85,8 @@ namespace Travelo.Infrastracture.Repositories
         public IWishlistRepository Wishlists { get; private set; }
 
         public ITicketRepository Ticket { get; private set; }
+
+        public IGeneralBookingRepository GeneralBooking { get; private set; }
 
         public IGenericRepository<T> Repository<T> () where T : class
         {

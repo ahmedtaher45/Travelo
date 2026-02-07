@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Templates\Email\BookingConfigration.html" />
     <None Remove="Templates\Email\ConfirmEmail.html" />
   </ItemGroup>
 
@@ -32,6 +33,11 @@
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
 		<PackageReference Include="NETCore.MailKit" Version="2.1.0" />
 		<PackageReference Include="Stripe.net" Version="50.2.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Templates\Email\BookingConfigration.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	

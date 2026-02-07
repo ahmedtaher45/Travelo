@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Travelo.Application.Common.Responses;
+﻿using Microsoft.AspNetCore.Mvc;
 using Travelo.Application.DTOs.Common;
 using Travelo.Application.DTOs.Hotels;
-using Travelo.Application.DTOs.Review;
 using Travelo.Application.UseCases.Hotels;
 using Travelo.Application.UseCases.Review;
 
@@ -23,7 +20,7 @@ namespace Travelo.API.Controllers
         private readonly SearchAvailableRoomsUseCase _searchAvailableRoomsUse;
         private readonly GetAllHotelsUseCase _getAllHotelsUseCase;
 
-        public HotelsController(
+        public HotelsController (
             GetFeaturedHotelsUseCase getFeaturedHotelsUseCase,
             GetHotelByIdUseCase getHotelByIdUseCase,
             GetHotelRoomsUseCase getHotelRoomsUseCase,
@@ -45,15 +42,16 @@ namespace Travelo.API.Controllers
 
 
         [HttpGet("featured")]
-        public async Task<IActionResult> GetFeatured([FromQuery] PaginationRequest request)
+        public async Task<IActionResult> GetFeatured ([FromQuery] PaginationRequest request)
         {
             var response = await _getFeaturedHotelsUseCase.ExecuteAsync(request);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-
-            return BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+        [HttpGet("GetAllHotels")]
+        public async Task<IActionResult> GetAll ([FromQuery] PaginationRequest request)
+        {
+            var res = await getAllHotelsUseCase.Execute(request);
+            return res.Success ? Ok(res) : BadRequest(res);
         }
 
         [HttpGet]
@@ -71,89 +69,61 @@ namespace Travelo.API.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById (int id)
         {
             var response = await _getHotelByIdUseCase.ExecuteAsync(id);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-
-            if (response.Message == "Hotel not found")
-            {
-                return NotFound(response);
-            }
-            return BadRequest(response);
+            return response.Success ? Ok(response) : response.Message=="Hotel not found" ? NotFound(response) : BadRequest(response);
         }
 
 
 
         [HttpGet("{hotelId}/rooms")]
-        public async Task<IActionResult> GetRooms(int hotelId)
+        public async Task<IActionResult> GetRooms (int hotelId)
         {
             var response = await _getHotelRoomsUseCase.ExecuteAsync(hotelId);
 
-            if (response.Success)
-                return Ok(response);
-
-            return BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
-       
-       
+
+
         [HttpGet("{hotelId}/reviews")]
-        public async Task<IActionResult> GetHotelReviews(
+        public async Task<IActionResult> GetHotelReviews (
             int hotelId,
             [FromQuery] int pageNum = 1,
             [FromQuery] int pageSize = 5)
         {
             var response = await _getHotelReviewsUseCase.GetHotelReview(hotelId, pageNum, pageSize);
 
-            if (response.Success)
-                return Ok(response);
-
-            return BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
 
-        
+
         [HttpGet("{hotelId}/things-to-do")]
-        public async Task<IActionResult> GetThingsToDo(int hotelId)
+        public async Task<IActionResult> GetThingsToDo (int hotelId)
         {
             var response = await _getThingsToDoUseCase.ExecuteAsync(hotelId);
 
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-
-            return BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
 
         [HttpGet("{hotelId}/similar")]
-        public async Task<IActionResult> GetSimilarHotels(int hotelId)
+        public async Task<IActionResult> GetSimilarHotels (int hotelId)
         {
             var response = await _getSimilarHotelsUseCase.ExecuteAsync(hotelId);
 
-            if (response.Success)
-                return Ok(response);
-
-            return BadRequest(response);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPost("search")]
-        public async Task<IActionResult> SearchAvailableRooms(
+        public async Task<IActionResult> SearchAvailableRooms (
             [FromBody] RoomSearchDto dto)
         {
             var result = await _searchAvailableRoomsUse.ExecuteAsync(dto);
 
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
-
-            return Ok(result);
+            return !result.Success ? BadRequest(result) : Ok(result);
         }
 
     }

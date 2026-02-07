@@ -28,13 +28,12 @@ namespace Travelo.Infrastracture.Contexts
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<ThingToDo> ThingsToDo { get; set; }
-        public DbSet<RoomBooking> RoomBookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
-        public DbSet<FlightBooking> FlightBookings { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<WishlistItem> WishlistItems { get; set; }
+        public DbSet<GeneralBooking> GeneralBooking { get; set; }
 
         override protected void OnModelCreating (ModelBuilder builder)
         {
