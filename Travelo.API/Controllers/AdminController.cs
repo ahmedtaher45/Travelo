@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Travelo.Application.DTOs.Auth;
 using Travelo.Application.DTOs.Hotels;
 using Travelo.Application.DTOs.Restaurant;
@@ -22,7 +24,28 @@ namespace Travelo.API.Controllers
             var result = await addAdminUseCase.ExecuteAsync(adminDTO);
             return !result.Success ? BadRequest(result) : Ok(result);
         }
+        [HttpGet("me")]
+        [Authorize]
+        public IActionResult GetCurrentUserFromToken ()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                      ??User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+
+            var roles = User.FindAll(ClaimTypes.Role)
+                            .Select(r => r.Value)
+                            .ToList();
+
+            return Ok(new
+            {
+                UserId = userId,
+                UserName = userName,
+                Email = email,
+                Roles = roles
+            });
+        }
         [HttpPost("add-restaurant")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddRestaurant (
