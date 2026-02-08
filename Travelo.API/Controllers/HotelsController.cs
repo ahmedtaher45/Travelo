@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Travelo.Application.DTOs.Common;
 using Travelo.Application.DTOs.Hotels;
 using Travelo.Application.UseCases.Hotels;
@@ -19,6 +21,8 @@ namespace Travelo.API.Controllers
         private readonly GetSimilarHotelsUseCase _getSimilarHotelsUseCase;
         private readonly SearchAvailableRoomsUseCase _searchAvailableRoomsUse;
         private readonly GetAllHotelsUseCase _getAllHotelsUseCase;
+        private readonly UpdateHotelUseCase _updateHotelUseCase;
+        private readonly DeleteHotelUseCase _deleteHotelUseCase;
 
         public HotelsController (
             GetFeaturedHotelsUseCase getFeaturedHotelsUseCase,
@@ -28,7 +32,9 @@ namespace Travelo.API.Controllers
             GetThingsToDoUseCase getThingsToDoUseCase,
             GetSimilarHotelsUseCase getSimilarHotelsUseCase,
             SearchAvailableRoomsUseCase searchAvailableRoomsUse,
-            GetAllHotelsUseCase getAllHotelsUseCase)
+            GetAllHotelsUseCase getAllHotelsUseCase,
+            UpdateHotelUseCase updateHotelUseCase,
+            DeleteHotelUseCase deleteHotelUseCase)
         {
             _getFeaturedHotelsUseCase = getFeaturedHotelsUseCase;
             _getHotelByIdUseCase = getHotelByIdUseCase;
@@ -38,6 +44,8 @@ namespace Travelo.API.Controllers
             _getSimilarHotelsUseCase = getSimilarHotelsUseCase;
             _searchAvailableRoomsUse = searchAvailableRoomsUse;
             _getAllHotelsUseCase = getAllHotelsUseCase;
+            _updateHotelUseCase = updateHotelUseCase;
+            _deleteHotelUseCase = deleteHotelUseCase;
         }
 
 
@@ -47,13 +55,7 @@ namespace Travelo.API.Controllers
             var response = await _getFeaturedHotelsUseCase.ExecuteAsync(request);
             return response.Success ? Ok(response) : BadRequest(response);
         }
-        //[HttpGet("GetAllHotels")]
-        //public async Task<IActionResult> GetAll ([FromQuery] PaginationRequest request)
-        //{
-        //    var res = await GetAllHotelsUseCase.Execute(request);
-        //    return res.Success ? Ok(res) : BadRequest(res);
-        //}
-
+   
         [HttpGet]
         public async Task<IActionResult> GetAllHotels([FromQuery] PaginationRequest request)
         {
@@ -124,6 +126,25 @@ namespace Travelo.API.Controllers
             var result = await _searchAvailableRoomsUse.ExecuteAsync(dto);
 
             return !result.Success ? BadRequest(result) : Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Hotel")] 
+        public async Task<IActionResult> UpdateHotel(int id,[FromBody] UpdateHotelDto dto)       
+        {
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            bool isAdmin = User.IsInRole("Admin");
+
+            var result = await _updateHotelUseCase.ExecuteAsync(id, dto, currentUserId, isAdmin);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] 
+        public async Task<IActionResult> DeleteHotel(int id)          
+        {
+            var result = await _deleteHotelUseCase.ExecuteAsync(id);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
     }

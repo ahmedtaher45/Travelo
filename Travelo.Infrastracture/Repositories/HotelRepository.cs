@@ -302,5 +302,60 @@ namespace Travelo.Infrastracture.Repositories
             }
         }
 
+        public async Task<GenericResponse<string>> UpdateHotelAsync(int id, UpdateHotelDto dto, string currentUserId, bool isAdmin)
+
+        {
+            try
+            {
+                var hotel = await _context.Hotels.FindAsync(id);
+                if (hotel == null)
+                    return GenericResponse<string>.FailureResponse("Hotel not found");
+
+                if (!isAdmin && hotel.UserId != currentUserId)
+                {
+                    return GenericResponse<string>.FailureResponse("You are not authorized to update this hotel.");
+                }
+
+
+                hotel.Name = dto.Name;
+                hotel.Description = dto.Description;
+                hotel.PricePerNight = dto.PricePerNight;
+                hotel.Address = dto.Address;
+                hotel.ImageUrl = dto.ImageUrl;
+                hotel.IsFeatured = dto.IsFeatured;
+
+
+                _context.Hotels.Update(hotel);
+                await _context.SaveChangesAsync();
+
+                return GenericResponse<string>.SuccessResponse("Hotel updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<string>.FailureResponse($"Error: {ex.Message}");
+            }
+        }
+
+        public async Task<GenericResponse<string>> DeleteHotelAsync(int id)
+        {
+            try
+            {
+                var hotel = await _context.Hotels.FindAsync(id);
+                if (hotel == null)
+                {
+                    return GenericResponse<string>.FailureResponse("Hotel not found");
+                }
+
+                _context.Hotels.Remove(hotel);
+                await _context.SaveChangesAsync();
+
+                return GenericResponse<string>.SuccessResponse("Hotel deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return GenericResponse<string>.FailureResponse($"Error: {ex.Message}");
+            }
+        }
+
     }
 }
