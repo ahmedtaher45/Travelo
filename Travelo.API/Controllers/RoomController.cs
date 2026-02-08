@@ -38,9 +38,13 @@ namespace Travelo.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var role = User.FindFirstValue(ClaimTypes.Role);
+            var data = await roomService.RemoveRoom(roomId, userId, role);
+            if (data.Success) return Ok(data);
 
-            var data = await roomService.RemoveRoom(roomId, userId, role);                  
-            return data.Success ? Ok(data) : NotFound();
+            if (data.Message.Contains("Unauthorized")) return StatusCode(403, data);
+            if (data.Message.Contains("not found")) return NotFound(data);
+            return BadRequest(data);
+
         }
         [HttpPut("{roomId}")]
         [Authorize(Roles = "Admin, Hotel")]

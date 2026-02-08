@@ -88,9 +88,6 @@ namespace Travelo.API.Controllers
             return !result.Success ? BadRequest(result) : Ok(result);
         }
 
-
-
-
         [HttpGet("Google-Login")]
         public async Task<IActionResult> GoogleLogin ()
         {

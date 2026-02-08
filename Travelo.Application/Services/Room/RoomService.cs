@@ -75,7 +75,7 @@ namespace Travelo.Application.Services.Room
         {
             var room = await unitOfWork.Rooms.GetById(roomId);       
             if (room == null) return GenericResponse<string>.FailureResponse("Room not found");
-
+          
             if (!await IsAuthorizedToEditAsync(room.HotelId, userId, role))
             {
                 return GenericResponse<string>.FailureResponse("Unauthorized: You do not own this room.");
@@ -95,20 +95,16 @@ namespace Travelo.Application.Services.Room
                 return GenericResponse<string>.FailureResponse("Unauthorized: You do not own this room.");
             }
 
-            var update = new Travelo.Domain.Models.Entities.Room
-            {
-                Id=roomId,
-                Type=roomReq.Type,
-                PricePerNight=roomReq.PricePerNight,
-                Capacity=roomReq.Capacity,
-                View=roomReq.View,
-                ImageUrl=roomReq.ImageUrl,
-                IsAvailable=roomReq.IsAvailable,
-                BedType=roomReq.BedType,
-                HotelId=room.HotelId,
-                Size=roomReq.Size
-            };
-            unitOfWork.Rooms.Update(update);
+            room.Type = roomReq.Type;
+            room.PricePerNight = roomReq.PricePerNight;
+            room.Capacity = roomReq.Capacity;
+            room.View = roomReq.View;
+            room.ImageUrl = roomReq.ImageUrl;
+            room.IsAvailable = roomReq.IsAvailable;
+            room.BedType = roomReq.BedType;
+            room.Size = roomReq.Size;
+
+            unitOfWork.Rooms.Update(room);
             await unitOfWork.SaveChangesAsync();
             return GenericResponse<string>.SuccessResponse("Room updated successfully.");
         }

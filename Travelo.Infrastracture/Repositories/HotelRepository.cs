@@ -340,19 +340,29 @@ namespace Travelo.Infrastracture.Repositories
         {
             try
             {
-                var hotel = await _context.Hotels.FindAsync(id);
+                var hotel = await _context.Hotels
+                .Include(h => h.Rooms)
+                .Include(h => h.ThingsToDo)
+                .Include(h => h.Reviews)
+                .FirstOrDefaultAsync(h => h.Id == id);
+
                 if (hotel == null)
                 {
                     return GenericResponse<string>.FailureResponse("Hotel not found");
                 }
 
+                if (hotel.Rooms != null) _context.Rooms.RemoveRange(hotel.Rooms);
+                if (hotel.ThingsToDo != null) _context.ThingsToDo.RemoveRange(hotel.ThingsToDo);
+                if (hotel.Reviews != null) _context.Reviews.RemoveRange(hotel.Reviews);
+
                 _context.Hotels.Remove(hotel);
                 await _context.SaveChangesAsync();
 
-                return GenericResponse<string>.SuccessResponse("Hotel deleted successfully");
+                return GenericResponse<string>.SuccessResponse("Hotel and all related data deleted successfully");
             }
             catch (Exception ex)
             {
+                var msg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return GenericResponse<string>.FailureResponse($"Error: {ex.Message}");
             }
         }
