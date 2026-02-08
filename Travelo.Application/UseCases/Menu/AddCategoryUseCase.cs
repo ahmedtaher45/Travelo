@@ -9,11 +9,11 @@ namespace Travelo.Application.UseCases.Menu
     public class AddCategoryUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IFileServices _fileService;
+        private readonly IFileService _fileService;
         public AddCategoryUseCase (IUnitOfWork unitOfWork, IFileService fileService)
         {
             _unitOfWork=unitOfWork;
-            _fileService=(IFileServices?)fileService;
+            _fileService=fileService;
         }
 
         public async Task<GenericResponse<string>> ExecuteAsync (AddCategoryDTO dto)

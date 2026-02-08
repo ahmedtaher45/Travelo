@@ -15,12 +15,18 @@ namespace Travelo.Application.UseCases.Menu
             _unitOfWork=unitOfWork;
             _fileService=fileService;
         }
-        public async Task<GenericResponse<string>> ExecuteAsync (int itemId)
+        public async Task<GenericResponse<string>> ExecuteAsync (int itemId, string user)
         {
             var item = await _unitOfWork
                 .Repository<MenuItem>()
                 .GetById(itemId);
+            var catigory = await _unitOfWork.Repository<MenuCategory>().GetById(itemId);
+            var restaurant = await _unitOfWork.Restaurant.GetById(catigory.RestaurantId);
 
+            if (restaurant==null||restaurant.UserId!=user)
+            {
+                return GenericResponse<string>.FailureResponse("Unauthorized: You do not own this restaurant.");
+            }
             if (item==null||item.IsDeleted)
             {
                 return GenericResponse<string>

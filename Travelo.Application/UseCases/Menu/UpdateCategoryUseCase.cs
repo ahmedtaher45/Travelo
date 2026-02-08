@@ -15,22 +15,18 @@ namespace Travelo.Application.UseCases.Menu
             _unitOfWork=unitOfWork;
             _fileService=fileService;
         }
-        public async Task<GenericResponse<string>> ExecuteAsync (UpdateCategoryDTO dto)
+        public async Task<GenericResponse<string>> ExecuteAsync (UpdateCategoryDTO dto, int id)
         {
-            var category = await _unitOfWork.Repository<MenuCategory>().GetById(dto.CategoryId);
+            var category = await _unitOfWork.Repository<MenuCategory>().GetById(id);
 
             if (category==null||category.IsDeleted)
             {
                 return GenericResponse<string>.FailureResponse("Category not found.");
             }
-
-
             if (!string.IsNullOrEmpty(dto.Name))
                 category.Name=dto.Name;
-
             if (!string.IsNullOrEmpty(dto.Description))
-                category.Description=dto.Description;
-
+                category.Description=dto.Description.Trim();
 
             if (dto.Image!=null)
             {
@@ -38,15 +34,14 @@ namespace Travelo.Application.UseCases.Menu
                 {
                     await _fileService.DeleteFileAsync(category.Image, "MenuCategories");
                 }
-
                 var fileName = await _fileService.UploadFileAsync(dto.Image, "MenuCategories");
                 category.Image=fileName;
             }
             category.ModifiedOn=DateTime.UtcNow;
             _unitOfWork.Repository<MenuCategory>().Update(category);
             await _unitOfWork.SaveChangesAsync();
-            return GenericResponse<string>.SuccessResponse("Category updated successfully.");
-        }
 
+            return GenericResponse<string>.SuccessResponse("Category Updated");
+        }
     }
 }
