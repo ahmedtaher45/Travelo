@@ -2,6 +2,7 @@
 using Travelo.Application.DTOs.Hotels;
 using Travelo.Application.DTOs.Room;
 using Travelo.Application.Interfaces;
+using Travelo.Domain.Models.Entities;
 
 namespace Travelo.Application.Services.Room
 {
@@ -13,8 +14,22 @@ namespace Travelo.Application.Services.Room
         {
             this.unitOfWork=unitOfWork;
         }
-        public async Task<GenericResponse<string>> CreateRoom (RoomReqDTO roomReq)
+
+        private async Task<bool> IsAuthorizedToEditAsync(int hotelId, string userId, string role)
+        {          
+            if (role == "Admin") return true;
+     
+            var hotel = await unitOfWork.Hotels.GetById(hotelId);
+            if (hotel == null) return false;
+            return hotel.UserId == userId;
+        }
+        public async Task<GenericResponse<string>> CreateRoom (RoomReqDTO roomReq, string userId, string role)
         {
+
+            if (!await IsAuthorizedToEditAsync(roomReq.HotelId, userId, role))
+            {
+                return GenericResponse<string>.FailureResponse("Unauthorized: You do not own this hotel.");
+            }
             var isExsisHotel = await unitOfWork.Hotels.GetById(roomReq.HotelId);
             if (isExsisHotel==null)
             {
@@ -32,6 +47,7 @@ namespace Travelo.Application.Services.Room
                 Size=roomReq.Size
             };
             await unitOfWork.Rooms.Add(room);
+            await unitOfWork.SaveChangesAsync();
             return GenericResponse<string>.SuccessResponse("room added successfully");
         }
 
@@ -55,25 +71,30 @@ namespace Travelo.Application.Services.Room
             return GenericResponse<RoomDto>.SuccessResponse(dtoData);
         }
 
-        public async Task<GenericResponse<string>> RemoveRoom (int roomId)
+        public async Task<GenericResponse<string>> RemoveRoom (int roomId, string userId, string role)
         {
-            var isExsist = await unitOfWork.Rooms.GetById(roomId);
-            if (isExsist==null)
+            var room = await unitOfWork.Rooms.GetById(roomId);       
+            if (room == null) return GenericResponse<string>.FailureResponse("Room not found");
+
+            if (!await IsAuthorizedToEditAsync(room.HotelId, userId, role))
             {
-                return GenericResponse<string>.FailureResponse("Room not found ");
+                return GenericResponse<string>.FailureResponse("Unauthorized: You do not own this room.");
             }
-            unitOfWork.Rooms.Delete(isExsist);
+
+            unitOfWork.Rooms.Delete(room);
             await unitOfWork.SaveChangesAsync();
-            return GenericResponse<string>.FailureResponse("Room deleted successfully.");
+            return GenericResponse<string>.SuccessResponse("Room deleted successfully.");
         }
 
-        public async Task<GenericResponse<string>> UpdateRoom (int roomId, RoomReqDTO roomReq)
+        public async Task<GenericResponse<string>> UpdateRoom (int roomId, RoomReqDTO roomReq , string userId, string role)
         {
-            var isExsist = await unitOfWork.Rooms.GetById(roomId);
-            if (isExsist==null)
+            var room = await unitOfWork.Rooms.GetById(roomId);
+            if (room == null) return GenericResponse<string>.FailureResponse("Room not found");
+            if (!await IsAuthorizedToEditAsync(room.HotelId, userId, role))
             {
-                return GenericResponse<string>.FailureResponse("Room not found ");
+                return GenericResponse<string>.FailureResponse("Unauthorized: You do not own this room.");
             }
+
             var update = new Travelo.Domain.Models.Entities.Room
             {
                 Id=roomId,
@@ -84,12 +105,12 @@ namespace Travelo.Application.Services.Room
                 ImageUrl=roomReq.ImageUrl,
                 IsAvailable=roomReq.IsAvailable,
                 BedType=roomReq.BedType,
-                HotelId=isExsist.HotelId,
+                HotelId=room.HotelId,
                 Size=roomReq.Size
             };
             unitOfWork.Rooms.Update(update);
             await unitOfWork.SaveChangesAsync();
-            return GenericResponse<string>.FailureResponse("Room updated successfully.");
+            return GenericResponse<string>.SuccessResponse("Room updated successfully.");
         }
     }
 }

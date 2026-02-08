@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Travelo.Application.DTOs.City;
 using Travelo.Application.Services.City;
 
@@ -29,18 +30,21 @@ namespace Travelo.API.Controllers
             return !result.Success ? BadRequest(result) : Ok(result);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCity ([FromForm] CityReqDTO cityReq)
         {
             var result = await cityService.CreateCity(cityReq);
             return !result.Success ? BadRequest(result) : Ok(result);
         }
         [HttpPatch("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCity (int id, [FromForm] CityReqDTO cityReq)
         {
             var result = await cityService.UpdateCity(id, cityReq);
             return !result.Success ? BadRequest(result) : Ok(result);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCity (int id)
         {
             var result = await cityService.RemoveCity(id);

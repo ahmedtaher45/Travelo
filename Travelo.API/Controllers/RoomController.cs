@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Travelo.Application.DTOs.Room;
 using Travelo.Application.Services.Room;
 
@@ -21,22 +23,34 @@ namespace Travelo.API.Controllers
             return res.Success ? Ok(res) : BadRequest(res);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin, Hotel")]
         public async Task<IActionResult> addRoom ([FromBody] RoomReqDTO roomReq)
-        {
-            var data = await roomService.CreateRoom(roomReq);
+        {            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+            var data = await roomService.CreateRoom(roomReq, userId, role);           
             return data.Success ? Ok(data) : BadRequest(data);
         }
         [HttpDelete("{roomId}")]
+        [Authorize(Roles = "Admin, Hotel")]
         public async Task<IActionResult> Delete (int roomId)
         {
-            var data = await roomService.RemoveRoom(roomId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+            var data = await roomService.RemoveRoom(roomId, userId, role);                  
             return data.Success ? Ok(data) : NotFound();
         }
         [HttpPut("{roomId}")]
+        [Authorize(Roles = "Admin, Hotel")]
         public async Task<IActionResult> Update (int roomId, [FromBody] RoomReqDTO roomReq)
-        {
-            var data = await roomService.UpdateRoom(roomId, roomReq);
+        {                  
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            var data = await roomService.UpdateRoom(roomId, roomReq, userId, role);
             return data.Success ? Ok(data) : BadRequest(data);
+
         }
 
     }

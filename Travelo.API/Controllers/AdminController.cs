@@ -14,7 +14,7 @@ namespace Travelo.API.Controllers
     public class AdminController : ControllerBase
     {
         [HttpPost("add-admin")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddAdmin (
             [FromBody] AdminDTO adminDTO,
             [FromServices] AddAdminUseCase addAdminUseCase)

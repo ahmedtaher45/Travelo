@@ -102,6 +102,7 @@ builder.Services.AddScoped<AddRestaurantUseCase>();
 builder.Services.AddScoped<GetRestaurantUseCase>();
 builder.Services.AddScoped<UpdateRestaurantUseCase>();
 builder.Services.AddScoped<RemoveRestaurantUseCase>();
+builder.Services.AddScoped<GetAllRestaurantsUseCase>();
 builder.Services.AddScoped<GetMenuUseCase>();
 builder.Services.AddScoped<GetItemUseCase>();
 builder.Services.AddScoped<AddCategoryUseCase>();
@@ -119,6 +120,10 @@ builder.Services.AddScoped<GetHotelRoomsUseCase>();
 builder.Services.AddScoped<GetThingsToDoUseCase>();
 builder.Services.AddScoped<GetSimilarHotelsUseCase>();
 builder.Services.AddScoped<GetHotelReviewsUseCase>();
+builder.Services.AddScoped<SearchAvailableRoomsUseCase>();
+builder.Services.AddScoped<GetAllHotelsUseCase>();
+builder.Services.AddScoped<UpdateHotelUseCase>();
+builder.Services.AddScoped<DeleteHotelUseCase>();
 
 
 // Cart Use Cases
