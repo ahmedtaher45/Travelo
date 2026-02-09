@@ -54,12 +54,21 @@ namespace Travelo.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateRestaurant ([FromRoute] int id, [FromBody] AddRestaurantDto dto)
+        [Authorize(Roles = "Admin, Restaurant")]
+        public async Task<IActionResult> UpdateRestaurant ([FromRoute] int id, [FromBody] RestaurantDto dto)
         {
             try
             {
-                var res = await _updateRestaurantUseCase.UpdateRestaurant(id, dto);
+                var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var userRoles = User.FindAll(System.Security.Claims.ClaimTypes.Role).Select(r => r.Value).ToList();             
+                var res = await _updateRestaurantUseCase.UpdateRestaurant(id, dto, currentUserId, userRoles);
+
+                if (!res.Success)
+                {                   
+                    if (res.Message == "Unauthorized action") return StatusCode(403, res.Message);
+                    return BadRequest(res.Message);
+                }
+
                 return Ok(res);
             }
             catch (Exception ex)
@@ -74,7 +83,11 @@ namespace Travelo.API.Controllers
         {
             try
             {
-                await _removeRestaurantUseCase.RemoveRestaurant(id);
+                var result = await _removeRestaurantUseCase.RemoveRestaurant(id);            
+                if (!result.Success)
+                {
+                    return NotFound(result.Message); 
+                }            
                 return NoContent();
             }
             catch (Exception ex)

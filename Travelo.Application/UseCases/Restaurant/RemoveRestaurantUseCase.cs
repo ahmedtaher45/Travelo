@@ -25,7 +25,6 @@ namespace Travelo.Application.UseCases.Restaurant
             }
               _unitOfWork.Repository<Domain.Models.Entities.Restaurant>().Delete(restaurant);
             await _unitOfWork.SaveChangesAsync();
-
             return new GenericResponse<string>{Success = true, Message = "Restaurant deleted successfully"};
         }
     }

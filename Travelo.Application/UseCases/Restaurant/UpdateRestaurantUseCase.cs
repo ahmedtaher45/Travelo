@@ -18,19 +18,29 @@ namespace Travelo.Application.UseCases.Restaurant
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<GenericResponse<string>> UpdateRestaurant(int id,AddRestaurantDto request)
+        public async Task<GenericResponse<string>> UpdateRestaurant(int id, RestaurantDto request, string currentUserId, List<string> userRoles)
         {
+
             var existingRestaurant = await _unitOfWork.Repository<Domain.Models.Entities.Restaurant>().GetById(id);
+
             if (existingRestaurant == null)
             {
-                return new GenericResponse<string> { Message = "Restaurant not found" };
+                return new GenericResponse<string> { Message = "Restaurant not found", Success = false };
             }
+            bool isAdmin = userRoles.Contains("Admin");
+            bool isOwner = existingRestaurant.UserId == currentUserId;
+            if (!isAdmin && !isOwner)
+            {
+                return new GenericResponse<string> { Message = "Unauthorized action", Success = false };
+            }
+      
             existingRestaurant.Name = request.Name;
             existingRestaurant.Description = request.Description;
-
-             _unitOfWork.Repository<Domain.Models.Entities.Restaurant>().Update(existingRestaurant);
+            _unitOfWork.Repository<Domain.Models.Entities.Restaurant>().Update(existingRestaurant);
             await _unitOfWork.SaveChangesAsync();
-            return new GenericResponse<string> { Message = "Restaurant updated successfully" };
+
+            return new GenericResponse<string> { Message = "Restaurant updated successfully", Success = true };
+
         }
 
     }
