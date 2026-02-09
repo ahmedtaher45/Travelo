@@ -19,7 +19,7 @@ namespace Travelo.Application.UseCases.Menu
             _fileService=fileService;
         }
 
-        public async Task<GenericResponse<string>> ExecuteAsync (AddItemDTO dto)
+        public async Task<GenericResponse<string>> ExecuteAsync (AddItemDTO dto, string user)
         {
             var category = await _unitOfWork
                 .Repository<MenuCategory>()
@@ -30,8 +30,12 @@ namespace Travelo.Application.UseCases.Menu
                 return GenericResponse<string>
                     .FailureResponse("Category not found.");
             }
-
-
+            var restaurant = await _unitOfWork.Restaurant.GetById(category.RestaurantId);
+            if (restaurant.UserId==user)
+            {
+                return GenericResponse<string>
+                    .FailureResponse("You are not Authrize to ");
+            }
             var imageNames = new List<string>();
 
             if (dto.Images!=null&&dto.Images.Any())
@@ -57,9 +61,7 @@ namespace Travelo.Application.UseCases.Menu
                 Stock=dto.Stock,
                 Ingredients=dto.Ingredients??new List<string>(),
                 CreatedOn=DateTime.UtcNow
-
             };
-
 
             await _unitOfWork.Repository<MenuItem>().Add(item);
             await _unitOfWork.SaveChangesAsync();

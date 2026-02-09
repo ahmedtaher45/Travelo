@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Travelo.Application.Common.Responses;
+﻿using Travelo.Application.Common.Responses;
 using Travelo.Application.Interfaces;
 using Travelo.Domain.Models.Entities;
 
@@ -13,28 +8,33 @@ namespace Travelo.Application.UseCases.Menu
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteCategoryUseCase(IUnitOfWork unitOfWork)
+        public DeleteCategoryUseCase (IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            _unitOfWork=unitOfWork;
         }
-        public async Task<GenericResponse<string>> ExecuteAsync(int categoryId)
+        public async Task<GenericResponse<string>> ExecuteAsync (int categoryId, string user)
         {
-            
+
             var category = await _unitOfWork.Repository<MenuCategory>().GetById(categoryId);
 
-            if (category == null || category.IsDeleted)
+            if (category==null||category.IsDeleted)
             {
                 return GenericResponse<string>.FailureResponse("Category not found.");
             }
+            var restaurant = await _unitOfWork.Restaurant.GetById(category.RestaurantId);
+            if (restaurant==null||restaurant.UserId!=user)
+            {
+                return GenericResponse<string>.FailureResponse("Unauthorized: You do not own this restaurant.");
+            }
 
-            category.IsDeleted = true;
-            
+            category.IsDeleted=true;
 
-            if (category.items != null && category.items.Any())
+
+            if (category.items!=null&&category.items.Any())
             {
                 foreach (var item in category.items)
                 {
-                    item.IsDeleted = true;
+                    item.IsDeleted=true;
 
                     _unitOfWork.Repository<MenuItem>().Update(item);
                 }

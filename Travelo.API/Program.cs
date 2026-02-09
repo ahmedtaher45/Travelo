@@ -28,7 +28,6 @@ using Travelo.Application.UseCases.Review;
 using Travelo.Domain.Models.Entities;
 using Travelo.Infrastracture.Contexts;
 using Travelo.Infrastracture.Repositories;
-using Travelo.Persistence.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -217,7 +216,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
-    await SeedData.SeedAsync(context);
+    // await SeedData.SeedAsync(context);
 }
 //if (app.Environment.IsDevelopment())
 //{
