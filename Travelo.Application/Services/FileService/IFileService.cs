@@ -7,5 +7,6 @@ namespace Travelo.Application.Services.FileService
     {
         Task<string?> UploadFileAsync (IFormFile file, string filePath);
         Task<bool> DeleteFileAsync (string fileUrl, string folderName);
+        Task<string?> CalculateHashAsync(IFormFile file);
     }
 }

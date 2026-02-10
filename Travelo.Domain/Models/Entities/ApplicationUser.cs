@@ -9,6 +9,7 @@ namespace Travelo.Domain.Models.Entities
         public Restaurant? Restaurant { get; set; }
         public bool PasswordRestCode { get; set; } = false;
         public string? ProfileImageUrl { get; set; }
+        public string? ProfileImageHash { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Address { get; set; }
         public string? Gender { get; set; }

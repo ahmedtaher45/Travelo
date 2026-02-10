@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Security.Cryptography;
 
 namespace Travelo.Application.Services.FileService
 {
@@ -38,6 +39,16 @@ namespace Travelo.Application.Services.FileService
             }
             return null;
         }
+
+        public async Task<string> CalculateHashAsync(IFormFile file)
+        {
+            using var stream = file.OpenReadStream();
+            using var sha256 = SHA256.Create();
+
+            var hashBytes = await sha256.ComputeHashAsync(stream);
+            return Convert.ToBase64String(hashBytes);
+        }
+
 
     }
 }

@@ -24,14 +24,14 @@ namespace Travelo.Infrastracture.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
-        public AuthRepository (UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailSender)
+        public AuthRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailSender)
         {
-            this.userManager=userManager;
-            _context=context;
-            _configuration=configuration;
-            _emailSender=emailSender;
+            this.userManager = userManager;
+            _context = context;
+            _configuration = configuration;
+            _emailSender = emailSender;
         }
-        public async Task<GenericResponse<string>> ChangePasswordAsync (ChangePasswordDTO changePasswordDTO, string userId)
+        public async Task<GenericResponse<string>> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO, string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
             if (user is null)
@@ -45,9 +45,9 @@ namespace Travelo.Infrastracture.Repositories
         }
 
 
-        public async Task<GenericResponse<string>> RegisterAsync (RegisterDTO registerDTO)
+        public async Task<GenericResponse<string>> RegisterAsync(RegisterDTO registerDTO)
         {
-            if (registerDTO.Email==null)
+            if (registerDTO.Email == null)
             {
                 return GenericResponse<string>.FailureResponse("Invalid Email");
             }
@@ -55,11 +55,11 @@ namespace Travelo.Infrastracture.Repositories
 
             try
             {
-                user=new ApplicationUser
+                user = new ApplicationUser
                 {
-                    Email=registerDTO.Email,
-                    UserName=registerDTO.UserName,
-                    PhoneNumber=registerDTO.PhoneNumber
+                    Email = registerDTO.Email,
+                    UserName = registerDTO.UserName,
+                    PhoneNumber = registerDTO.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, registerDTO.Password!);
 
@@ -78,21 +78,21 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                if (user!=null)
+                if (user != null)
                     await userManager.DeleteAsync(user);
 
-                var errorMessage = ex.InnerException!=null
+                var errorMessage = ex.InnerException != null
                       ? ex.InnerException.Message
                       : ex.Message;
 
-                return GenericResponse<string>.FailureResponse("Error: "+errorMessage+" | StackTrace: "+ex.StackTrace);
+                return GenericResponse<string>.FailureResponse("Error: " + errorMessage + " | StackTrace: " + ex.StackTrace);
             }
 
             //var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
             ////token=WebUtility.UrlEncode(token);
             //token=WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            token=WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             var param = new Dictionary<string, string?>
                 {
                     {"token",token },
@@ -117,9 +117,9 @@ namespace Travelo.Infrastracture.Repositories
 
             return GenericResponse<string>.SuccessResponse("Check your Email for Confirmation");
         }
-        public async Task<GenericResponse<string>> AddAdmin (AdminDTO adminDTO)
+        public async Task<GenericResponse<string>> AddAdmin(AdminDTO adminDTO)
         {
-            if (adminDTO==null)
+            if (adminDTO == null)
             {
                 return GenericResponse<string>.FailureResponse("Admin Data can't be null");
             }
@@ -127,9 +127,9 @@ namespace Travelo.Infrastracture.Repositories
             {
                 var user = new ApplicationUser()
                 {
-                    Email=adminDTO.Email,
-                    UserName=adminDTO.UserName,
-                    PhoneNumber=adminDTO.PhoneNumber
+                    Email = adminDTO.Email,
+                    UserName = adminDTO.UserName,
+                    PhoneNumber = adminDTO.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, adminDTO.Password!);
                 if (!result.Succeeded)
@@ -146,12 +146,12 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                return GenericResponse<string>.FailureResponse("Exception occured: "+ex.Message);
+                return GenericResponse<string>.FailureResponse("Exception occured: " + ex.Message);
             }
         }
-        public async Task<GenericResponse<string>> AddRestaurant (int cityId, AddRestaurantDto addRestaurantDto)
+        public async Task<GenericResponse<string>> AddRestaurant(int cityId, AddRestaurantDto addRestaurantDto)
         {
-            if (addRestaurantDto==null)
+            if (addRestaurantDto == null)
             {
                 return GenericResponse<string>.FailureResponse("Restaurant Data can't be null");
             }
@@ -159,9 +159,9 @@ namespace Travelo.Infrastracture.Repositories
             {
                 var user = new ApplicationUser()
                 {
-                    Email=addRestaurantDto.Email,
-                    UserName=addRestaurantDto.UserName,
-                    PhoneNumber=addRestaurantDto.PhoneNumber
+                    Email = addRestaurantDto.Email,
+                    UserName = addRestaurantDto.UserName,
+                    PhoneNumber = addRestaurantDto.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, addRestaurantDto.Password!);
                 if (!result.Succeeded)
@@ -176,10 +176,10 @@ namespace Travelo.Infrastracture.Repositories
 
                 var restaurant = new Restaurant()
                 {
-                    Name=addRestaurantDto.Name,
-                    Description=addRestaurantDto.Description,
-                    UserId=user.Id,
-                    CityId=cityId
+                    Name = addRestaurantDto.Name,
+                    Description = addRestaurantDto.Description,
+                    UserId = user.Id,
+                    CityId = cityId
                 };
                 await _context.Restaurants.AddAsync(restaurant);
                 await _context.SaveChangesAsync();
@@ -187,13 +187,13 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                return GenericResponse<string>.FailureResponse("Exception occured: "+ex.Message);
+                return GenericResponse<string>.FailureResponse("Exception occured: " + ex.Message);
             }
         }
 
-        public async Task<GenericResponse<string>> AddHotel (int cityId, AddHotelDTO dto)
+        public async Task<GenericResponse<string>> AddHotel(int cityId, AddHotelDTO dto)
         {
-            if (dto==null)
+            if (dto == null)
             {
                 return GenericResponse<string>.FailureResponse("Hotel Data can't be null");
             }
@@ -201,9 +201,9 @@ namespace Travelo.Infrastracture.Repositories
             {
                 var user = new ApplicationUser()
                 {
-                    Email=dto.Email,
-                    UserName=dto.UserName,
-                    PhoneNumber=dto.PhoneNumber
+                    Email = dto.Email,
+                    UserName = dto.UserName,
+                    PhoneNumber = dto.PhoneNumber
                 };
                 var result = await userManager.CreateAsync(user, dto.Password!);
                 if (!result.Succeeded)
@@ -218,47 +218,47 @@ namespace Travelo.Infrastracture.Repositories
 
                 var hotel = new Hotel
                 {
-                    Name=dto.Name,
-                    ResponsibleName=dto.ResponsibleName,
-                    Address=dto.Address,
-                    Country=dto.Country,
-                    Latitude=dto.Latitude,
-                    Longitude=dto.Longitude,
-                    CityId=dto.CityId,
-                    PricePerNight=dto.PricePerNight,
-                    Rating=dto.Rating,
-                    ReviewsCount=dto.ReviewsCount,
-                    ImageUrl=dto.ImageUrl,
-                    IsFeatured=dto.IsFeatured,
-                    Description=dto.Description,
-                    UserId=user.Id
+                    Name = dto.Name,
+                    ResponsibleName = dto.ResponsibleName,
+                    Address = dto.Address,
+                    Country = dto.Country,
+                    Latitude = dto.Latitude,
+                    Longitude = dto.Longitude,
+                    CityId = dto.CityId,
+                    PricePerNight = dto.PricePerNight,
+                    Rating = dto.Rating,
+                    ReviewsCount = dto.ReviewsCount,
+                    ImageUrl = dto.ImageUrl,
+                    IsFeatured = dto.IsFeatured,
+                    Description = dto.Description,
+                    UserId = user.Id
                 };
 
-                if (dto.Rooms!=null&&dto.Rooms.Any())
+                if (dto.Rooms != null && dto.Rooms.Any())
                 {
-                    hotel.Rooms=dto.Rooms.Select(r => new Room
+                    hotel.Rooms = dto.Rooms.Select(r => new Room
                     {
-                        Type=r.Type,
-                        PricePerNight=r.PricePerNight,
-                        Capacity=r.Capacity,
-                        View=r.View,
-                        ImageUrl=r.ImageUrl,
-                        IsAvailable=r.IsAvailable,
-                        BedType=r.BedType,
-                        Size=r.Size
+                        Type = r.Type,
+                        PricePerNight = r.PricePerNight,
+                        Capacity = r.Capacity,
+                        View = r.View,
+                        ImageUrl = r.ImageUrl,
+                        IsAvailable = r.IsAvailable,
+                        BedType = r.BedType,
+                        Size = r.Size
                     }).ToList();
                 }
 
-                if (dto.ThingsToDo!=null&&dto.ThingsToDo.Any())
+                if (dto.ThingsToDo != null && dto.ThingsToDo.Any())
                 {
-                    hotel.ThingsToDo=dto.ThingsToDo.Select(t => new ThingToDo
+                    hotel.ThingsToDo = dto.ThingsToDo.Select(t => new ThingToDo
                     {
-                        Title=t.Title,
-                        Category=t.Category,
-                        Distance=t.Distance,
-                        Price=t.Price,
-                        OldPrice=t.OldPrice,
-                        ImageUrl=t.ImageUrl
+                        Title = t.Title,
+                        Category = t.Category,
+                        Distance = t.Distance,
+                        Price = t.Price,
+                        OldPrice = t.OldPrice,
+                        ImageUrl = t.ImageUrl
                     }).ToList();
                 }
 
@@ -268,15 +268,15 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                return GenericResponse<string>.FailureResponse("Exception occured: "+ex.Message);
+                return GenericResponse<string>.FailureResponse("Exception occured: " + ex.Message);
             }
         }
-        public async Task<GenericResponse<AuthResponseDTO>> LoginAsync (LoginDTO loginDTO)
+        public async Task<GenericResponse<AuthResponseDTO>> LoginAsync(LoginDTO loginDTO)
         {
 
             var user = await userManager.FindByEmailAsync(loginDTO.Email);
 
-            if (user==null||!await userManager.CheckPasswordAsync(user, loginDTO.Password))
+            if (user == null || !await userManager.CheckPasswordAsync(user, loginDTO.Password))
             {
                 return GenericResponse<AuthResponseDTO>.FailureResponse("Invalid Email or Password");
             }
@@ -285,14 +285,14 @@ namespace Travelo.Infrastracture.Repositories
 
             var authData = new AuthResponseDTO
             {
-                Token=token,
-                UserName=user.UserName!,
-                Email=user.Email!
+                Token = token,
+                UserName = user.UserName!,
+                Email = user.Email!
             };
 
             return GenericResponse<AuthResponseDTO>.SuccessResponse(authData, "Login Successful");
         }
-        private async Task<string> GenerateJwtToken (ApplicationUser user)
+        private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
             var roles = await userManager.GetRolesAsync(user);
             var claims = new List<Claim>
@@ -320,7 +320,7 @@ namespace Travelo.Infrastracture.Repositories
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        public async Task<GenericResponse<string>> ForgotPasswordAsync (ForgotPasswordDTO forgotPasswordDTO)
+        public async Task<GenericResponse<string>> ForgotPasswordAsync(ForgotPasswordDTO forgotPasswordDTO)
         {
             if (string.IsNullOrWhiteSpace(forgotPasswordDTO.Email))
             {
@@ -331,7 +331,7 @@ namespace Travelo.Infrastracture.Repositories
             {
                 var user = await userManager.FindByEmailAsync(forgotPasswordDTO.Email);
 
-                if (user==null)
+                if (user == null)
                 {
                     return GenericResponse<string>.FailureResponse(
                         "Invalid Email"
@@ -339,7 +339,7 @@ namespace Travelo.Infrastracture.Repositories
                 }
 
                 var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                token=WebUtility.UrlEncode(token);
+                token = WebUtility.UrlEncode(token);
                 var param = new Dictionary<string, string?>
                 {
                     {"token",token },
@@ -369,20 +369,20 @@ namespace Travelo.Infrastracture.Repositories
             }
             catch (Exception ex)
             {
-                var errorMessage = ex.InnerException!=null
+                var errorMessage = ex.InnerException != null
                     ? ex.InnerException.Message
                     : ex.Message;
 
                 return GenericResponse<string>.FailureResponse(
-                    "Error: "+errorMessage+" | StackTrace: "+ex.StackTrace
+                    "Error: " + errorMessage + " | StackTrace: " + ex.StackTrace
                 );
             }
         }
 
-        public async Task<GenericResponse<string>> ResetPasswordAsync (ResetPasswordDTO resetPasswordDTO)
+        public async Task<GenericResponse<string>> ResetPasswordAsync(ResetPasswordDTO resetPasswordDTO)
         {
             var user = await userManager.FindByEmailAsync(resetPasswordDTO.Email);
-            if (user==null)
+            if (user == null)
                 return GenericResponse<string>.FailureResponse("User not found.");
 
             var Token = WebUtility.UrlDecode(resetPasswordDTO.Token);
@@ -399,10 +399,10 @@ namespace Travelo.Infrastracture.Repositories
             return GenericResponse<string>.SuccessResponse("Password has been reset successfully.");
         }
 
-        public async Task<GenericResponse<string>> ConfirmEmailAsync (ConfirmEmailDTO confirmEmailDTO)
+        public async Task<GenericResponse<string>> ConfirmEmailAsync(ConfirmEmailDTO confirmEmailDTO)
         {
             var user = await userManager.FindByEmailAsync(confirmEmailDTO.Email);
-            if (user==null)
+            if (user == null)
             {
                 return await Task.FromResult(GenericResponse<string>.FailureResponse("User not found."));
             }
@@ -429,11 +429,11 @@ namespace Travelo.Infrastracture.Repositories
             return await Task.FromResult(GenericResponse<string>.SuccessResponse("Email confirmed successfully."));
         }
 
-        public async Task<GenericResponse<string>> ResendConfirmationEmailAsync (ResendConfirmEmailDTO resendConfirmEmailDTO)
+        public async Task<GenericResponse<string>> ResendConfirmationEmailAsync(ResendConfirmEmailDTO resendConfirmEmailDTO)
         {
             var user = await userManager.FindByEmailAsync(resendConfirmEmailDTO.Email);
 
-            if (user==null)
+            if (user == null)
             {
                 return GenericResponse<string>.FailureResponse("User not found.");
             }
@@ -444,7 +444,7 @@ namespace Travelo.Infrastracture.Repositories
             }
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            token=WebUtility.UrlEncode(token);
+            token = WebUtility.UrlEncode(token);
 
             var param = new Dictionary<string, string?>
             {
@@ -473,25 +473,25 @@ namespace Travelo.Infrastracture.Repositories
 
             return GenericResponse<string>.SuccessResponse("Confirmation email resent successfully.");
         }
-        public async Task<GenericResponse<UserProfileDTO>> GetUserData (string userId)
+        public async Task<GenericResponse<UserProfileDTO>> GetUserData(string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
-            if (user==null)
+            if (user == null)
                 return GenericResponse<UserProfileDTO>.FailureResponse("User not found.");
 
             var roles = await userManager.GetRolesAsync(user);
 
             var userProfile = new UserProfileDTO
             {
-                UserId=user.Id,
-                UserName=user.UserName!,
-                Email=user.Email!,
-                PhoneNumber=user.PhoneNumber,
-                Role=roles.FirstOrDefault()??"User",
-                DateOfBirth=user.DateOfBirth,
-                ProfilePictureUrl=user.ProfileImageUrl,
-                Address=user.Address,
-                Gender=user.Gender
+                UserId = user.Id,
+                UserName = user.UserName!,
+                Email = user.Email!,
+                PhoneNumber = user.PhoneNumber,
+                Role = roles.FirstOrDefault() ?? "User",
+                DateOfBirth = user.DateOfBirth,
+                ProfilePictureUrl = user.ProfileImageUrl,
+                Address = user.Address,
+                Gender = user.Gender
             };
 
             return GenericResponse<UserProfileDTO>.SuccessResponse(
@@ -500,29 +500,94 @@ namespace Travelo.Infrastracture.Repositories
             );
         }
 
-
-        public async Task<GenericResponse<string>> UpdateUserProfileAsync (updateUserProfileDTORes update, string userId)
+        public async Task<string?> GetProfileImageHashAsync(string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
-            if (user==null)
-                return GenericResponse<string>.FailureResponse("User not found.");
+            return user?.ProfileImageHash;
+        }
 
-            user.UserName=update.UserName??user.UserName;
-            user.PhoneNumber=update.PhoneNumber??user.PhoneNumber;
-            user.DateOfBirth=update.DateOfBirth??user.DateOfBirth;
-            user.Address=update.Address??user.Address;
-            user.ProfileImageUrl=update.ProfilePictureUrl??user.ProfileImageUrl;
+        public async Task<GenericResponse<string>> UpdateUserProfileAsync(updateUserProfileDTORes update, string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null) return GenericResponse<string>.FailureResponse("User not found.");
+       
+            var changesLog = new List<string>();
+            bool hasChanges = false;
+          
+            if (!string.IsNullOrWhiteSpace(update.UserName) && update.UserName.Trim() != user.UserName)
+            {
+                changesLog.Add($"Name: '{user.UserName}' -> '{update.UserName}'");
+                user.UserName = update.UserName.Trim();
+                hasChanges = true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(update.PhoneNumber) && update.PhoneNumber.Trim() != user.PhoneNumber)
+            {
+                changesLog.Add($"Phone: '{user.PhoneNumber}' -> '{update.PhoneNumber}'");
+                user.PhoneNumber = update.PhoneNumber.Trim();
+                hasChanges = true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(update.Address) && update.Address.Trim() != user.Address)
+            {
+                changesLog.Add($"Address: '{user.Address}' -> '{update.Address}'");
+                user.Address = update.Address.Trim();
+                hasChanges = true;
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(update.ProfilePictureUrl))
+            {           
+                changesLog.Add("Image Changed");
+                user.ProfileImageUrl = update.ProfilePictureUrl;
+                user.ProfileImageHash = update.ProfileImageHash; 
+                hasChanges = true;
+            }
+
+            if (update.DateOfBirth.HasValue)
+            {
+                if (!user.DateOfBirth.HasValue || update.DateOfBirth.Value.Date != user.DateOfBirth.Value.Date)
+                {
+                    changesLog.Add($"DOB: '{user.DateOfBirth}' -> '{update.DateOfBirth}'");
+                    user.DateOfBirth = update.DateOfBirth;
+                    hasChanges = true;
+                }
+            }
+
+            if (update.Gender.HasValue)
+            {
+                var newGenderString = update.Gender.Value.ToString();
+                if (user.Gender != newGenderString)
+                {
+                    changesLog.Add($"Gender: '{user.Gender}' -> '{newGenderString}'");
+                    user.Gender = newGenderString;
+                    hasChanges = true;
+                }
+            }
+
+            if (!hasChanges)
+            {
+                return GenericResponse<string>.SuccessResponse("No changes detected. Profile is already up to date.");
+            }
+
             try
             {
-                await userManager.UpdateAsync(user);
-                return GenericResponse<string>.SuccessResponse("User profile updated successfully.");
+                var result = await userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    return GenericResponse<string>.FailureResponse($"Update failed: {errors}");
+                }
+
+                string changesSummary = string.Join(", ", changesLog);
+                return GenericResponse<string>.SuccessResponse($"Updated successfully.");
+                // return GenericResponse<string>.SuccessResponse($"Updated successfully. Changes: [ {changesSummary} ]");
             }
             catch (Exception ex)
             {
-                return GenericResponse<string>.FailureResponse($"Update failed: {ex.Message}");
+                return GenericResponse<string>.FailureResponse($"Error: {ex.Message}");
             }
         }
-
-
     }
-}
+    }

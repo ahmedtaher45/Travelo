@@ -8,6 +8,7 @@ namespace Travelo.Application.DTOs.Auth
         public string? FullName { get; set; }
         public string? PhoneNumber { get; set; }
         public IFormFile? ProfilePictureUrl { get; set; }
+        public string? ProfileImageHash { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Address { get; set; }
         public Gender? Gender { get; set; }
@@ -15,6 +16,6 @@ namespace Travelo.Application.DTOs.Auth
 }
 public enum Gender
 {
-    Female,
-    Male,
+    Female = 0,
+    Male = 1,
 }

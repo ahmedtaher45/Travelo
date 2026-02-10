@@ -19,5 +19,6 @@ namespace Travelo.Application.Interfaces
         Task<GenericResponse<string>> AddAdmin (AdminDTO adminDTO);
         Task<GenericResponse<UserProfileDTO>> GetUserData (string userId);
         Task<GenericResponse<string>> UpdateUserProfileAsync (updateUserProfileDTORes update, string userId);
+        Task<string> GetProfileImageHashAsync(string userId);
     }
 }
